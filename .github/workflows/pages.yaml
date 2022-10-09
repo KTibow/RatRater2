@@ -28,6 +28,8 @@ jobs:
         uses: actions/configure-pages@v2
         with:
           static_site_generator: sveltekit
+      - name: Run install
+        run: npm install
       - name: Run build
         run: npm run build
       - run: ls
