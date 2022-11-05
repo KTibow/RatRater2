@@ -32,7 +32,6 @@ jobs:
         run: npm install
       - name: Run build
         run: npm run build
-      - run: ls
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v1
         with:
