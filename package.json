@@ -10,8 +10,10 @@
     "format": "prettier --plugin-search-dir . --write ."
   },
   "devDependencies": {
+    "@iconify/svelte": "^3.0.0",
     "@sveltejs/kit": "next",
     "autoprefixer": "^10.4.7",
+    "monaco-editor": "^0.34.1",
     "postcss": "^8.4.14",
     "postcss-load-config": "^4.0.1",
     "prettier": "^2.6.2",
@@ -25,6 +27,7 @@
   },
   "type": "module",
   "dependencies": {
+    "@iconify-icons/mdi": "^1.2.32",
     "@sveltejs/adapter-static": "^1.0.0-next.44",
     "jszip": "^3.10.1"
   }
