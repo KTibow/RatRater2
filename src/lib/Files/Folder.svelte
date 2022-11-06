@@ -7,15 +7,21 @@
 
   let entries;
   $: entries = Object.entries(folder).sort(([nameA, partA], [nameB, partB]) => {
-    const folderComp = Boolean(partA["is/folder"]) - Boolean(partB["is/folder"]);
-    const subfolderComp = nameA.includes("/") - nameB.includes("/");
-    return folderComp || subfolderComp || nameA.localeCompare(nameB);
+    const folderComp =
+      Boolean(partA["is/folder"] || nameA.includes("/")) -
+      Boolean(partB["is/folder"] || nameB.includes("/"));
+    return folderComp || nameA.localeCompare(nameB);
   });
 </script>
 
 <details bind:open>
-  <summary class="my-2 flex cursor-pointer list-none px-2 py-1 transition-all hover:bg-blue-500/30">
-    {name}
+  <summary
+    class="my-2 flex cursor-pointer list-none rounded-md px-2 py-1 transition-all hover:bg-blue-500/30"
+  >
+    <span class="opacity-70">
+      {name.split("/").slice(0, -1).join("/") + (name.includes("/") ? "/" : "")}
+    </span>
+    {name.split("/").at(-1)}
     <span class="ml-auto">{open ? "⬆️" : "⬇️"}</span>
   </summary>
   <div class="border-l-4 border-blue-500/40 pl-2">
@@ -24,11 +30,14 @@
         <svelte:self folder={part} name={itemName} bind:activePath />
       {:else if itemName != "is/folder"}
         <p
-          class="my-2 cursor-pointer rounded-md px-2 py-1 transition-all hover:bg-blue-500/30"
+          class="my-2 flex cursor-pointer rounded-md px-2 py-1 transition-all hover:bg-blue-500/30"
           class:selected={activePath == part.name}
           on:click={() => (activePath = part.name)}
         >
-          {itemName}
+          <span class="opacity-70">
+            {itemName.split("/").slice(0, -1).join("/") + (itemName.includes("/") ? "/" : "")}
+          </span>
+          {itemName.split("/").at(-1)}
         </p>
       {/if}
     {/each}

@@ -8,9 +8,7 @@
   import cloudLoad from "@iconify-icons/mdi/cloud-sync";
   import fileRestore from "@iconify-icons/mdi/file-restore";
   import save from "@iconify-icons/mdi/content-save";
-  import copy from "@iconify-icons/mdi/content-copy";
   import close from "@iconify-icons/mdi/close";
-  import data from "@iconify-icons/mdi/language-java";
 
   export let zip;
   export let path;
@@ -19,7 +17,8 @@
 
   let editorContents;
   $: {
-    if (!zip || !path) break $;
+    console.log(zip, path);
+    if (!zip || !path || !zip.files[path]) break $;
     zip.files[path].async("text").then((data) => (rawFile = data));
   }
   $: {

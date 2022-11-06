@@ -1,5 +1,6 @@
 <script>
   import Folder from "./Folder.svelte";
+  import Chooser from "$lib/Panel/Chooser.svelte";
 
   export let activeFile;
   export let activeFileName;
@@ -47,5 +48,6 @@
 {#if activeFile}
   <div class="max-h-screen flex-shrink-0 overflow-scroll bg-neutral-900 p-4 lg:w-1/4">
     <Folder folder={tree} name={activeFileName} open={true} bind:activePath />
+    <Chooser bind:activeFile bind:activeFileName />
   </div>
 {/if}
