@@ -54,7 +54,6 @@
         editor.setValue(val);
       },
     };
-    console.log(editor);
 
     return () => {
       editor.dispose();

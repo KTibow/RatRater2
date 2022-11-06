@@ -10,7 +10,7 @@
   <p class="mt-auto">
     Made by KTibow - Support in <a
       href="https://discord.gg/v4VCe6EsBA"
-      class="text-blue-200 underline"
+      class="border-b-2 border-b-current text-blue-200 transition-all hover:border-b-4"
     >
       The Fight Against Malware
     </a>

@@ -1,16 +1,21 @@
 <script>
   import Monaco from "./Monaco.svelte";
-  import { tick } from "svelte";
+  import { decompile } from "./decomp.js";
+  import Button from "$lib/Button.svelte";
   import Icon from "@iconify/svelte";
+
+  import java from "@iconify-icons/mdi/language-java";
+  import cloudLoad from "@iconify-icons/mdi/cloud-sync";
+  import fileRestore from "@iconify-icons/mdi/file-restore";
   import save from "@iconify-icons/mdi/content-save";
-  import copy from "@iconify-icons/mdi/clipboard";
+  import copy from "@iconify-icons/mdi/content-copy";
   import close from "@iconify-icons/mdi/close";
-  import Button from "../Button.svelte";
+  import data from "@iconify-icons/mdi/language-java";
 
   export let zip;
   export let path;
   let rawFile;
-  let mode;
+  let decompiled = { status: 0 };
 
   let editorContents;
   $: {
@@ -19,7 +24,9 @@
   }
   $: {
     if (!editorContents || !rawFile) break $;
-    $editorContents = rawFile;
+    if (decompiled.for && decompiled.for != path) decompiled = { status: 0 };
+    if (decompiled.status == 2) $editorContents = decompiled.data;
+    else $editorContents = rawFile;
   }
 </script>
 
@@ -31,6 +38,7 @@
     <Button
       styling="inline-block p-2 mx-2 ml-auto"
       on:click={() => {
+        console.log($editorContents == rawFile, $editorContents, rawFile);
         const file = new File([rawFile], path.split("/").at(-1), {
           type: path.endsWith(".class") ? "application/java-vm" : "text/plain",
         });
@@ -45,7 +53,28 @@
     >
       <Icon icon={save} />
     </Button>
-    <Button styling="inline-block p-2 mx-2"><Icon icon={copy} /></Button>
+    <Button
+      styling="inline-block p-2 mx-2"
+      on:click={async () => {
+        if (decompiled.status == 0) {
+          decompiled = { status: 1 };
+          const fileBuffer = await zip.files[path].async("arraybuffer");
+          const decomped = await decompile(rawFile, fileBuffer, path);
+          decompiled = { status: 2, data: decomped, for: path };
+        } else if (decompiled.status == 1) return;
+        else {
+          decompiled.status = 0;
+        }
+      }}
+    >
+      {#if decompiled.status == 0}
+        <Icon icon={java} />
+      {:else if decompiled.status == 1}
+        <Icon icon={cloudLoad} />
+      {:else}
+        <Icon icon={fileRestore} />
+      {/if}
+    </Button>
     <Button styling="inline-block p-2 mx-2" on:click={() => (path = null)}>
       <Icon icon={close} />
     </Button>

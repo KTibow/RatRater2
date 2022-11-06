@@ -23,10 +23,14 @@
     Object.entries(tree).forEach(([name, contents]) => {
       if (name == "is/folder") return;
       const items = Object.keys(contents).filter((name) => name != "is/folder");
-      if (items.length == 1 && contents["is/folder"]) {
-        couldReduce = true;
-        delete tree[name];
-        tree[name + "/" + items[0]] = contents[items[0]];
+      if (contents["is/folder"]) {
+        if (items.length == 1) {
+          couldReduce = true;
+          delete tree[name];
+          tree[name + "/" + items[0]] = contents[items[0]];
+        } else {
+          tree[name] = reduceTree(contents);
+        }
       }
     });
     if (couldReduce) reduceTree(tree);
