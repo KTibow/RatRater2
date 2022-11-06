@@ -12,6 +12,9 @@ const config = {
       animation: {
         wave: "wave 5s ease-in-out infinite",
       },
+      backgroundImage: {
+        sweep: "linear-gradient(to left, #1d55cc, #1d55cc 50%, #1e3a8a 50%, #1e3a8a)",
+      },
     },
   },
 

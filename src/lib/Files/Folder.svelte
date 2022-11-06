@@ -8,19 +8,23 @@
   let entries;
   $: entries = Object.entries(folder).sort(([nameA, partA], [nameB, partB]) => {
     const folderComp = Boolean(partA["is/folder"]) - Boolean(partB["is/folder"]);
-    return folderComp || nameA.localeCompare(nameB);
+    const subfolderComp = nameA.includes("/") - nameB.includes("/");
+    return folderComp || subfolderComp || nameA.localeCompare(nameB);
   });
 </script>
 
 <details bind:open>
-  <summary class="cursor-pointer list-none">{open ? "⬆️" : "⬇️"} {name}</summary>
+  <summary class="my-2 flex cursor-pointer list-none px-2 py-1 transition-all hover:bg-blue-500/30">
+    {name}
+    <span class="ml-auto">{open ? "⬆️" : "⬇️"}</span>
+  </summary>
   <div class="border-l-4 border-blue-500/40 pl-2">
     {#each entries as [itemName, part]}
       {#if part["is/folder"]}
         <svelte:self folder={part} name={itemName} bind:activePath />
       {:else if itemName != "is/folder"}
         <p
-          class="cursor-pointer text-blue-400"
+          class="my-2 cursor-pointer rounded-md px-2 py-1 transition-all hover:bg-blue-500/30"
           class:selected={activePath == part.name}
           on:click={() => (activePath = part.name)}
         >
@@ -33,6 +37,6 @@
 
 <style>
   .selected {
-    @apply rounded-md bg-blue-500 text-white;
+    @apply bg-blue-500;
   }
 </style>

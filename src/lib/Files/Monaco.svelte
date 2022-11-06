@@ -37,6 +37,7 @@
       value: "/* Loading... */",
       language: "java",
       theme: "vs-dark",
+      readOnly: true,
     });
     editor.onDidChangeModelContent(() => {
       const text = editor.getValue();

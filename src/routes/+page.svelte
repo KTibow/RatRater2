@@ -15,7 +15,7 @@
   <Sidebar {activeFile} {activeFileName} bind:activePath />
   {#if activeFile}
     {#if activePath}
-      <Viewer zip={activeFile} path={activePath} />
+      <Viewer zip={activeFile} bind:path={activePath} />
     {:else}
       <Background bind:activeFile>TODO</Background>
     {/if}
