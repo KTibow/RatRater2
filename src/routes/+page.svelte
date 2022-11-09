@@ -2,7 +2,8 @@
   import Sidebar from "$lib/Files/Sidebar.svelte";
   import Background from "$lib/Panel/Background.svelte";
   import Chooser from "$lib/Panel/Chooser.svelte";
-  import Viewer from "$lib/Files/Viewer.svelte";
+  import Analysis from "$lib/Panel/Analysis.svelte";
+  import Viewer from "$lib/Panel/Viewer.svelte";
 
   let activeFile;
   let activeFileName;
@@ -18,7 +19,7 @@
       <Viewer zip={activeFile} bind:path={activePath} />
     {:else}
       <Background bind:activeFile>
-        <h1 class="text-4xl font-bold lg:text-9xl">Analysis</h1>
+        <Analysis />
       </Background>
     {/if}
   {:else}

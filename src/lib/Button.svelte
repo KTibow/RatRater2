@@ -1,5 +1,5 @@
 <script>
-  export let styling = "inline-block p-6 m-4";
+  export let styling = "p-6 m-4";
 </script>
 
 <button

@@ -1,6 +1,6 @@
 <script>
-  import Monaco from "./Monaco.svelte";
-  import { decompile } from "./decomp.js";
+  import Monaco from "$lib/Files/Monaco.svelte";
+  import { decompile } from "$lib/Files/decomp.js";
   import Button from "$lib/Button.svelte";
   import Icon from "@iconify/svelte";
 
@@ -22,7 +22,7 @@
     zip.files[path].async("text").then((data) => (rawFile = data));
   }
   $: {
-    if (!editorContents || !rawFile) break $;
+    if (!editorContents || rawFile == null) break $;
     if (decompiled.for && decompiled.for != path) decompiled = { status: 0 };
     if (decompiled.status == 2) $editorContents = decompiled.data;
     else $editorContents = rawFile;
@@ -53,7 +53,7 @@
       <Icon icon={save} />
     </Button>
     <Button
-      styling="inline-block p-2 mx-2"
+      styling="p-2 mx-2"
       on:click={async () => {
         if (decompiled.status == 0) {
           decompiled = { status: 1 };
@@ -74,7 +74,7 @@
         <Icon icon={fileRestore} />
       {/if}
     </Button>
-    <Button styling="inline-block p-2 mx-2" on:click={() => (path = null)}>
+    <Button styling="p-2 mx-2" on:click={() => (path = null)}>
       <Icon icon={close} />
     </Button>
   </div>

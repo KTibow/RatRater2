@@ -8,8 +8,7 @@
   let entries;
   $: entries = Object.entries(folder).sort(([nameA, partA], [nameB, partB]) => {
     const folderComp =
-      Boolean(partA["is/folder"] || nameA.includes("/")) -
-      Boolean(partB["is/folder"] || nameB.includes("/"));
+      !(partA["is/folder"] || nameA.includes("/")) - !(partB["is/folder"] || nameB.includes("/"));
     return folderComp || nameA.localeCompare(nameB);
   });
 </script>

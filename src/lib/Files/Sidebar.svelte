@@ -1,6 +1,7 @@
 <script>
   import Folder from "./Folder.svelte";
   import Chooser from "$lib/Panel/Chooser.svelte";
+  import Button from "../Button.svelte";
 
   export let activeFile;
   export let activeFileName;
@@ -46,8 +47,11 @@
 </script>
 
 {#if activeFile}
-  <div class="max-h-screen flex-shrink-0 overflow-scroll bg-neutral-900 p-4 lg:w-1/4">
+  <div class="flex max-h-screen flex-shrink-0 flex-col overflow-scroll bg-neutral-900 p-4 lg:w-1/4">
     <Folder folder={tree} name={activeFileName} open={true} bind:activePath />
-    <Chooser bind:activeFile bind:activeFileName />
+    <div class="mt-auto flex gap-4">
+      <Button styling="flex-grow p-6">Deobfuscate...</Button>
+      <Chooser bind:activeFile bind:activeFileName altButton={true} />
+    </div>
   </div>
 {/if}

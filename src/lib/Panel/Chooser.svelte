@@ -5,6 +5,7 @@
 
   export let activeFile;
   export let activeFileName;
+  export let altButton;
 
   let modalOpen;
   let modalContents;
@@ -12,7 +13,9 @@
   let fileChooser;
 </script>
 
-<Button styling="inline-block mt-4 p-6" on:click={() => fileChooser.click()}>Choose a file</Button>
+<Button styling="{altButton ? 'flex-grow' : 'mt-4'} p-6" on:click={() => fileChooser.click()}>
+  Choose a file
+</Button>
 <input
   type="file"
   class="hidden"
