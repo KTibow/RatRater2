@@ -1,4 +1,6 @@
 <script>
+  import { createEventDispatcher } from "svelte";
+
   export let folder;
   export let name;
   export let open;
@@ -11,6 +13,7 @@
       !(partA["is/folder"] || nameA.includes("/")) - !(partB["is/folder"] || nameB.includes("/"));
     return folderComp || nameA.localeCompare(nameB);
   });
+  const dispatch = createEventDispatcher();
 </script>
 
 <details bind:open>

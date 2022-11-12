@@ -19,15 +19,15 @@
       <Viewer zip={activeFile} bind:path={activePath} />
     {:else}
       <Background bind:activeFile>
-        <Analysis />
+        <Analysis bind:activeFile />
       </Background>
     {/if}
   {:else}
     <Background bind:activeFile>
       <h1 class="text-4xl font-bold lg:text-9xl">RatRater 2</h1>
       <p>
-        RatRater is a tool that analyzes .jar files for known signs of infostealers, common among
-        the Hypixel Skyblock modding community.
+        RatRater is a tool that analyzes .jar files for known signs of infostealers (rats), common
+        among the Hypixel Skyblock modding community.
       </p>
       <Chooser bind:activeFile bind:activeFileName />
     </Background>

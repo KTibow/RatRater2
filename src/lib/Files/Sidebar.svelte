@@ -12,7 +12,7 @@
     Object.values(files).forEach((file) => {
       const parts = file.name.split("/");
       parts.reduce((section, name, index) => {
-        if (!name) return;
+        if (!name) return section;
         if (!section[name])
           section[name] = index == parts.length - 1 ? file : { "is/folder": true }; // weird name for security
         return section[name];
