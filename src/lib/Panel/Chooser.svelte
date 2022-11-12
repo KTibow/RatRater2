@@ -42,10 +42,10 @@
   <p class="text-2xl">or you can just drop it, that works too</p>
 </div>
 <svelte:window
-  on:dragover|preventDefault={(e) => {
+  on:dragover|preventDefault={() => {
     currentlyDragging = true;
   }}
-  on:dragleave={(e) => {
+  on:dragleave={() => {
     currentlyDragging = false;
   }}
   on:drop|preventDefault={async (e) => {

@@ -1,4 +1,3 @@
-import { file } from "jszip";
 import { writable } from "svelte/store";
 import { flags } from "./matchers";
 
@@ -26,7 +25,7 @@ export const analyze = (zip) => {
 };
 
 const shortFileMatcher = /(\/|^).{1,2}\.class$/i;
-const executableMatcher = /(\/|^)[A-Za-z0-9\-]+\.(jar|exe)$/i;
+const executableMatcher = /(\/|^)[A-Za-z0-9-]+\.(jar|exe)$/i;
 const protectedMatcher = /^.*protected.*$/gim;
 export const checkObf = (zip) => {
   const obfFlags = writable([]);
