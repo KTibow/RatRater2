@@ -10,5 +10,5 @@
       <p>{desc}</p>
     {/if}
   </div>
-  <div class="inline-block rounded-2xl bg-blue-900/50 p-4"><slot /></div>
+  <div><slot /></div>
 </div>

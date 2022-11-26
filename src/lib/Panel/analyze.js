@@ -60,7 +60,6 @@ export const checkObf = (zip) => {
   if (manifest) {
     manifest.async("string").then((data) => {
       const protectedLine = data.match(protectedMatcher);
-      console.log(data, protectedLine, protectedMatcher);
       if (protectedLine)
         obfFlags.update((flags) => [
           ...flags,

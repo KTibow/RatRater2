@@ -12,7 +12,7 @@ const hashCode = (str) => {
 };
 export const decompile = async (data, dataBuffer, name) => {
   const form = new FormData();
-  form.set("to_be_decompiled", new Blob([dataBuffer]), name.replace(/[^a-zA-Z0-9_.-]/g, "_"));
+  form.set("to_be_decompiled", new Blob([dataBuffer]), name.replace(/[^a-zA-Z0-9_\.\-]/g, "_"));
   let decompiled = localStorage[hashCode(data)];
   if (!decompiled) {
     const response = await fetch("https://Decompiler.ktibow.repl.co", {
@@ -20,7 +20,7 @@ export const decompile = async (data, dataBuffer, name) => {
       body: form,
     });
     decompiled = await response.text();
-    localStorage[hashCode(data)] = decompiled;
+    if (response.ok) localStorage[hashCode(data)] = decompiled;
   }
   return decompiled;
 };
