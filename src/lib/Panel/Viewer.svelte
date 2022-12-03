@@ -58,19 +58,27 @@
         if (decompiled.status == 0) {
           decompiled = { status: 1 };
           const fileBuffer = await zip.files[path].async("arraybuffer");
-          const decomped = await decompile(rawFile, fileBuffer, path);
-          decompiled = { status: 2, data: decomped, for: path };
+          try {
+            const decomped = await decompile(rawFile, fileBuffer, path);
+            decompiled = { status: 2, data: decomped, for: path };
+          } catch (e) {
+            decompiled = { status: 3 };
+          }
         } else if (decompiled.status == 1) return;
         else {
           decompiled.status = 0;
         }
       }}
+      disabled={decompiled.status == 1}
     >
       {#if decompiled.status == 0}
         <Icon icon={java} />
       {:else if decompiled.status == 1}
         <Icon icon={cloudLoad} />
       {:else}
+        {#if decompiled.status == 3}
+          Failed
+        {/if}
         <Icon icon={fileRestore} />
       {/if}
     </Button>

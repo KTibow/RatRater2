@@ -52,6 +52,24 @@ export const flags = [
     type: "exfil",
   },
   {
+    match: "func_111286_b",
+    desc: "Gets your session ID",
+    importance: {
+      score: 3,
+      desc: "Your session ID can log into your account. Usually legit mods won't use this method.",
+    },
+    type: "getData",
+  },
+  {
+    match: "func_148254_d",
+    desc: "Gets your session token",
+    importance: {
+      score: 3,
+      desc: "Your session ID (made out of your token and your UUID) can log into your account. Sometimes this method is used in legit mods, but it could also be used to steal your account.",
+    },
+    type: "getData",
+  },
+  {
     match: /https?:\/\/checkip\.amazonaws\.com/i,
     desc: "Tries to get your IP address",
     importance: {
@@ -59,7 +77,6 @@ export const flags = [
       desc: "Could be used as a joke, but rats commonly get your IP address",
     },
     type: "getData",
-    present: ["dreamys"],
   },
   {
     match: /File not found :\(/i,
@@ -69,6 +86,5 @@ export const flags = [
       desc: "Could be another developer just happens to use it, but it's a known string.",
     },
     type: "signature",
-    present: ["dreamys"],
   },
 ];
