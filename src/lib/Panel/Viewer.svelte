@@ -35,7 +35,6 @@
     <Button
       styling="inline-block p-2 mx-2 ml-auto"
       on:click={() => {
-        console.log($editorContents == rawFile, $editorContents, rawFile);
         const file = new File([rawFile], path.split("/").at(-1), {
           type: path.endsWith(".class") ? "application/java-vm" : "text/plain",
         });

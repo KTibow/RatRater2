@@ -42,7 +42,7 @@
   $: {
     if (!activeFile) break $;
     tree = reduceTree(createTree(activeFile.files));
-    console.log(tree);
+    console.log("tree", tree);
   }
 </script>
 

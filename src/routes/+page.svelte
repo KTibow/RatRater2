@@ -9,7 +9,7 @@
   let activeFileName;
   let activePath;
 
-  $: console.log(activeFile);
+  $: console.log(activeFileName, activeFile);
 </script>
 
 <div class="flex min-h-screen flex-col lg:flex-row">
