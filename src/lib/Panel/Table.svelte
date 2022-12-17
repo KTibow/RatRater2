@@ -27,11 +27,11 @@
       <td class="p-4 align-top">
         <p>{flag.importance.desc}</p>
         <div
-          class="mt-2 inline-flex items-center p-2 {flag.importance.score == 3
-            ? 'bg-red-100 text-red-900'
+          class="mt-2 inline-flex items-center border-2 p-2 {flag.importance.score == 3
+            ? 'bg-red-900/50 border-red-900 text-red-100'
             : flag.importance.score == 2
-            ? 'bg-amber-100 text-amber-900'
-            : 'bg-blue-100 text-blue-900'} rounded-md"
+            ? 'bg-amber-900/50 border-amber-900 text-amber-100'
+            : 'bg-blue-900/50 border-blue-700 text-blue-100'} rounded-md"
         >
           <Icon
             icon={flag.importance.score == 3
@@ -51,7 +51,7 @@
       </td>
       <td class="p-4 align-top">
         <button
-          class="text-left text-blue-200 underline underline-offset-2 transition-all hover:underline-offset-4"
+          class="max-w-lg text-left text-blue-200 underline underline-offset-2 transition-all hover:underline-offset-4"
         >
           {flag.files.length == 1 ? flag.files : flag.files.length + "files"}
         </button>

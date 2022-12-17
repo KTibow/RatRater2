@@ -29,11 +29,9 @@
   }
 </script>
 
-<div class="flex flex-grow flex-col">
+<div class="flex min-w-0 flex-grow flex-col">
   <div class="flex items-center bg-neutral-800 p-4">
-    <div>
-      <p class="font-mono">{path}</p>
-    </div>
+    <p class="min-w-0 overflow-hidden font-mono">{path}</p>
     <Button
       styling="inline-block p-2 mx-2 ml-auto"
       on:click={() => {

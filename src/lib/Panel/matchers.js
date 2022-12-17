@@ -52,7 +52,7 @@ export const flags = [
     type: "exfil",
   },
   {
-    match: "func_111286_b",
+    match: /func_111286_b/,
     desc: "Gets your session ID",
     importance: {
       score: 3,
@@ -61,7 +61,7 @@ export const flags = [
     type: "getData",
   },
   {
-    match: "func_148254_d",
+    match: /func_148254_d/,
     desc: "Gets your session token",
     importance: {
       score: 3,
