@@ -1,4 +1,11 @@
 /* Write your global styles here, in PostCSS syntax */
+@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap");
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+:root {
+  box-sizing: border-box;
+}
+a {
+  @apply text-primary underline decoration-primary/50 transition-all hover:decoration-primary/75 focus-visible:decoration-primary/75 active:decoration-primary/100;
+}

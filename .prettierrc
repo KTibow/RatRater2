@@ -1,7 +1,5 @@
 {
   "printWidth": 100,
-  "plugins": ["prettier-plugin-svelte"],
   "pluginSearchDirs": ["."],
-  "overrides": [{ "files": "*.svelte", "options": { "parser": "svelte" } }],
-  "htmlWhitespaceSensitivity": "ignore"
+  "overrides": [{ "files": "*.svelte", "options": { "parser": "svelte" } }]
 }
