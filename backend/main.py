@@ -1,4 +1,4 @@
-import aiofiles, asyncio, time
+import aiofiles, asyncio
 from tempfile import gettempdir
 from contextlib import AsyncExitStack
 from zipfile import ZipFile, ZIP_DEFLATED
@@ -9,8 +9,6 @@ from sanic.response import text, raw, file
 from sanic.exceptions import SanicException
 from sanic.request import Request, File
 from sanic_ext import Extend
-
-import time
 
 app = Sanic("RatRaterBackend")
 app.config.CORS_ORIGINS = "https://ktibow.github.io,http://localhost:5173"
