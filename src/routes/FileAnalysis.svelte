@@ -3,7 +3,7 @@
   import Icon from "@iconify/svelte";
   import iconLoading from "@iconify-icons/ic/outline-pending-actions";
   import AnalysisTable from "$lib/analysis/AnalysisTable.svelte";
-  // import Results from "$lib/analysis/Results.svelte";
+  import Results from "$lib/analysis/Results.svelte";
 
   export let currentFile;
   export let loading;
@@ -25,7 +25,7 @@
     </div>
   </Card>
   <div class="h-4" />
-  <!-- <Results zip={loading.zip} {hash} /> -->
+  <Results zip={loading.zip} {hash} on:open />
 {:else}
   <div
     class="m3-font-headline-small m-auto flex flex-col items-center gap-4 rounded-2xl bg-primary/10 p-4"

@@ -26,7 +26,14 @@
         <p>Could not open file. .jar files are supposed to be zip files.</p>
       {:else if loading.status == "loaded"}
         {#if browserActive == 0}
-          <FileAnalysis {currentFile} {loading} />
+          <FileAnalysis
+            {currentFile}
+            {loading}
+            on:open={(e) => {
+              openFile = e.detail;
+              browserActive = 1;
+            }}
+          />
         {:else}
           <FileBrowser bind:openFile {loading} />
         {/if}

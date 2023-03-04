@@ -1,21 +1,20 @@
 <script>
   import iconExtract from "@iconify-icons/ic/outline-unarchive";
-  import iconCode from "@iconify-icons/ic/outline-code";
-  import iconArrowDown from "@iconify-icons/ic/outline-expand-more";
   import { Chip } from "m3-svelte";
   import Monaco from "./Monaco.svelte";
+  import Decompile from "./Decompile.svelte";
   /**
    * @type {import("jszip")}
    */
   export let zip;
   export let openFile;
-  let content, showingDecompiled;
-  $: (async () => {
+  let rawContent, decompiled, content;
+  $: {
     const file = zip.files[openFile];
-    if (!file || !content) return;
-    if (showingDecompiled) return; // TODO
-    $content = await file.async("string");
-  })();
+    if (!openFile.endsWith(".class")) decompiled = false;
+    if (file) file.async("string").then((c) => (rawContent = c));
+  }
+  $: if (content && rawContent) $content = decompiled || rawContent;
   const downloadFile = async () => {
     const file = zip.files[openFile];
     if (!file) return console.error("could not find file");
@@ -36,6 +35,8 @@
   <div class="absolute top-full flex w-full items-center gap-2 p-1">
     <span class="mr-auto flex-1 overflow-hidden text-ellipsis font-mono">{openFile}</span>
     <Chip type="assist" on:click={downloadFile} icon={iconExtract}>Grab</Chip>
-    <Chip type="assist" icon={iconCode} trailingIcon={iconArrowDown}>Decompile</Chip>
+    {#if openFile.endsWith(".class")}
+      <Decompile bind:decompiled {rawContent} {zip} {openFile} />
+    {/if}
   </div>
 </div>

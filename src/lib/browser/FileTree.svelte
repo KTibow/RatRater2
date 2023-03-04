@@ -20,9 +20,9 @@
       <span class="shared-chop inline-block">{name}</span>
     </button>
   {:else}
-    <p class="shared-name shared-chop flex items-center gap-2">
-      <Icon icon={iconFolder} />
-      {name}
+    <p class="shared-name flex items-center gap-2">
+      <Icon icon={iconFolder} class="flex-shrink-0" />
+      <span class="shared-chop inline-block">{name}</span>
     </p>
     <div class="border-l border-transparent pl-6 group-hover:border-surface-variant">
       <svelte:self
