@@ -138,7 +138,7 @@
       <Radio value="cfr" bind:group={decompiler} name="decompiler" /> CFR
     </label>
   </p>
-  <p class="m3-font-label-large">
+  <p class="m3-font-label-large mb-4">
     <label class="flex items-center gap-2" for={undefined}>
       <Switch bind:checked={decompileAll} /> Decompile whole .jar
     </label>
@@ -152,10 +152,35 @@
       Azure App Services, plus a mix of Docker, Python, Java, and janky load balancing take your
       request and run a Java decompiler for you.
     </p>
-    <p>
+    <p class="mb-2">
       Don't overload the servers. Note that a mix of a slow decompiler like Procyon, decompiling the
       whole jar, and a large jar may mean your request doesn't get through in time.
     </p>
+    <p class="mb-2">
+      So you can understand some expected response times, here's a table. Note that different
+      servers may have different response times, especially if they have a cold start.
+    </p>
+    <table class="border-collapse">
+      <tr>
+        <td>File</td>
+        <td>FernFlower</td>
+        <td>QuiltFlower</td>
+        <td>Procyon</td>
+        <td>CFR</td>
+      </tr>
+      <tr>
+        <td>45-class non-obfuscated jar</td><td>7s</td><td>10s</td><td>13s</td><td>6s</td>
+      </tr>
+      <tr>
+        <td>348-class non-obfuscated jar</td><td>52s</td><td>56s</td>
+        <td><a class="text-primary" href="http://http.cat/503">503</a></td><td>30s</td>
+      </tr>
+      <tr>
+        <td>Single obfuscated class</td>
+        <td><a class="text-primary" href="http://http.cat/500">500</a></td>
+        <td>12s</td><td>20s</td><td>10s</td>
+      </tr>
+    </table>
   </details>
 </Dialog>
 {#key decompiling}
@@ -165,3 +190,9 @@
     </Snackbar>
   </SnackbarPlacer>
 {/key}
+
+<style lang="postcss">
+  table > tr > td {
+    @apply border border-outline px-2;
+  }
+</style>
