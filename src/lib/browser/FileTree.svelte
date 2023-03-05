@@ -5,16 +5,26 @@
   import iconCode from "@iconify-icons/ic/outline-code";
   import iconExtension from "@iconify-icons/ic/outline-extension";
   import iconFolder from "@iconify-icons/ic/folder";
+  import iconOpenFolder from "@iconify-icons/ic/outline-folder";
   import { sortTree } from "./tree";
 
   export let nodes;
+  export let openByDefault;
   const dispatch = createEventDispatcher();
+
+  let openFolders = new Set();
+  const toggleFolder = (name) => {
+    if (openFolders.has(name)) openFolders.delete(name);
+    else openFolders.add(name);
+    openFolders = openFolders;
+  };
+  $: if (openByDefault) openFolders = new Set(Object.keys(nodes));
 </script>
 
 {#each sortTree(nodes) as [name, contents]}
   {#if contents == 0}
     <button
-      class="shared-name flex items-center gap-2 whitespace-nowrap text-left text-primary"
+      class="shared-name shared-ring flex items-center gap-2 text-primary"
       on:click={() => dispatch("open", name)}
     >
       <Icon
@@ -28,24 +38,32 @@
       <span class="shared-chop inline-block">{name}</span>
     </button>
   {:else}
-    <p class="shared-name flex items-center gap-2 whitespace-nowrap">
-      <Icon icon={iconFolder} class="flex-shrink-0" />
+    <button
+      class="shared-name shared-ring flex items-center gap-2"
+      on:click={() => toggleFolder(name)}
+    >
+      <Icon icon={openFolders.has(name) ? iconOpenFolder : iconFolder} class="flex-shrink-0" />
       <span class="shared-chop inline-block">{name}</span>
-    </p>
-    <div class="border-l border-transparent pl-6 group-hover:border-surface-variant">
-      <svelte:self
-        nodes={contents}
-        on:open={(e) => {
-          dispatch("open", name + "/" + e.detail);
-        }}
-      />
-    </div>
+    </button>
+    {#if openFolders.has(name)}
+      <div class="border-l border-transparent pl-6 group-hover:border-surface-variant">
+        <svelte:self
+          nodes={contents}
+          on:open={(e) => {
+            dispatch("open", name + "/" + e.detail);
+          }}
+        />
+      </div>
+    {/if}
   {/if}
 {/each}
 
 <style lang="postcss">
   .shared-name {
-    @apply w-full font-mono;
+    @apply w-full whitespace-nowrap font-mono;
+  }
+  .shared-ring {
+    @apply rounded-lg outline-2 outline-offset-2 outline-primary hover:outline;
   }
   .shared-chop {
     @apply overflow-hidden text-ellipsis;

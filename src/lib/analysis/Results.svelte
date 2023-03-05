@@ -18,4 +18,5 @@
 {/if}
 {#if $analysis.obfuscation.length}
   <ObfuscationNote data={$analysis.obfuscation} on:open />
+  <div class="h-4" />
 {/if}

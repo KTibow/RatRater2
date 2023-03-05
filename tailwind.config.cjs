@@ -34,6 +34,9 @@ const config = {
         "inverse-on-surface": "rgb(var(--m3-scheme-inverse-on-surface) / <alpha-value>)",
         "inverse-primary": "rgb(var(--m3-scheme-inverse-primary) / <alpha-value>)",
       },
+      fontFamily: {
+        mono: ["Roboto Mono", "monospace"],
+      },
     },
   },
 
