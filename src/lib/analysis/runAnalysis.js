@@ -37,8 +37,12 @@ export const runAnalysis = async (file, analysis, progress) => {
   });
   await tick();
 
+  const filesToCheck = file.files.filter(
+    (path) => /manifest\.mf$/i.test(path) || path.endsWith(".class")
+  );
+  progress.set({ done: 0, total: filesToCheck.length });
   await Promise.all(
-    file.files.map(async (path) => {
+    filesToCheck.map(async (path) => {
       const thisFile = file.zip.files[path];
       const contents = await thisFile.async("string");
       if (/manifest\.mf$/i.test(path)) {
@@ -48,8 +52,12 @@ export const runAnalysis = async (file, analysis, progress) => {
             name: "Obfuscator noted in manifest.mf",
             example: protectedLine.join("\n"),
           });
+        progress.update((p) => ({ ...p, done: p.done + 1 }));
+        return;
       }
-      // todo: regex for obfuscators and others
+      obfuscators.forEach((obf) => {
+        if (obf.regex.test(contents)) appendNoDupe({ name: "Obfuscator " + obf.name, file: path });
+      });
       progress.update((p) => ({ ...p, done: p.done + 1 }));
       await tick();
     })

@@ -5,17 +5,11 @@
 
   export let zip;
   export let hash;
-  let analysis, progress;
+  export let progress;
+  let analysis;
   $: ({ analysis, progress } = createAnalysis({ zip, hash }));
 </script>
 
-{#if $progress.done < $progress.total}
-  <p>
-    Analyzing {$progress.total} files
-  </p>
-  <LinearProgress percent={$progress.done / $progress.total} />
-  <div class="h-4" />
-{/if}
 {#if $analysis.obfuscation.length}
   <ObfuscationNote data={$analysis.obfuscation} on:open />
   <div class="h-4" />

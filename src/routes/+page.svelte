@@ -1,5 +1,7 @@
 <script>
-  import { sharedAxisTransition, Tabs } from "m3-svelte";
+  import { Button, sharedAxisTransition, Tabs } from "m3-svelte";
+  import Icon from "@iconify/svelte";
+  import iconError from "@iconify-icons/ic/outline-error";
   import Home from "./Home.svelte";
   import FileAltInputs from "$lib/files/FileAltInputs.svelte";
   import Footer from "./Footer.svelte";
@@ -24,7 +26,16 @@
     </div>
     <div class="flex w-full grow flex-col overflow-hidden p-6">
       {#if loading.status == "errored"}
-        <p>Could not open file. .jar files are supposed to be zip files.</p>
+        <div class="m-auto flex flex-col items-center gap-4 rounded-2xl bg-primary/10 p-6">
+          <Icon icon={iconError} height={24} class="text-secondary" />
+          <p class="m3-font-headline-small">Couldn't open file</p>
+          <p class="m3-font-body-medium text-on-surface-variant">
+            Make sure you dragged in a .jar file or something else that's a zip file.
+          </p>
+          <div class="mt-2 flex">
+            <Button type="filled" on:click={() => (currentFile = null)}>OK</Button>
+          </div>
+        </div>
       {:else if loading.status == "loaded"}
         {#if browserActive == 0}
           <FileAnalysis

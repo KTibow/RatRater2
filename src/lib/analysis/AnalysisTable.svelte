@@ -2,6 +2,7 @@
   export let size;
   export let hash;
   export let comment;
+  export let files;
   const getSize = (bytes) =>
     bytes < 1000
       ? bytes + " B"
@@ -29,4 +30,11 @@
       </td>
     </tr>
   {/if}
+  <tr>
+    <td class="border-r border-outline px-2">Files</td>
+    <td class="px-2">
+      {files.filter((f) => !f.dir && f.name.endsWith(".class")).length} classes,
+      {files.filter((f) => !f.dir).length} total
+    </td>
+  </tr>
 </table>
