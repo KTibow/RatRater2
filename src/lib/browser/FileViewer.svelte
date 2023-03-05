@@ -10,7 +10,7 @@
   export let openFile;
   let rawContent, decompiled, content;
   $: {
-    const file = zip.files[openFile];
+    const file = zip.files[openFile] || zip.files["/" + openFile];
     if (!openFile.endsWith(".class")) decompiled = false;
     if (file) file.async("string").then((c) => (rawContent = c));
   }
