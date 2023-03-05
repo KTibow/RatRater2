@@ -14,7 +14,7 @@
 {#each sortTree(nodes) as [name, contents]}
   {#if contents == 0}
     <button
-      class="shared-name flex items-center gap-2 text-left text-primary"
+      class="shared-name flex items-center gap-2 whitespace-nowrap text-left text-primary"
       on:click={() => dispatch("open", name)}
     >
       <Icon
@@ -28,7 +28,7 @@
       <span class="shared-chop inline-block">{name}</span>
     </button>
   {:else}
-    <p class="shared-name flex items-center gap-2">
+    <p class="shared-name flex items-center gap-2 whitespace-nowrap">
       <Icon icon={iconFolder} class="flex-shrink-0" />
       <span class="shared-chop inline-block">{name}</span>
     </p>

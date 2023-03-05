@@ -1,7 +1,7 @@
 import { tick } from "svelte";
 
 const shortFileMatcher = /(\/|^).{1,2}\.class$/i;
-const executableMatcher = /(\/|^)[a-z0-9-]+\.(jar|exe)$/i;
+const executableMatcher = /(\/|^)[a-z0-9-]+\.(jar|exe|dll)$/i;
 const obfuscators = [
   { name: "Stringer", regex: /\p{Script=Han}{5}[^]+reflect/iu },
   { name: "Bozar", regex: /(?=[Il]{9,})(?:(?:I+l+)+I+)/i },
@@ -27,7 +27,7 @@ export const runAnalysis = async (file, analysis, progress) => {
       name: "Possible obfuscation (many short file names)",
       file: shortFiles[0],
     });
-  if (executableFiles.length > 2)
+  if (executableFiles.length > 0)
     obfuscationFlags.push({ name: "Non-scanned executable files", file: executableFiles[0] });
   analysis.update((a) => ({ ...a, obfuscation: obfuscationFlags }));
   file.files.map((f) => {

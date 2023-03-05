@@ -20,7 +20,7 @@
 {#if hash}
   <Card type="elevated">
     <div class="flex flex-col lg:flex-row">
-      <p class="font-mono">{currentFile.name}</p>
+      <p class="flex-1 font-mono">{currentFile.name}</p>
       <AnalysisTable size={currentFile.size} {hash} comment={loading.zip.comment} />
     </div>
   </Card>

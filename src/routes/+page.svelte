@@ -12,6 +12,7 @@
   let openFile;
 </script>
 
+<svelte:head><title>RatRater 2</title></svelte:head>
 {#if currentFile}
   <FileWrapper file={currentFile} let:loading>
     <div class="flex w-full flex-col">
