@@ -3,6 +3,7 @@
   import Icon from "@iconify/svelte";
   import iconFile from "@iconify-icons/ic/outline-description";
   import iconCode from "@iconify-icons/ic/outline-code";
+  import iconExtension from "@iconify-icons/ic/outline-extension";
   import iconFolder from "@iconify-icons/ic/folder";
   import { sortTree } from "./tree";
 
@@ -16,7 +17,14 @@
       class="shared-name flex items-center gap-2 text-left text-primary"
       on:click={() => dispatch("open", name)}
     >
-      <Icon icon={name.endsWith(".class") ? iconCode : iconFile} class="flex-shrink-0" />
+      <Icon
+        icon={name.endsWith(".class")
+          ? /\$[a-z0-9]+.class$/gi.test(name)
+            ? iconExtension
+            : iconCode
+          : iconFile}
+        class="flex-shrink-0"
+      />
       <span class="shared-chop inline-block">{name}</span>
     </button>
   {:else}

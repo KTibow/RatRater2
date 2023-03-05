@@ -29,7 +29,7 @@
 
   let decompileDialog,
     decompiling = false,
-    decompiler = "forgeflower",
+    decompiler = "cfr",
     decompileAll = true;
   $: rawContent, (decompiling = false);
   const addToCache = (raw, decompiled) => {
@@ -56,7 +56,10 @@
 
     let response;
     try {
-      response = await fetch("http://localhost:8000/decompile?decompiler=" + decompiler, {
+      const endpoint = "ratrater" + (Math.floor(Math.random() * 4) + 1) + ".azurewebsites.net";
+      // load balancer lol
+      // also see: https://github.com/KTibow/RatRater2Backend
+      response = await fetch(`https://${endpoint}/decompile?decompiler=${decompiler}`, {
         method: "POST",
         body: form,
       });
@@ -140,6 +143,20 @@
       <Switch bind:checked={decompileAll} /> Decompile whole .jar
     </label>
   </p>
+  <details>
+    <summary class="font-italic cursor-pointer">Please be patient</summary>
+    <p class="mb-2">
+      The fact I could run these decompilers without putting any ads on here is crazy.
+    </p>
+    <p class="mb-2">
+      Azure App Services, plus a mix of Docker, Python, Java, and janky load balancing take your
+      request and run a Java decompiler for you.
+    </p>
+    <p>
+      Don't overload the servers. Note that a mix of a slow decompiler like Procyon, decompiling the
+      whole jar, and a large jar may mean your request doesn't get through in time.
+    </p>
+  </details>
 </Dialog>
 {#key decompiling}
   <SnackbarPlacer>
