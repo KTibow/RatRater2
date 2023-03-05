@@ -1,5 +1,4 @@
 <script>
-  import { LinearProgress } from "m3-svelte";
   import { createAnalysis } from "./createAnalysis";
   import ObfuscationNote from "./ObfuscationNote.svelte";
 

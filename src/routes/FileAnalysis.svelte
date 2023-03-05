@@ -38,11 +38,9 @@
   <div class="h-4" />
   <Results zip={loading.zip} {hash} bind:progress on:open />
 {:else}
-  <div
-    class="m3-font-headline-small m-auto flex flex-col items-center gap-4 rounded-2xl bg-primary/10 p-4"
-  >
-    <Icon icon={iconLoading} height={48} />
-    Hashing file...
+  <div class="m-auto flex flex-col items-center gap-4 rounded-2xl bg-primary/10 p-6">
+    <Icon icon={iconLoading} height={24} />
+    <p class="m3-font-headline-small">Hashing file...</p>
   </div>
 {/if}
 

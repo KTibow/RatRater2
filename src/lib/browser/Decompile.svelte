@@ -157,8 +157,9 @@
       whole jar, and a large jar may mean your request doesn't get through in time.
     </p>
     <p class="mb-2">
-      So you can understand some expected response times, here's a table. Note that different
-      servers may have different response times, especially if they have a cold start.
+      This jar has {Object.values(zip.files).filter((f) => !f.dir && f.name.endsWith(".class"))
+        .length} classes. So you can understand some expected response times, here's a table. Note that
+      different servers may have different response times, especially if they have a cold start.
     </p>
     <table class="border-collapse">
       <tr>
