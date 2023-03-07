@@ -2,7 +2,6 @@
   export let size;
   export let hash;
   export let comment;
-  export let files;
   const getSize = (bytes) =>
     bytes < 1000
       ? bytes + " B"

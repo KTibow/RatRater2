@@ -22,12 +22,7 @@
   <Card type="elevated">
     <div class="flex flex-col lg:flex-row">
       <p class="flex-1 font-mono">{currentFile.name}</p>
-      <AnalysisTable
-        size={currentFile.size}
-        {hash}
-        comment={loading.zip.comment}
-        files={Object.values(loading.zip.files)}
-      />
+      <AnalysisTable size={currentFile.size} {hash} comment={loading.zip.comment} />
     </div>
     {#if progress}
       <div class="progress -m-4 mt-2 flex">
