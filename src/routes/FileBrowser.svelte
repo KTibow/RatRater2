@@ -8,7 +8,7 @@
   $: fileList = Object.keys(loading.zip.files);
 </script>
 
-<div class="flex h-full pb-8">
+<div class="flex h-full" class:pb-8={openFile}>
   <div
     class="group w-1/4 overflow-auto rounded-md p-2 outline outline-2 outline-outline"
     class:rounded-r-none={openFile}

@@ -46,7 +46,7 @@ export const runAnalysis = async (file, analysis, progress) => {
       const thisFile = file.zip.files[path];
       const contents = await thisFile.async("string");
       if (/manifest\.mf$/i.test(path)) {
-        const protectedLine = contents.match(/^.*protected.*$/gim);
+        const protectedLine = contents.match(/^(?=.*protected).*$/im);
         if (protectedLine)
           appendNoDupe({
             name: "Obfuscator noted in manifest.mf",

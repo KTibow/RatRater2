@@ -1,6 +1,8 @@
 <script>
   import { Button, sharedAxisTransition, Tabs } from "m3-svelte";
   import Icon from "@iconify/svelte";
+  import { onMount, setContext } from "svelte";
+  import { writable } from "svelte/store";
   import iconError from "@iconify-icons/ic/outline-error";
   import Home from "./Home.svelte";
   import FileAltInputs from "$lib/files/FileAltInputs.svelte";
@@ -12,6 +14,15 @@
   let currentFile;
   let browserActive = 0;
   let openFile;
+  const hashes = writable();
+  setContext("hashes", hashes);
+  onMount(async () => {
+    const hashResp = await fetch(
+      "https://raw.githubusercontent.com/KTibow/RatRater2Hash/main/hashes.json"
+    );
+    const hashJson = await hashResp.json();
+    hashes.set(hashJson);
+  });
 </script>
 
 <svelte:head><title>RatRater 2</title></svelte:head>
@@ -24,7 +35,7 @@
         bind:activeItem={browserActive}
       />
     </div>
-    <div class="flex w-full grow flex-col overflow-hidden p-6">
+    <div class="flex w-full grow flex-col p-6" class:overflow-hidden={browserActive == 1}>
       {#if loading.status == "errored"}
         <div class="m-auto flex flex-col items-center gap-4 rounded-2xl bg-primary/10 p-6">
           <Icon icon={iconError} height={24} class="text-secondary" />
