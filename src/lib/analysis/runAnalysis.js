@@ -3,7 +3,6 @@ import { tick } from "svelte";
 const shortFileMatcher = /(\/|^).{1,2}\.class$/i;
 const executableMatcher = /(\/|^)[a-z0-9-]+\.(jar|exe|dll)$/i;
 const obfuscators = [
-  { name: "Stringer", regex: /\p{Script=Han}{5}[^]+reflect/iu },
   { name: "Bozar", regex: /(?=[Il]{9,})(?:(?:I+l+)+I+)/i },
   { name: "Branchlock", regex: /branchlock/i },
   {
@@ -58,6 +57,8 @@ export const runAnalysis = async (file, analysis, progress) => {
       obfuscators.forEach((obf) => {
         if (obf.regex.test(contents)) appendNoDupe({ name: "Obfuscator " + obf.name, file: path });
       });
+      if (/\p{Script=Han}{5}/u.test(contents) && contents.includes("reflect"))
+        appendNoDupe({ name: "Obfuscator Stringer", file: path });
       progress.update((p) => ({ ...p, done: p.done + 1 }));
       await tick();
     })

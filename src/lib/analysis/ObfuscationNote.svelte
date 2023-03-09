@@ -36,4 +36,5 @@
       {/each}
     </table>
   </div>
+  <p>todo: add options for deobfuscation</p>
 </Card>

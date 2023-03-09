@@ -54,7 +54,7 @@
   {:else if status == "none"}
     <p>
       This file doesn't have any obvious flags, and RatRater hasn't found it in official sources.
-      Consider asking in <a href="https://discord.gg/7sBMTv7AF3">Vanta</a> or using other parts of RatRAter.
+      Consider asking in <a href="https://discord.gg/7sBMTv7AF3">Vanta</a> or using other parts of RatRater.
     </p>
   {/if}
 </div>
