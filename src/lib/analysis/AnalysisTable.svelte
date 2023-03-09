@@ -2,6 +2,7 @@
   export let size;
   export let hash;
   export let comment;
+  export let progress;
   const getSize = (bytes) =>
     bytes < 1000
       ? bytes + " B"
@@ -27,6 +28,12 @@
           {comment}
         </span>
       </td>
+    </tr>
+  {/if}
+  {#if progress}
+    <tr>
+      <td class="border-r border-outline px-2">Progress</td>
+      <td class="px-2">{(($progress.done / $progress.total) * 100).toFixed(0)}%</td>
     </tr>
   {/if}
 </table>

@@ -12,7 +12,7 @@
       <abbr title="a way of hiding what a program does that might confuse ratrater">
         Obfuscation
       </abbr>
-      was detected. Here's a table of the flags:
+      was detected.
     </p>
     <table>
       {#each data as obfuscator}
@@ -36,5 +36,5 @@
       {/each}
     </table>
   </div>
-  <p>todo: add options for deobfuscation</p>
+  <!--todo: add options for deobfuscation -->
 </Card>

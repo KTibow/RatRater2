@@ -1,7 +1,9 @@
 <script>
+  import { Button, Card, Divider } from "m3-svelte";
   import { getContext } from "svelte";
   import { createAnalysis } from "./createAnalysis";
   import ObfuscationNote from "./ObfuscationNote.svelte";
+  import SafeNote from "./SafeNote.svelte";
 
   export let zip;
   export let hash;
@@ -9,52 +11,32 @@
   let analysis;
   $: ({ analysis, progress } = createAnalysis({ zip, hash }));
   const officialHashes = getContext("hashes");
-  $: status = $analysis.flagged
-    ? "rat"
-    : $officialHashes
-    ? $officialHashes.some((h) => hash == h.hash)
-      ? "safe"
-      : "none"
-    : "fail";
 </script>
 
 {#if $analysis.obfuscation.length}
   <ObfuscationNote data={$analysis.obfuscation} on:open />
-  <div class="h-4" />
+  <div class="h-6" />
 {/if}
-<div class="h-2" />
-<div class="overflow-hidden rounded-lg bg-primary-container p-4 text-on-primary-container">
-  {#if status == "fail"}
-    <p>
-      This file doesn't have any obvious flags, but RatRater couldn't get the list of official mods.
-    </p>
-  {:else if status == "rat"}
-    <p>This file is almost definitely a rat. TODO: actually get $analysis.flagged</p>
-  {:else if status == "safe"}
-    {@const hash = $officialHashes.find((h) => hash == h.hash)}
-    <details>
-      <summary class="-m-4 cursor-pointer p-4"> This file was found in official sources. </summary>
-      <p class="my-2">
-        RatRater automatically grabs mods from official sources. This file's contents are identical
-        to an officially released one:
-      </p>
-      <table class="w-full">
-        <tr>
-          <td class="border-r border-primary pr-2">File</td>
-          <td class="border-r border-primary px-2">Source</td>
-          <td class="pl-2">Added</td>
-        </tr>
-        <tr>
-          <td class="border-r border-primary pr-2">{hash.file}</td>
-          <td class="border-r border-primary px-2">{hash.source}</td>
-          <td class="pl-2">{new Date(hash.time).toLocaleString()}</td>
-        </tr>
-      </table>
-    </details>
-  {:else if status == "none"}
-    <p>
-      This file doesn't have any obvious flags, and RatRater hasn't found it in official sources.
-      Consider asking in <a href="https://discord.gg/7sBMTv7AF3">Vanta</a> or using other parts of RatRater.
-    </p>
-  {/if}
+<SafeNote
+  flag={$analysis.flagged}
+  hash={$officialHashes ? $officialHashes.find((h) => h.hash == hash) : "error"}
+/>
+<div class="my-10">
+  <Divider verticalSpace={false} />
 </div>
+<p class="italic">RatRater is not ready to be used yet!</p>
+<!-- <div class="grid gap-4 lg:grid-cols-4 2xl:grid-cols-6">
+  {#each [1, 2, 3, 4, 5, 6] as i}
+    <div class="flex flex-col items-center rounded-xl bg-primary/5 p-4">
+      <h2 class="m3-font-headline-small">Uses session token</h2>
+      <p class="mt-2">3 files</p>
+      <div class="my-4 w-full">
+        <Divider verticalSpace={false} />
+      </div>
+      <div class="flex justify-center gap-2">
+        <Button type="text">View files</Button>
+        <Button type="tonal">Flag info</Button>
+      </div>
+    </div>
+  {/each}
+</div> -->
