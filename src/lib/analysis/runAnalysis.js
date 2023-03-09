@@ -1,7 +1,7 @@
 import { tick } from "svelte";
 
 const shortFileMatcher = /(\/|^).{1,2}\.class$/i;
-const executableMatcher = /(\/|^)[a-z0-9-]+\.(jar|exe|dll)$/i;
+const executableMatcher = /(\/|^).+\.(jar|exe|dll)$/i;
 const obfuscators = [
   { name: "Bozar", regex: /(?=[Il]{9,})(?:(?:I+l+)+I+)/i },
   { name: "Branchlock", regex: /branchlock/i },
@@ -14,11 +14,19 @@ export const runAnalysis = async (file, analysis, progress) => {
   const shortFiles = file.files.filter((f) => shortFileMatcher.test(f));
   const executableFiles = file.files.filter((f) => executableMatcher.test(f));
 
-  const appendNoDupe = (flag) =>
+  const addObfIfNotPresent = (flag) =>
     analysis.update((a) => {
       const obfuscation = a.obfuscation;
       if (!obfuscation.some((o) => o.name == flag.name)) obfuscation.push(flag);
-      return { ...a, obfuscation };
+      return a;
+    });
+  const addFlag = (flag) =>
+    analysis.update((a) => {
+      const flags = a.flags;
+      const flagEntry = flags.find((f) => f.name == flag.name);
+      if (flagEntry) flagEntry.matches.push(...flag.matches);
+      else flags.push(flag);
+      return a;
     });
   const obfuscationFlags = [];
   if (shortFiles.length > 2)
@@ -31,7 +39,7 @@ export const runAnalysis = async (file, analysis, progress) => {
   analysis.update((a) => ({ ...a, obfuscation: obfuscationFlags }));
   file.files.map((f) => {
     obfuscators.forEach((obf) => {
-      if (obf.regex.test(f)) appendNoDupe({ name: "Obfuscator " + obf.name, file: f });
+      if (obf.regex.test(f)) addObfIfNotPresent({ name: "Obfuscator " + obf.name, file: f });
     });
   });
   await tick();
@@ -47,7 +55,7 @@ export const runAnalysis = async (file, analysis, progress) => {
       if (/manifest\.mf$/i.test(path)) {
         const protectedLine = contents.match(/^(?=.*protected).*$/im);
         if (protectedLine)
-          appendNoDupe({
+          addObfIfNotPresent({
             name: "Obfuscator noted in manifest.mf",
             example: protectedLine.join("\n"),
           });
@@ -55,10 +63,19 @@ export const runAnalysis = async (file, analysis, progress) => {
         return;
       }
       obfuscators.forEach((obf) => {
-        if (obf.regex.test(contents)) appendNoDupe({ name: "Obfuscator " + obf.name, file: path });
+        if (obf.regex.test(contents))
+          addObfIfNotPresent({ name: "Obfuscator " + obf.name, file: path });
       });
       if (/\p{Script=Han}{5}/u.test(contents) && contents.includes("reflect"))
-        appendNoDupe({ name: "Obfuscator Stringer", file: path });
+        addObfIfNotPresent({ name: "Obfuscator Stringer", file: path });
+
+      if (contents.includes("func_111286_b") || contents.includes("func_148254_d"))
+        addFlag({
+          name: "Uses session token",
+          matches: [path],
+          link: "https://github.com/KTibow/RatRater2/wiki/Flags#func_111286_b--func_148254_d",
+        });
+
       progress.update((p) => ({ ...p, done: p.done + 1 }));
       await tick();
     })
