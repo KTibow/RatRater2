@@ -33,7 +33,11 @@
   {#if progress}
     <tr>
       <td class="border-r border-outline px-2">Progress</td>
-      <td class="px-2">{(($progress.done / $progress.total) * 100).toFixed(0)}%</td>
+      <td class="px-2">
+        {$progress.total == 0
+          ? "No checkable files"
+          : (($progress.done / $progress.total) * 100).toFixed(0)}%
+      </td>
     </tr>
   {/if}
 </table>
