@@ -22,7 +22,7 @@
   $: if (browserActive == 0) $initialFind = null;
   onMount(async () => {
     const hashResp = await fetch(
-      "https://raw.githubusercontent.com/KTibow/RatRater2Hash/main/hashes.json"
+      "https://raw.githubusercontent.com/KTibow/RatRater2Back/main/hash-grab/hashes.json"
     );
     const hashJson = await hashResp.json();
     hashes.set(hashJson);
