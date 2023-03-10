@@ -9,7 +9,7 @@
   import { sortTree } from "./tree";
 
   export let nodes;
-  export let openByDefault;
+  export let openByDefault = false;
   const dispatch = createEventDispatcher();
 
   let openFolders = new Set();

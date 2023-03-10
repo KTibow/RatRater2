@@ -21,7 +21,7 @@
           {#if obfuscator.file}
             <td class="max-w-2xl px-2 font-mono text-primary">
               <button
-                on:click={() => dispatch("open", obfuscator.file)}
+                on:click={() => dispatch("open", { file: obfuscator.file, find: obfuscator.find })}
                 class="max-w-full overflow-hidden text-ellipsis"
               >
                 {obfuscator.file}

@@ -14,8 +14,12 @@
   let currentFile;
   let browserActive = 0;
   let openFile;
+
   const hashes = writable();
+  const initialFind = writable();
   setContext("hashes", hashes);
+  setContext("initialFind", initialFind);
+  $: if (browserActive == 0) $initialFind = null;
   onMount(async () => {
     const hashResp = await fetch(
       "https://raw.githubusercontent.com/KTibow/RatRater2Hash/main/hashes.json"
@@ -53,7 +57,8 @@
             {currentFile}
             {loading}
             on:open={(e) => {
-              openFile = e.detail;
+              openFile = e.detail.file;
+              $initialFind = e.detail.find;
               browserActive = 1;
             }}
           />

@@ -27,6 +27,6 @@
 </div>
 <div class="grid gap-4 lg:grid-cols-4 2xl:grid-cols-6">
   {#each $analysis.flags as flag}
-    <FlagCard name={flag.name} files={flag.matches} infoLink={flag.link} on:open />
+    <FlagCard {...flag} on:open />
   {/each}
 </div>

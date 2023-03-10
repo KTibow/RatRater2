@@ -1,13 +1,14 @@
 <script>
-  import { onMount } from "svelte";
+  import { getContext, onMount } from "svelte";
   import editorWorker from "monaco-editor/esm/vs/editor/editor.worker?worker";
 
   let subscriptions = [];
-  export let content;
+  export let content = null;
 
   let divEl;
   let editor;
   let Monaco;
+  const initialFind = getContext("initialFind");
 
   onMount(async () => {
     self.MonacoEnvironment = {
@@ -44,7 +45,7 @@
       "editor.inactiveSelectionBackground": getColor("primary-container") + "b0",
       "editor.selectionHighlightBackground": getColor("primary-container") + "80",
       "editor.findMatchBackground": getColor("tertiary-container"),
-      "editor.findMatchHighlightBackground": getColor("tertiary-container") + "b0",
+      "editor.findMatchHighlightBackground": getColor("tertiary-container") + "80",
       "editor.foldBackground": getColor("tertiary-container") + "80",
       "inputValidation.infoBackground": getColor("primary-container"),
       "inputValidation.infoForeground": getColor("on-primary-container"),
@@ -63,7 +64,7 @@
 
       "editorLink.activeForeground": getColor("primary"),
     };
-    Monaco.editor.defineTheme("harmonized-dark", {
+    Monaco.editor.defineTheme("harmonized", {
       base: isDark ? "vs-dark" : "vs",
       inherit: true,
       rules: [
@@ -77,7 +78,7 @@
     editor = Monaco.editor.create(divEl, {
       value: "/* Loading... */",
       language: "java",
-      theme: "harmonized-dark",
+      theme: "harmonized",
       readOnly: true,
       fontFamily:
         'ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace',
@@ -97,6 +98,14 @@
         editor.setValue(val);
       },
     };
+    if ($initialFind) {
+      const findController = editor.getContribution("editor.contrib.findController");
+      findController.start({});
+      findController._state.change(
+        { isRegex: false, wholeWord: false, matchCase: false, ...$initialFind },
+        false
+      );
+    }
 
     return () => {
       editor.dispose();
