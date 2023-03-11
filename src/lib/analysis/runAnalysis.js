@@ -1,5 +1,4 @@
 import { testMatch } from "ralp";
-import obfuscation from "./obfuscation.json";
 /**
  *
  * @param {{ zip: import("jszip"), hash: string, files: string[] }} file
