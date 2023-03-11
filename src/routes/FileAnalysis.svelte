@@ -20,7 +20,7 @@
 
 {#if hash}
   <Card type="elevated">
-    <div class="flex flex-col lg:flex-row">
+    <div class="flex max-lg:flex-col">
       <p class="flex-1 font-mono">{currentFile.name}</p>
       <AnalysisTable size={currentFile.size} {hash} comment={loading.zip.comment} {progress} />
     </div>
@@ -33,9 +33,3 @@
     <p class="m3-font-headline-small">Hashing file...</p>
   </div>
 {/if}
-
-<style>
-  .progress > :global(div) {
-    width: 100%;
-  }
-</style>

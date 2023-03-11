@@ -7,7 +7,7 @@
 </script>
 
 <Card type="elevated">
-  <div class="flex flex-col lg:flex-row">
+  <div class="flex max-lg:flex-col">
     <p class="mr-auto">
       <abbr title="a way of hiding what a program does that might confuse ratrater">
         Obfuscation
