@@ -13,7 +13,7 @@
     "@iconify-icons/ic": "^1.2.13",
     "@iconify/svelte": "^3.1.0",
     "@sveltejs/adapter-static": "^2.0.1",
-    "@sveltejs/kit": "^1.11.0",
+    "@sveltejs/kit": "1.8.5",
     "autoprefixer": "^10.4.14",
     "eslint": "^8.36.0",
     "eslint-config-prettier": "^8.7.0",
