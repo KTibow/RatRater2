@@ -2,6 +2,7 @@
   import { Chip, Dialog, Radio, Switch, Snackbar, SnackbarPlacer } from "m3-svelte";
   import iconPlay from "@iconify-icons/ic/outline-play-arrow";
   import JSZip from "jszip";
+  import { hash } from "$lib/hash";
 
   export let decompiled;
   export let rawContent;
@@ -14,12 +15,7 @@
       decompiledAvailable = false;
       break $;
     }
-    let hash = 0;
-    Array.from(
-      { length: rawContent.length },
-      (_, i) => (hash = (Math.imul(31, hash) + rawContent.charCodeAt(i)) | 0)
-    );
-    const cache = JSON.parse(localStorage["rr2DecompilationCache"] || "{}")[hash];
+    const cache = JSON.parse(localStorage["rr2DecompilationCache"] || "{}")[hash(rawContent)];
     decompiledAvailable = cache ? cache : false;
   }
   $: {
@@ -33,13 +29,8 @@
     decompileAll = true;
   $: rawContent, (decompiling = false);
   const addToCache = (raw, decompiled) => {
-    let hash = 0;
-    Array.from(
-      { length: raw.length },
-      (_, i) => (hash = (Math.imul(31, hash) + raw.charCodeAt(i)) | 0)
-    );
     const caches = JSON.parse(localStorage["rr2DecompilationCache"] || "{}");
-    caches[hash] = decompiled;
+    caches[hash(raw)] = decompiled;
     localStorage["rr2DecompilationCache"] = JSON.stringify(caches);
   };
   const decompile = async () => {

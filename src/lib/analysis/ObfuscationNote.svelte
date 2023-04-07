@@ -15,21 +15,21 @@
       was detected.
     </p>
     <table>
-      {#each data as obfuscator}
+      {#each Object.entries(data) as [obfuscator, info]}
         <tr>
-          <td class="border-r border-outline pr-2">{obfuscator.name}</td>
-          {#if obfuscator.file}
+          <td class="border-r border-outline pr-2">{obfuscator}</td>
+          {#if info.file}
             <td class="max-w-2xl px-2 font-mono text-primary">
               <button
-                on:click={() => dispatch("open", { file: obfuscator.file, find: obfuscator.find })}
+                on:click={() => dispatch("open", { file: info.file, find: info.find })}
                 class="max-w-full overflow-hidden text-ellipsis"
               >
-                {obfuscator.file}
+                {info.file}
               </button>
             </td>
           {:else}
             <td class="max-w-2xl px-2 font-mono">
-              <span class="max-w-full overflow-hidden text-ellipsis">{obfuscator.example}</span>
+              <span class="max-w-full overflow-hidden text-ellipsis">{info.example}</span>
             </td>
           {/if}
         </tr>
