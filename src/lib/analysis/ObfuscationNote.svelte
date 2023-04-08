@@ -21,7 +21,7 @@
           <td class="max-w-2xl px-2 font-mono text-primary">
             <button
               on:click={() => dispatch("open", { file: info.file, find: info.find })}
-              class="max-w-full overflow-hidden text-ellipsis"
+              class="max-w-full overflow-hidden text-ellipsis whitespace-nowrap"
             >
               {info.file}
             </button>

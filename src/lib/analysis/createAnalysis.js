@@ -6,7 +6,7 @@ export const createAnalysis = ({ zip, hash }) => {
   const files = Object.values(zip.files)
     .filter((f) => !f.dir)
     .map((f) => f.name);
-  const analysis = writable({ obfuscation: [], flags: [] });
+  const analysis = writable({ obfuscation: {}, flags: {} });
   const progress = writable({ done: 0, total: 1 });
 
   const cache = JSON.parse(localStorage["rr2AnalysisCache" + CACHE_VER] || "{}")[hash];
