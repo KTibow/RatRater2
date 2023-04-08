@@ -18,20 +18,14 @@
       {#each Object.entries(data) as [obfuscator, info]}
         <tr>
           <td class="border-r border-outline pr-2">{obfuscator}</td>
-          {#if info.file}
-            <td class="max-w-2xl px-2 font-mono text-primary">
-              <button
-                on:click={() => dispatch("open", { file: info.file, find: info.find })}
-                class="max-w-full overflow-hidden text-ellipsis"
-              >
-                {info.file}
-              </button>
-            </td>
-          {:else}
-            <td class="max-w-2xl px-2 font-mono">
-              <span class="max-w-full overflow-hidden text-ellipsis">{info.example}</span>
-            </td>
-          {/if}
+          <td class="max-w-2xl px-2 font-mono text-primary">
+            <button
+              on:click={() => dispatch("open", { file: info.file, find: info.find })}
+              class="max-w-full overflow-hidden text-ellipsis"
+            >
+              {info.file}
+            </button>
+          </td>
         </tr>
       {/each}
     </table>
