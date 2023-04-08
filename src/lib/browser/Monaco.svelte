@@ -1,6 +1,5 @@
 <script>
   import { getContext, onMount } from "svelte";
-  import editorWorker from "monaco-editor/esm/vs/editor/editor.worker?worker";
 
   let subscriptions = [];
   export let content = null;
@@ -11,11 +10,7 @@
   const initialFind = getContext("initialFind");
 
   onMount(async () => {
-    self.MonacoEnvironment = {
-      getWorker() {
-        return new editorWorker();
-      },
-    };
+    // we should have a getWorker but we don't because it had too many problems
 
     Monaco = await import("monaco-editor");
 
