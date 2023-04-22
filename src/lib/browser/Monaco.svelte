@@ -11,14 +11,12 @@
   const initialFind = getContext("initialFind");
 
   onMount(async () => {
-    // we should have a getWorker in prod but the chunking is broken
-    if (dev)
-      self.MonacoEnvironment = {
-        getWorker: () =>
-          new Worker("/node_modules/monaco-editor/esm/vs/editor/editor.worker.js", {
-            type: "module",
-          }),
-      };
+    self.MonacoEnvironment = {
+      getWorker: () =>
+        new Worker("/node_modules/monaco-editor/esm/vs/editor/editor.worker.js", {
+          type: "module",
+        }),
+    };
 
     Monaco = await import("monaco-editor");
 
