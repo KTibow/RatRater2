@@ -18,8 +18,7 @@
     if (hashStatus.hideTimeout) clearTimeout(hashStatus.hideTimeout);
     hashStatus = { shown: true, text, hideTimeout };
   };
-
-  onMount(async () => {
+  const receiveFile = async () => {
     const hash = $page.url.searchParams.get("rat-to-peer-hash");
     if (!hash) return;
     setHashStatus("Connecting");
@@ -47,7 +46,24 @@
 
     const file = new File([Uint8Array.from(reply.data, (c) => c.charCodeAt(0))], reply.name);
     dispatch("chosen", file);
-  });
+  };
+  const downloadFile = async () => {
+    const url = $page.url.searchParams.get("rat-to-peer-url");
+    if (!url) return;
+
+    setHashStatus("Receiving file");
+    const resp = await fetch(
+      "https://rat-to-peer.onrender.com/file?url=" + encodeURIComponent(url)
+    );
+    const data = await resp.blob();
+    console.log("received file as", data);
+    setHashStatus("File received");
+
+    const file = new File([data], url.split("/").at(-1));
+    dispatch("chosen", file);
+  };
+
+  onMount(() => Promise.all([receiveFile(), downloadFile()]));
 </script>
 
 <svelte:window
