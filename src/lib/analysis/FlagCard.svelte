@@ -15,11 +15,11 @@
   in:sharedAxisTransition={{ direction: "Z", leaving: false }}
 >
   <h2 class="m3-font-headline-small">{name}</h2>
-  {#if expandedFiles}
+  {#if expandedFiles || matches.length == 1}
     <div class="w-full" transition:slide|local={{ easing: easeEmphasized }}>
       {#each matches as file}
         <button
-          class="shared-chop mt-2 block font-mono text-primary"
+          class="shared-chop underline-hover mt-2 block font-mono text-primary underline"
           on:click={() => dispatch("open", { file, find })}
           title={file}
         >
@@ -33,17 +33,23 @@
       {matches.length == 1 ? "file" : "files"}
     </p>
   {/if}
-  <div class="mt-auto w-full py-4">
-    <Divider verticalSpace={false} />
-  </div>
-  <div class="flex justify-center gap-2">
-    <Button type="tonal" on:click={() => (expandedFiles = !expandedFiles)}>
-      {expandedFiles ? "Collapse" : "Expand"} files
-    </Button>
-    {#if link}
+  {#if matches.length > 1}
+    <div class="mt-auto w-full py-4">
+      <Divider verticalSpace={false} />
+    </div>
+    <div class="flex justify-center gap-2">
+      <Button type="tonal" on:click={() => (expandedFiles = !expandedFiles)}>
+        {expandedFiles ? "Collapse" : "Expand"} files
+      </Button>
+      {#if link}
+        <Button type="text" href={link} extraOptions={{ target: "_blank" }}>Flag info</Button>
+      {/if}
+    </div>
+  {:else if link}
+    <div class="mt-auto flex justify-center pt-4">
       <Button type="text" href={link} extraOptions={{ target: "_blank" }}>Flag info</Button>
-    {/if}
-  </div>
+    </div>
+  {/if}
 </div>
 
 <style lang="postcss">

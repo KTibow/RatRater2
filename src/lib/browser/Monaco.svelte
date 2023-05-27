@@ -43,6 +43,7 @@
       "editor.inactiveSelectionBackground": getColor("primary-container") + "b0",
       "editor.selectionHighlightBackground": getColor("primary-container") + "80",
       "editor.findMatchBackground": getColor("tertiary-container"),
+      "editor.findMatchBorder": getColor("tertiary"),
       "editor.findMatchHighlightBackground": getColor("tertiary-container") + "80",
       "editor.foldBackground": getColor("tertiary-container") + "80",
       "inputValidation.infoBackground": getColor("primary-container"),
@@ -103,6 +104,12 @@
         { isRegex: false, wholeWord: false, matchCase: false, ...$initialFind },
         false
       );
+      editor.focus();
+      setTimeout(() => {
+        try {
+          editor.getAction("editor.action.nextMatchFindAction").run();
+        } catch (e) {}
+      }, 200);
     }
 
     return () => {

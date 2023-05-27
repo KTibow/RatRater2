@@ -9,6 +9,12 @@
   /** @type {JSZip} */
   export let zip, openFile;
 
+  let classCount;
+  $: {
+    const classes = Object.values(zip.files).filter((f) => !f.dir && f.name.endsWith(".class"));
+    classCount = classes.length;
+  }
+
   let showingDecompiled, decompiledAvailable;
   $: {
     if (!rawContent) {
@@ -84,6 +90,7 @@
       addToCache(pinnedRaw, decompiledAvailable);
     }
     decompiling = "done";
+    showingDecompiled = true;
   };
 </script>
 
@@ -148,9 +155,9 @@
       whole jar, and a large jar may mean your request doesn't get through in time.
     </p>
     <p class="mb-2">
-      This jar has {Object.values(zip.files).filter((f) => !f.dir && f.name.endsWith(".class"))
-        .length} classes. So you can understand some expected response times, here's a table. Note that
-      different servers may have different response times, especially if they have a cold start.
+      This jar has <strong>{classCount} classes</strong>. So you can understand some expected
+      response times, here's a table. Note that different servers may have different response times,
+      especially if they have a cold start.
     </p>
     <table class="border-collapse">
       <tr>
@@ -165,11 +172,11 @@
       </tr>
       <tr>
         <td>348-class non-obfuscated jar</td><td>52s</td><td>56s</td>
-        <td><a class="text-primary" href="http://http.cat/503">503</a></td><td>30s</td>
+        <td><a class="underline-hover" href="http://http.cat/503">503</a></td><td>30s</td>
       </tr>
       <tr>
         <td>Single obfuscated class</td>
-        <td><a class="text-primary" href="http://http.cat/500">500</a></td>
+        <td><a class="underline-hover" href="http://http.cat/500">500</a></td>
         <td>12s</td><td>20s</td><td>10s</td>
       </tr>
     </table>

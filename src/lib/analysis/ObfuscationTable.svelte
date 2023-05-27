@@ -10,7 +10,7 @@
     <p>{obfuscator}</p>
     <button
       on:click={() => dispatch("open", { file: info.file, find: info.find })}
-      class="max-w-2xl overflow-hidden text-ellipsis whitespace-nowrap font-mono text-primary"
+      class="underline-hover truncate font-mono text-primary underline"
     >
       {info.file}
     </button>
@@ -20,5 +20,8 @@
 <style lang="postcss">
   .not-last {
     @apply mb-2 border-b;
+  }
+  .truncate {
+    @apply w-full overflow-hidden text-ellipsis whitespace-nowrap text-left;
   }
 </style>
