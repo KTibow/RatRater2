@@ -9,41 +9,28 @@
   /** @type {JSZip} */
   export let zip, openFile;
 
-  let classCount;
-  $: {
-    const classes = Object.values(zip.files).filter((f) => !f.dir && f.name.endsWith(".class"));
-    classCount = classes.length;
-  }
-
-  let showingDecompiled, decompiledAvailable;
-  $: {
-    if (!rawContent) {
-      decompiledAvailable = false;
-      break $;
-    }
-    const cache = JSON.parse(localStorage["rr2DecompilationCache"] || "{}")[hash(rawContent)];
-    decompiledAvailable = cache ? cache : false;
-  }
-  $: {
-    if (!decompiledAvailable) showingDecompiled = false;
-    decompiled = showingDecompiled && decompiledAvailable;
-  }
-
-  let decompileDialog,
-    decompiling = false,
-    decompiler = "cfr",
-    decompileAll = true;
-  $: rawContent, (decompiling = false);
   const addToCache = (raw, decompiled) => {
     const caches = JSON.parse(localStorage["rr2DecompilationCache"] || "{}");
     caches[hash(raw)] = decompiled;
     localStorage["rr2DecompilationCache"] = JSON.stringify(caches);
   };
+  let showDecompiled = false;
+  /**
+   * @type {string | undefined}
+   */
+  $: decompiledContent =
+    (rawContent && JSON.parse(localStorage["rr2DecompilationCache"] || "{}")[hash(rawContent)]) ||
+    undefined;
+  $: decompiled = showDecompiled && decompiledContent;
+
+  let snackbar = { open: false };
+  let dialog = { open: false, decompiler: "cfr", decompileAll: true };
+  $: rawContent, (snackbar = { open: false });
   const decompile = async () => {
-    decompiling = "running";
+    snackbar = { open: true, message: "Decompiling..." };
     const form = new FormData(),
       pinnedRaw = rawContent;
-    if (decompileAll) {
+    if (dialog.decompileAll) {
       const blob = await zip.generateAsync({ type: "blob" });
       form.set("file", blob, "file.jar");
     } else {
@@ -56,21 +43,21 @@
       const endpoint = "ratrater" + (Math.floor(Math.random() * 4) + 1) + ".azurewebsites.net";
       // load balancer lol
       // also see: https://github.com/KTibow/RatRater2Backend
-      response = await fetch(`https://${endpoint}/decompile?decompiler=${decompiler}`, {
+      response = await fetch(`https://${endpoint}/decompile?decompiler=${dialog.decompiler}`, {
         method: "POST",
         body: form,
       });
       if (!response.ok) {
-        decompiling = "error";
+        snackbar = { open: true, message: "Failed to decompile" };
         console.error(response);
         return;
       }
     } catch (e) {
-      decompiling = "error";
+      snackbar = { open: true, message: "Failed to decompile" };
       console.error(e);
       return;
     }
-    if (decompileAll) {
+    if (dialog.decompileAll) {
       const outputZip = await new JSZip().loadAsync(await response.arrayBuffer());
       await Promise.all(
         Object.values(zip.files).map(async (f) => {
@@ -82,33 +69,37 @@
             decompiledFile.async("string"),
           ]);
           addToCache(raw, decompiled);
-          if (f.name == openFile) decompiledAvailable = decompiled;
+          if (f.name == openFile) decompiledContent = decompiled;
         })
       );
     } else {
-      decompiledAvailable = await response.text();
-      addToCache(pinnedRaw, decompiledAvailable);
+      decompiledContent = await response.text();
+      addToCache(pinnedRaw, decompiledContent);
     }
-    decompiling = "done";
-    showingDecompiled = true;
+    snackbar = { open: true, message: "Decompiled!" };
+    showDecompiled = true;
   };
+
+  $: classCount = Object.values(zip.files).filter(
+    (f) => !f.dir && f.name.endsWith(".class")
+  ).length;
 </script>
 
-{#if decompiledAvailable}
+{#if decompiledContent}
   <Chip
     type="assist"
-    selected={showingDecompiled}
+    selected={showDecompiled}
     trailingIcon={iconRefresh}
-    on:click={() => (showingDecompiled = !showingDecompiled)}
-    on:trailingClicked={() => (decompileDialog = true)}
+    on:click={() => (showDecompiled = !showDecompiled)}
+    on:trailingClicked={() => (dialog.open = true)}
   >
     Decompiled
   </Chip>
 {:else}
-  <Chip type="assist" on:click={() => (decompileDialog = true)}>Decompile</Chip>
+  <Chip type="assist" on:click={() => (dialog.open = true)}>Decompile</Chip>
 {/if}
 <Dialog
-  bind:open={decompileDialog}
+  bind:open={dialog.open}
   title="Decompile file"
   confirmLabel="Decompile"
   cancelLabel="Cancel"
@@ -118,27 +109,27 @@
 >
   <p class="m3-font-label-large mb-2">
     <label class="flex items-center gap-2" for={undefined}>
-      <Radio value="forgeflower" bind:group={decompiler} name="decompiler" /> FernFlower
+      <Radio value="forgeflower" bind:group={dialog.decompiler} name="decompiler" /> FernFlower
     </label>
   </p>
   <p class="m3-font-label-large mb-2">
     <label class="flex items-center gap-2" for={undefined}>
-      <Radio value="quiltflower" bind:group={decompiler} name="decompiler" /> QuiltFlower
+      <Radio value="quiltflower" bind:group={dialog.decompiler} name="decompiler" /> QuiltFlower
     </label>
   </p>
   <p class="m3-font-label-large mb-2">
     <label class="flex items-center gap-2" for={undefined}>
-      <Radio value="procyon" bind:group={decompiler} name="decompiler" /> Procyon
+      <Radio value="procyon" bind:group={dialog.decompiler} name="decompiler" /> Procyon
     </label>
   </p>
   <p class="m3-font-label-large mb-4">
     <label class="flex items-center gap-2" for={undefined}>
-      <Radio value="cfr" bind:group={decompiler} name="decompiler" /> CFR
+      <Radio value="cfr" bind:group={dialog.decompiler} name="decompiler" /> CFR
     </label>
   </p>
   <p class="m3-font-label-large mb-4">
     <label class="flex items-center gap-2" for={undefined}>
-      <Switch bind:checked={decompileAll} /> Decompile whole .jar
+      <Switch bind:checked={dialog.decompileAll} /> Decompile whole .jar
     </label>
   </p>
   <details>
@@ -182,10 +173,10 @@
     </table>
   </details>
 </Dialog>
-{#key decompiling}
+{#key snackbar}
   <SnackbarPlacer>
-    <Snackbar open={decompiling}>
-      Decompiling {decompiling}
+    <Snackbar open={snackbar.open}>
+      {snackbar.message}
     </Snackbar>
   </SnackbarPlacer>
 {/key}
