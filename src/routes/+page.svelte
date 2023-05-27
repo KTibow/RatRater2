@@ -5,11 +5,11 @@
   import { writable } from "svelte/store";
   import iconError from "@iconify-icons/ic/outline-error";
   import Home from "./Home.svelte";
-  import FileAltInputs from "$lib/files/FileAltInputs.svelte";
   import Footer from "./Footer.svelte";
+  import FileAltInputs from "$lib/files/FileAltInputs.svelte";
   import FileWrapper from "./FileWrapper.svelte";
-  import FileAnalysis from "./FileAnalysis.svelte";
-  import FileBrowser from "./FileBrowser.svelte";
+  import FileAnalysis from "$lib/analysis/FileAnalysis.svelte";
+  import FileBrowser from "$lib/browser/FileBrowser.svelte";
 
   let currentFile;
   let browserActive = 0;

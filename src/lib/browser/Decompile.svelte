@@ -1,6 +1,6 @@
 <script>
   import { Chip, Dialog, Radio, Switch, Snackbar, SnackbarPlacer } from "m3-svelte";
-  import iconPlay from "@iconify-icons/ic/outline-play-arrow";
+  import iconRefresh from "@iconify-icons/ic/outline-refresh";
   import JSZip from "jszip";
   import { hash } from "$lib/hash";
 
@@ -91,7 +91,7 @@
   <Chip
     type="assist"
     selected={showingDecompiled}
-    trailingIcon={iconPlay}
+    trailingIcon={iconRefresh}
     on:click={() => (showingDecompiled = !showingDecompiled)}
     on:trailingClicked={() => (decompileDialog = true)}
   >

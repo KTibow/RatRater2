@@ -46,7 +46,7 @@
       <span class="shared-chop inline-block">{name}</span>
     </button>
     {#if openFolders.has(name)}
-      <div class="border-l border-transparent pl-6 group-hover:border-surface-variant">
+      <div class="border-l border-transparent pl-6 transition-colors group-hover:border-primary/50">
         <svelte:self
           nodes={contents}
           on:open={(e) => {
@@ -63,7 +63,7 @@
     @apply w-full whitespace-nowrap font-mono;
   }
   .shared-ring {
-    @apply rounded-lg outline-2 outline-offset-2 outline-primary hover:outline;
+    @apply -ml-1 rounded-lg pl-1 outline-2 outline-offset-2 outline-primary hover:outline;
   }
   .shared-chop {
     @apply overflow-hidden text-ellipsis;
