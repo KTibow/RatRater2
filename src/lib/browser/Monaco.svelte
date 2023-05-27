@@ -101,7 +101,12 @@
       const findController = editor.getContribution("editor.contrib.findController");
       findController.start({});
       findController._state.change(
-        { isRegex: false, wholeWord: false, matchCase: false, ...$initialFind },
+        {
+          searchString: $initialFind.searchString,
+          isRegex: $initialFind.isRegex || false,
+          wholeWord: $initialFind.wholeWord || false,
+          matchCase: $initialFind.matchCase || false,
+        },
         false
       );
       editor.focus();

@@ -1,5 +1,5 @@
 <script>
-  import { getContext } from "svelte";
+  import { createEventDispatcher, getContext } from "svelte";
   import { createAnalysis } from "./createAnalysis";
   import ObfuscationTable from "./ObfuscationTable.svelte";
   import FlagCard from "./FlagCard.svelte";
@@ -8,6 +8,7 @@
   export let hash;
   export let progress;
   const officialHashes = getContext("hashes");
+  const dispatch = createEventDispatcher();
 
   let analysis;
   $: ({ analysis, progress } = createAnalysis({ zip, hash }));
@@ -34,12 +35,19 @@
     </div>
   {/if}
   {#if $analysis.flagged || !$officialHashes || $officialHashes.find((h) => h.hash == hash)}
-    <div class="info-layout flex-1 rounded-2xl bg-primary/10">
+    <div
+      class="info-layout flex-1 rounded-2xl border-primary bg-primary/10"
+      class:border-4={$analysis.flagged}
+    >
       {#if $analysis.flagged}
-        <p class="m3-font-headline-small text-center">
-          Almost definitely a rat<br />
-          TODO: show flag
-        </p>
+        <p class="m3-font-headline-small text-center">Almost definitely a rat</p>
+        <p class="text-center">Classification: {$analysis.flagged.name}</p>
+        <button
+          class="underline-hover truncate text-primary underline"
+          on:click={() => dispatch("open", { file: $analysis.flagged.file })}
+        >
+          File: <span class="font-mono">{$analysis.flagged.file}</span>
+        </button>
       {:else if !$officialHashes}
         <p class="m3-font-headline-small text-center">Failed to load official hashes</p>
       {:else}
@@ -71,6 +79,6 @@
 
 <style lang="postcss">
   .info-layout {
-    @apply flex flex-col items-center justify-center p-4;
+    @apply flex flex-col items-center justify-center overflow-hidden p-4;
   }
 </style>

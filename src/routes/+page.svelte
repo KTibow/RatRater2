@@ -58,7 +58,7 @@
             {loading}
             on:open={(e) => {
               openFile = e.detail.file;
-              $initialFind = e.detail.find;
+              $initialFind = e.detail.initialFind;
               browserActive = 1;
             }}
           />

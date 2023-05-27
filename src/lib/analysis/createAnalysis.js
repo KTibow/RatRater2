@@ -1,5 +1,5 @@
 import { writable } from "svelte/store";
-import { runAnalysis } from "./runAnalysis";
+import runAnalysis from "./runAnalysis";
 
 const CACHE_VER = "0";
 export const createAnalysis = ({ zip, hash }) => {

@@ -5,7 +5,7 @@
   export let name;
   export let matches = [];
   export let link;
-  export let find;
+  export let initialFind;
   let expandedFiles = false;
   const dispatch = createEventDispatcher();
 </script>
@@ -19,8 +19,8 @@
     <div class="w-full" transition:slide|local={{ easing: easeEmphasized }}>
       {#each matches as file}
         <button
-          class="shared-chop underline-hover mt-2 block font-mono text-primary underline"
-          on:click={() => dispatch("open", { file, find })}
+          class="underline-hover mt-2 block truncate font-mono text-primary underline"
+          on:click={() => dispatch("open", { file, initialFind })}
           title={file}
         >
           {file}
@@ -51,9 +51,3 @@
     </div>
   {/if}
 </div>
-
-<style lang="postcss">
-  .shared-chop {
-    @apply w-full overflow-hidden text-ellipsis whitespace-nowrap;
-  }
-</style>

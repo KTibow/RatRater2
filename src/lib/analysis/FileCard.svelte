@@ -15,7 +15,7 @@
 
 <div class="file-card flex items-center">
   <Icon icon={iconFile} height={24} />
-  <p class="grow pl-4 font-mono">{currentFile.name}</p>
-  <p class="pl-4">{getSize(currentFile.size)}</p>
+  <p class="grow whitespace-nowrap pl-4 font-mono">{currentFile.name}</p>
+  <p class="whitespace-nowrap pl-4">{getSize(currentFile.size)}</p>
   <p class="pl-4">{hash}</p>
 </div>
