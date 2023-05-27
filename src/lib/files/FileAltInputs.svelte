@@ -90,7 +90,7 @@
   }}
 />
 <div
-  class="dragover-positioning fixed rounded-2xl bg-primary-container text-on-primary-container transition-[clip-path]"
+  class="dragover-positioning fixed rounded-2xl bg-primary-container text-on-primary-container"
   class:custom-hide={hide}
   style="left: {currentX}px; top: {currentY}px;"
 >
@@ -108,11 +108,14 @@
 
 <style lang="postcss">
   .dragover-positioning {
-    @apply flex h-16 w-16 -translate-x-1/2 -translate-y-1/2 items-center justify-center overflow-hidden;
+    @apply flex h-16 w-16 items-center justify-center overflow-hidden;
+    transition: clip-path 0.5s, opacity 0.5s;
+    transform: translate(-50%, -50%);
     clip-path: circle(2.829rem);
   }
   .custom-hide {
     clip-path: circle(0);
+    opacity: 0;
   }
   .hash-status {
     @apply fixed bottom-4 right-4;

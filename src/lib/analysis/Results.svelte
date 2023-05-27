@@ -29,7 +29,7 @@
   </div>
   {#if obfuscation && obfuscation.length}
     <div class="info-layout flex-1 rounded-2xl bg-primary/10">
-      <p class="m3-font-headline-small">Obfuscation detected</p>
+      <p class="m3-font-headline-small">Possible obfuscation</p>
       <ObfuscationTable {obfuscation} on:open />
     </div>
   {/if}
