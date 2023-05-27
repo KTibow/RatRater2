@@ -12,7 +12,12 @@
   const addToCache = (raw, decompiled) => {
     const caches = JSON.parse(localStorage["rr2DecompilationCache"] || "{}");
     caches[hash(raw)] = decompiled;
-    localStorage["rr2DecompilationCache"] = JSON.stringify(caches);
+    try {
+      localStorage["rr2DecompilationCache"] = JSON.stringify(caches);
+    } catch (e) {
+      localStorage.removeItem("rr2DecompilationCache");
+      console.error("failed to update cache", e);
+    }
   };
   let showDecompiled = false;
   /**
