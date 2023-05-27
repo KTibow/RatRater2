@@ -98,7 +98,7 @@
 </div>
 {#if hashStatus.shown}
   <div
-    class="hash-status rounded-lg bg-primary-container p-4 text-on-primary-container"
+    class="hash-status rounded-xl bg-primary-container p-4 text-on-primary-container"
     transition:sharedAxisTransition={{ direction: "Y", rightSeam: false }}
   >
     <p class="font-bold">rat-to-peer</p>

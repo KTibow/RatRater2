@@ -63,7 +63,7 @@
     @apply w-full whitespace-nowrap font-mono;
   }
   .shared-ring {
-    @apply -ml-1 rounded-lg pl-1 outline-2 outline-offset-2 outline-primary hover:outline;
+    @apply -ml-1 rounded-xl pl-1 outline-2 outline-offset-2 outline-primary hover:outline;
   }
   .shared-chop {
     @apply overflow-hidden text-ellipsis;

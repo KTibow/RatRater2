@@ -9,7 +9,7 @@
 </script>
 
 <div class="flex h-full max-lg:flex-col" class:pb-8={openFile}>
-  <div class="tree group shrink-0 overflow-auto rounded-lg p-2" class:custom-open-file={openFile}>
+  <div class="tree group shrink-0 overflow-auto rounded-xl p-2" class:custom-open-file={openFile}>
     <FileTree nodes={getFileTree(fileList)} on:open={(e) => (openFile = e.detail)} />
   </div>
   {#if openFile}
