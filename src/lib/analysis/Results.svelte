@@ -47,13 +47,15 @@
         <p class="m3-font-headline-small text-center">Found in official sources</p>
         <table class="w-full">
           <tr>
-            <td class="border-r border-outline pr-2">File</td>
-            <td class="border-r border-outline px-2">Source</td>
-            <td class="pl-2">Added</td>
+            <th class="border-r border-outline pr-2">File</th>
+            <td class="pl-2">{hash.file}</td>
           </tr>
           <tr>
-            <td class="border-r border-outline pr-2">{hash.file}</td>
-            <td class="border-r border-outline px-2">{hash.source}</td>
+            <th class="border-r border-outline pr-2">Source</th>
+            <td class="pl-2">{hash.source}</td>
+          </tr>
+          <tr>
+            <th class="border-r border-outline pr-2">Added</th>
             <td class="pl-2">{new Date(hash.time).toLocaleString()}</td>
           </tr>
         </table>
