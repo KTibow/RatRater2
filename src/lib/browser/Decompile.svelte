@@ -1,15 +1,15 @@
-<script>
+<script lang="ts">
   import { Chip, Dialog, Radio, Switch, Snackbar, SnackbarPlacer } from "m3-svelte";
   import iconRefresh from "@iconify-icons/ic/outline-refresh";
   import JSZip from "jszip";
   import { hash } from "$lib/hash";
+  import { file, type Loaded, view } from "$lib/state";
+  import { tick } from "svelte";
 
-  export let decompiled;
-  export let rawContent;
-  /** @type {JSZip} */
-  export let zip, openFile;
+  export let contentOut: string | undefined;
+  export let contentIn: string | undefined;
 
-  const addToCache = (raw, decompiled) => {
+  const addToCache = (raw: string, decompiled: string) => {
     const caches = JSON.parse(localStorage["rr2DecompilationCache"] || "{}");
     caches[hash(raw)] = decompiled;
     try {
@@ -19,27 +19,26 @@
       console.error("failed to update cache", e);
     }
   };
-  let showDecompiled = false;
-  /**
-   * @type {string | undefined}
-   */
+  let decompiledContent: string | undefined,
+    showDecompiled = false;
   $: decompiledContent =
-    (rawContent && JSON.parse(localStorage["rr2DecompilationCache"] || "{}")[hash(rawContent)]) ||
+    (contentIn && JSON.parse(localStorage["rr2DecompilationCache"] || "{}")[hash(contentIn)]) ||
     undefined;
-  $: decompiled = showDecompiled && decompiledContent;
+  $: contentOut = (showDecompiled && decompiledContent) || undefined;
 
-  let snackbar = { open: false };
+  let snackbar: { open: boolean; message?: string } = { open: false };
   let dialog = { open: false, decompiler: "cfr", decompileAll: true };
-  $: rawContent, (snackbar = { open: false });
+  $: contentIn, (snackbar = { open: false });
   const decompile = async () => {
     snackbar = { open: true, message: "Decompiling..." };
     const form = new FormData(),
-      pinnedRaw = rawContent;
+      pinnedRaw = contentIn as string,
+      pinnedFile = $view.editorFile as string,
+      pinnedZip = ($file as Loaded).zip;
     if (dialog.decompileAll) {
-      const blob = await zip.generateAsync({ type: "blob" });
-      form.set("file", blob, "file.jar");
+      form.set("file", ($file as Loaded).file, "file.jar");
     } else {
-      const blob = await zip.files[openFile].async("blob");
+      const blob = await ($file as Loaded).zip.files[pinnedFile].async("blob");
       form.set("file", blob, "file.class");
     }
 
@@ -63,9 +62,11 @@
       return;
     }
     if (dialog.decompileAll) {
+      snackbar = { open: true, message: "Loading decompiled..." };
+      await tick();
       const outputZip = await new JSZip().loadAsync(await response.arrayBuffer());
       await Promise.all(
-        Object.values(zip.files).map(async (f) => {
+        Object.values(pinnedZip.files).map(async (f) => {
           if (f.dir || !f.name.endsWith(".class")) return;
           const decompiledFile = outputZip.files[f.name.replace(/\.class$/, ".java")];
           if (!decompiledFile) return;
@@ -74,18 +75,21 @@
             decompiledFile.async("string"),
           ]);
           addToCache(raw, decompiled);
-          if (f.name == openFile) decompiledContent = decompiled;
+          if (f.name == pinnedFile) {
+            decompiledContent = decompiled;
+            showDecompiled = true;
+          }
         })
       );
     } else {
       decompiledContent = await response.text();
       addToCache(pinnedRaw, decompiledContent);
+      showDecompiled = true;
     }
     snackbar = { open: true, message: "Decompiled!" };
-    showDecompiled = true;
   };
 
-  $: classCount = Object.values(zip.files).filter(
+  $: classCount = Object.values(($file as Loaded).zip.files).filter(
     (f) => !f.dir && f.name.endsWith(".class")
   ).length;
 </script>

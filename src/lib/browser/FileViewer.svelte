@@ -1,28 +1,30 @@
-<script>
+<script lang="ts">
   import iconExtract from "@iconify-icons/ic/outline-unarchive";
+  import type { Writable } from "svelte/store";
   import { Chip } from "m3-svelte";
+  import { file, type Loaded, view } from "$lib/state";
   import Monaco from "./Monaco.svelte";
   import Decompile from "./Decompile.svelte";
-  /**
-   * @type {import("jszip")}
-   */
-  export let zip;
-  export let openFile;
-  let rawContent, decompiled, content;
+
+  let content: Writable<string> | undefined;
+  let rawContent: string, decompiled: string | undefined;
+
+  $: editorFile = $view.editorFile as string;
   $: {
-    const file = zip.files[openFile] || zip.files["/" + openFile];
-    if (!openFile.endsWith(".class")) decompiled = false;
-    if (file) file.async("string").then((c) => (rawContent = c));
+    const files = ($file as Loaded).zip.files;
+    const fileZip = files[editorFile] || files["/" + editorFile];
+    if (!editorFile.endsWith(".class")) decompiled = undefined;
+    if (fileZip) fileZip.async("string").then((c) => (rawContent = c));
   }
   $: if (content && rawContent) $content = decompiled || rawContent;
   const downloadFile = async () => {
-    const file = zip.files[openFile];
-    if (!file) return console.error("could not find file");
-    const fileBlob = await file.async("blob");
+    const fileZip = ($file as Loaded).zip.files[editorFile];
+    if (!fileZip) return console.error("could not find file");
+    const fileBlob = await fileZip.async("blob");
     const fileUrl = URL.createObjectURL(fileBlob);
 
     const link = document.createElement("a");
-    link.setAttribute("download", openFile.split("/").at(-1));
+    link.setAttribute("download", editorFile.split("/").at(-1) as string);
     link.setAttribute("href", fileUrl);
     document.head.appendChild(link);
     link.click();
@@ -33,10 +35,10 @@
 <div class="relative flex-grow">
   <Monaco bind:content />
   <div class="absolute top-full flex w-full items-center gap-2 p-1">
-    <span class="mr-auto flex-1 overflow-hidden text-ellipsis font-mono">{openFile}</span>
+    <span class="mr-auto flex-1 overflow-hidden text-ellipsis font-mono">{editorFile}</span>
     <Chip type="assist" on:click={downloadFile} icon={iconExtract}>Grab</Chip>
-    {#if openFile.endsWith(".class")}
-      <Decompile bind:decompiled {rawContent} {zip} {openFile} />
+    {#if editorFile.endsWith(".class")}
+      <Decompile bind:contentOut={decompiled} contentIn={rawContent} />
     {/if}
   </div>
 </div>

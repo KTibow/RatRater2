@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
   import { createEventDispatcher, onMount } from "svelte";
   import Icon from "@iconify/svelte";
   import iconFile from "@iconify-icons/ic/outline-file-present";
@@ -10,8 +10,8 @@
     currentY = 0,
     hide = true;
 
-  let hashStatus = { shown: false };
-  const setHashStatus = (text) => {
+  let hashStatus: { shown: boolean; text?: string; hideTimeout?: number } = { shown: false };
+  const setHashStatus = (text: string) => {
     const hideTimeout = setTimeout(() => {
       hashStatus = { shown: false };
     }, 5000);
@@ -28,14 +28,16 @@
     ws.send(JSON.stringify({ type: "get-file", hash }));
 
     setHashStatus("Receiving file");
-    const replyMessage = await new Promise((resolve) => {
-      const handleMessage = (m) => {
+    const replyMessage: MessageEvent = await new Promise((resolve) => {
+      const handleMessage = (m: MessageEvent) => {
         ws.removeEventListener("message", handleMessage);
         resolve(m);
       };
       ws.addEventListener("message", handleMessage);
     });
-    const reply = JSON.parse(replyMessage.data);
+    const reply:
+      | { type: "error"; message: string }
+      | { type: "success"; data: string; name: string } = JSON.parse(replyMessage.data);
     console.log("received file as", reply);
     if (reply.type == "error") {
       setHashStatus(reply.message);
@@ -59,7 +61,7 @@
     console.log("received file as", data);
     setHashStatus("File received");
 
-    const file = new File([data], url.split("/").at(-1));
+    const file = new File([data], url.split("/").at(-1) as string);
     dispatch("chosen", file);
   };
 
@@ -68,14 +70,14 @@
 
 <svelte:window
   on:dragover={(e) => {
-    hide = !e.dataTransfer.types.includes("Files");
+    hide = !e.dataTransfer || !e.dataTransfer.types.includes("Files");
     if (hide) return;
     e.preventDefault();
     (currentX = e.clientX), (currentY = e.clientY);
   }}
   on:drop={(e) => {
     hide = true;
-    const file = e.dataTransfer.files[0];
+    const file = e.dataTransfer && e.dataTransfer.files[0];
     if (!file) return;
     e.preventDefault();
     dispatch("chosen", file);
@@ -83,7 +85,7 @@
   on:dragleave={() => (hide = true)}
   on:dragexit={() => (hide = true)}
   on:paste={(e) => {
-    const file = e.clipboardData.files[0];
+    const file = e.clipboardData && e.clipboardData.files[0];
     if (!file) return;
     e.preventDefault();
     dispatch("chosen", file);

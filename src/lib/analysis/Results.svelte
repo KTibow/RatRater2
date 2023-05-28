@@ -1,22 +1,24 @@
-<script>
+<script lang="ts">
   import { createEventDispatcher, getContext } from "svelte";
-  import { createAnalysis } from "./createAnalysis";
+  import type { Writable } from "svelte/store";
+  import { file, type Loaded } from "$lib/state";
+  import { createAnalysis, type Analysis, type Progress, type Obfuscation } from "./createAnalysis";
   import ObfuscationTable from "./ObfuscationTable.svelte";
   import FlagCard from "./FlagCard.svelte";
 
-  export let zip;
-  export let hash;
-  export let progress;
-  const officialHashes = getContext("hashes");
+  const officialHashes: Writable<{ file: string; hash: string; source: string; time: number }[]> =
+    getContext("hashes");
+  $: officialFile = $officialHashes.find((h) => h.hash == ($file as Loaded).hash);
   const dispatch = createEventDispatcher();
 
-  let analysis;
-  $: ({ analysis, progress } = createAnalysis({ zip, hash }));
-  let obfuscation;
-  $: if ($analysis) obfuscation = Object.entries($analysis.obfuscation);
+  let analysis: Writable<Analysis>;
+  let progress: Writable<Progress>;
+  $: ({ analysis, progress } = createAnalysis());
+  let obfuscation: Obfuscation;
+  $: obfuscation = Object.entries($analysis.obfuscation);
 </script>
 
-<div class="mb-6 flex gap-4 max-lg:flex-col">
+<div class="flex gap-4 max-lg:flex-col">
   <div class="info-layout flex-1 rounded-2xl bg-primary/10">
     <p class="m3-font-headline-small">
       {#if !$progress}
@@ -34,37 +36,37 @@
       <ObfuscationTable {obfuscation} on:open />
     </div>
   {/if}
-  {#if $analysis.flagged || !$officialHashes || $officialHashes.find((h) => h.hash == hash)}
+  {#if $analysis.flagged || !$officialHashes || officialFile}
     <div
       class="info-layout flex-1 rounded-2xl border-primary bg-primary/10"
       class:border-4={$analysis.flagged}
     >
       {#if $analysis.flagged}
+        {@const flag = $analysis.flagged}
         <p class="m3-font-headline-small text-center">Almost definitely a rat</p>
-        <p class="text-center">Classification: {$analysis.flagged.name}</p>
+        <p class="text-center">Classification: {flag.name}</p>
         <button
           class="underline-hover truncate text-primary underline"
-          on:click={() => dispatch("open", { file: $analysis.flagged.file })}
+          on:click={() => dispatch("open", flag.file)}
         >
-          File: <span class="font-mono">{$analysis.flagged.file}</span>
+          File: <span class="font-mono">{flag.file}</span>
         </button>
       {:else if !$officialHashes}
         <p class="m3-font-headline-small text-center">Failed to load official hashes</p>
-      {:else}
-        {@const hash = $officialHashes.find((h) => h.hash == hash)}
+      {:else if officialFile}
         <p class="m3-font-headline-small text-center">Found in official sources</p>
         <table class="w-full">
           <tr>
             <th class="border-r border-outline pr-2">File</th>
-            <td class="pl-2">{hash.file}</td>
+            <td class="pl-2">{officialFile.file}</td>
           </tr>
           <tr>
             <th class="border-r border-outline pr-2">Source</th>
-            <td class="pl-2">{hash.source}</td>
+            <td class="pl-2">{officialFile.source}</td>
           </tr>
           <tr>
             <th class="border-r border-outline pr-2">Added</th>
-            <td class="pl-2">{new Date(hash.time).toLocaleString()}</td>
+            <td class="pl-2">{new Date(officialFile.time).toLocaleString()}</td>
           </tr>
         </table>
       {/if}
@@ -72,8 +74,8 @@
   {/if}
 </div>
 <div class="grid gap-4 lg:grid-cols-4 2xl:grid-cols-6">
-  {#each Object.entries($analysis.flags) as [flag, data]}
-    <FlagCard name={flag} {...data} on:open />
+  {#each Object.entries($analysis.flags) as [name, flag]}
+    <FlagCard {name} {flag} on:open />
   {/each}
 </div>
 

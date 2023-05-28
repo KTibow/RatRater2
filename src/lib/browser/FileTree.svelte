@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
   import { createEventDispatcher } from "svelte";
   import Icon from "@iconify/svelte";
   import iconFile from "@iconify-icons/ic/outline-description";
@@ -6,26 +6,24 @@
   import iconExtension from "@iconify-icons/ic/outline-extension";
   import iconFolder from "@iconify-icons/ic/folder";
   import iconOpenFolder from "@iconify-icons/ic/outline-folder";
-  import { sortTree } from "./tree";
+  import { sortTree, type Tree } from "./tree";
 
-  export let nodes;
-  export let openByDefault = false;
+  export let nodes: Tree;
   const dispatch = createEventDispatcher();
 
   let openFolders = new Set();
-  const toggleFolder = (name) => {
+  const toggleFolder = (name: string) => {
     if (openFolders.has(name)) openFolders.delete(name);
     else openFolders.add(name);
     openFolders = openFolders;
   };
-  $: if (openByDefault) openFolders = new Set(Object.keys(nodes));
 </script>
 
 {#each sortTree(nodes) as [name, contents]}
   {#if contents == 0}
     <button
       class="shared-name shared-ring flex items-center gap-2 text-primary"
-      on:click={() => dispatch("open", name)}
+      on:click={() => dispatch("chosen", name)}
     >
       <Icon
         icon={name.endsWith(".class")
@@ -49,8 +47,8 @@
       <div class="border-l border-transparent pl-6 transition-colors group-hover:border-primary/50">
         <svelte:self
           nodes={contents}
-          on:open={(e) => {
-            dispatch("open", name + "/" + e.detail);
+          on:chosen={(e) => {
+            dispatch("chosen", name + "/" + e.detail);
           }}
         />
       </div>

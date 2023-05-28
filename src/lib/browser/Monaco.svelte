@@ -1,12 +1,15 @@
-<script>
+<script lang="ts">
   import { getContext, onMount } from "svelte";
+  import type { Subscriber, Writable } from "svelte/store";
   import editorWorker from "monaco-editor/esm/vs/editor/editor.worker?worker";
+  import type { editor } from "monaco-editor";
+  import { view } from "$lib/state";
 
-  let subscriptions = [];
-  export let content = null;
+  let subscriptions: Subscriber<string>[] = [];
+  export let content: Writable<string> | undefined;
 
-  let divEl;
-  let editor;
+  let divEl: HTMLElement;
+  let editor: editor.IStandaloneCodeEditor;
   let Monaco;
   const initialFind = getContext("initialFind");
 
@@ -18,7 +21,7 @@
     Monaco = await import("monaco-editor");
 
     const isDark = matchMedia("(prefers-color-scheme: dark)").matches;
-    const getColor = (name) => {
+    const getColor = (name: string) => {
       const rgb = getComputedStyle(document.body).getPropertyValue(`--m3-scheme-${name}`).trim();
       return (
         "#" +
@@ -87,32 +90,35 @@
       subscriptions.forEach((sub) => sub(text));
     });
     content = {
-      subscribe(func) {
+      subscribe(func: Subscriber<string>) {
         subscriptions.push(func);
         return () => {
           subscriptions = subscriptions.filter((sub) => sub != func);
         };
       },
-      set(val) {
+      set(val: string) {
         editor.setValue(val);
       },
+      update(updater: (val: string) => string) {
+        editor.setValue(updater(editor.getValue()));
+      },
     };
-    if ($initialFind) {
-      const findController = editor.getContribution("editor.contrib.findController");
+    if ($view.editorFind) {
+      const findController = editor.getContribution("editor.contrib.findController") as any;
       findController.start({});
       findController._state.change(
         {
-          searchString: $initialFind.searchString,
-          isRegex: $initialFind.isRegex || false,
-          wholeWord: $initialFind.wholeWord || false,
-          matchCase: $initialFind.matchCase || false,
+          searchString: $view.editorFind.searchString,
+          isRegex: $view.editorFind.isRegex || false,
+          wholeWord: $view.editorFind.wholeWord || false,
+          matchCase: $view.editorFind.matchCase || false,
         },
         false
       );
       editor.focus();
       setTimeout(() => {
         try {
-          editor.getAction("editor.action.nextMatchFindAction").run();
+          editor.getAction("editor.action.nextMatchFindAction")!.run();
         } catch (e) {}
       }, 200);
     }
@@ -128,6 +134,7 @@
   on:resize={() => {
     editor.layout({ width: 0, height: 0 });
     window.requestAnimationFrame(() => {
+      if (!divEl.parentElement) return;
       const rect = divEl.parentElement.getBoundingClientRect();
       editor.layout({ width: rect.width, height: rect.height });
     });

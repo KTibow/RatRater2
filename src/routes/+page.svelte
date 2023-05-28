@@ -1,88 +1,98 @@
-<script>
-  import { Button, sharedAxisTransition, Tabs } from "m3-svelte";
-  import Icon from "@iconify/svelte";
+<script lang="ts">
   import { onMount, setContext } from "svelte";
   import { writable } from "svelte/store";
+  import { Button, Tabs, sharedAxisTransition } from "m3-svelte";
+  import iconLoading from "@iconify-icons/ic/outline-pending-actions";
   import iconError from "@iconify-icons/ic/outline-error";
+  import { file, loadFile, view } from "$lib/state";
+  import Status from "$lib/files/Status.svelte";
   import Home from "./Home.svelte";
-  import Footer from "./Footer.svelte";
+  import BrowserPane from "$lib/browser/BrowserPane.svelte";
   import FileAltInputs from "$lib/files/FileAltInputs.svelte";
-  import FileWrapper from "./FileWrapper.svelte";
-  import FileAnalysis from "$lib/analysis/FileAnalysis.svelte";
-  import FileBrowser from "$lib/browser/FileBrowser.svelte";
-
-  let currentFile;
-  let activeTab = 0;
-  let openFile;
+  import AnalysisPane from "$lib/analysis/AnalysisPane.svelte";
 
   const hashes = writable();
-  const initialFind = writable();
   setContext("hashes", hashes);
-  setContext("initialFind", initialFind);
-  $: if (activeTab != 1) $initialFind = null;
   onMount(async () => {
     const hashResp = await fetch(
       "https://raw.githubusercontent.com/KTibow/RatRater2Back/main/hash-grab/hashes.json"
     );
-    const hashJson = await hashResp.json();
-    hashes.set(hashJson);
+    hashes.set(await hashResp.json());
   });
+  $: $view.tab, ($view.editorFind = undefined);
 </script>
 
 <svelte:head><title>RatRater 2</title></svelte:head>
-{#if currentFile}
-  <FileWrapper file={currentFile} let:loading>
-    <div class="flex w-full flex-col">
+{#if $file.state == "loading"}
+  <main
+    class="vertical-container absolute min-h-screen"
+    in:sharedAxisTransition={{ direction: "X", rightSeam: false }}
+  >
+    <Status icon={iconLoading}>
+      <p class="m3-font-headline-small">Loading file...</p>
+    </Status>
+  </main>
+{:else if $file.state == "error"}
+  <main
+    class="vertical-container absolute min-h-screen"
+    transition:sharedAxisTransition={{ direction: "X", rightSeam: false }}
+  >
+    <Status icon={iconError}>
+      <p class="m3-font-headline-small">Couldn't open file</p>
+      <p class="m3-font-body-medium text-on-surface-variant">
+        Make sure you dragged in a .jar file or something else that's a zip file.
+      </p>
+      <div class="mt-2 flex">
+        <Button type="filled" on:click={() => ($file = {})}>OK</Button>
+      </div>
+    </Status>
+  </main>
+{:else if $file.state == "loaded"}
+  <main
+    class="content-wrapper absolute min-h-screen w-full"
+    class:h-screen={$view.tab == 1}
+    transition:sharedAxisTransition={{ direction: "X", rightSeam: false }}
+  >
+    <div class="flex flex-col">
       <Tabs
         items={[{ name: "Analysis" }, { name: "Browser" }]}
         style="primary"
-        bind:activeItem={activeTab}
+        bind:activeItem={$view.tab}
       />
     </div>
-    <div class="flex w-full grow flex-col p-6" class:overflow-hidden={activeTab == 1}>
-      {#if loading.status == "errored"}
-        <div class="m-auto flex flex-col items-center gap-4 rounded-2xl bg-primary/10 p-6">
-          <Icon icon={iconError} height={24} class="text-secondary" />
-          <p class="m3-font-headline-small">Couldn't open file</p>
-          <p class="m3-font-body-medium text-on-surface-variant">
-            Make sure you dragged in a .jar file or something else that's a zip file.
-          </p>
-          <div class="mt-2 flex">
-            <Button type="filled" on:click={() => (currentFile = null)}>OK</Button>
-          </div>
-        </div>
-      {:else if loading.status == "loaded"}
-        {#if activeTab == 0}
-          <FileAnalysis
-            {currentFile}
-            {loading}
-            on:open={(e) => {
-              openFile = e.detail.file;
-              $initialFind = e.detail.initialFind;
-              activeTab = 1;
-            }}
-          />
-        {:else}
-          <FileBrowser bind:openFile {loading} />
-        {/if}
-      {:else}
-        <p>Opening file...</p>
-      {/if}
-    </div>
-  </FileWrapper>
+    {#if $view.tab == 0}
+      <AnalysisPane
+        on:open={(e) => {
+          $view = { tab: 1, editorFile: e.detail, editorFind: $view.editorFind };
+        }}
+      />
+    {:else}
+      <BrowserPane />
+    {/if}
+  </main>
 {:else}
   <main
-    class="absolute flex min-h-screen w-full flex-col items-start p-6"
+    class="vertical-container absolute min-h-screen p-6"
     transition:sharedAxisTransition={{ direction: "X", rightSeam: true }}
   >
-    <Home on:chosen={(e) => (currentFile = e.detail)} />
-    <Footer />
+    <Home on:chosen={(e) => loadFile(e.detail)} />
   </main>
 {/if}
 
 <FileAltInputs
   on:chosen={(e) => {
-    openFile = null;
-    currentFile = e.detail;
+    $view.editorFile = undefined;
+    loadFile(e.detail);
   }}
 />
+
+<style lang="postcss">
+  .vertical-container {
+    @apply flex w-full flex-col items-start;
+  }
+  .content-wrapper {
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: auto 1fr;
+  }
+</style>
