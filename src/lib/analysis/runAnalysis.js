@@ -107,7 +107,7 @@ const processors = [
         matches: [file],
         link: "https://github.com/KTibow/RatRater2/wiki/Flags#file-access",
         initialFind: {
-          searchString: String.raw`\Google\Chrome\User Data\Default|essential/microsoft_accounts.json|.lunarclient/settings/game/accounts.json`,
+          searchString: String.raw`\\Google\\Chrome\\User Data\\Default|essential/microsoft_accounts.json|.lunarclient/settings/game/accounts.json`,
           isRegex: true,
         },
       };
