@@ -12,14 +12,14 @@
   import FileBrowser from "$lib/browser/FileBrowser.svelte";
 
   let currentFile;
-  let browserActive = 0;
+  let activeTab = 0;
   let openFile;
 
   const hashes = writable();
   const initialFind = writable();
   setContext("hashes", hashes);
   setContext("initialFind", initialFind);
-  $: if (browserActive == 0) $initialFind = null;
+  $: if (activeTab != 1) $initialFind = null;
   onMount(async () => {
     const hashResp = await fetch(
       "https://raw.githubusercontent.com/KTibow/RatRater2Back/main/hash-grab/hashes.json"
@@ -36,10 +36,10 @@
       <Tabs
         items={[{ name: "Analysis" }, { name: "Browser" }]}
         style="primary"
-        bind:activeItem={browserActive}
+        bind:activeItem={activeTab}
       />
     </div>
-    <div class="flex w-full grow flex-col p-6" class:overflow-hidden={browserActive == 1}>
+    <div class="flex w-full grow flex-col p-6" class:overflow-hidden={activeTab == 1}>
       {#if loading.status == "errored"}
         <div class="m-auto flex flex-col items-center gap-4 rounded-2xl bg-primary/10 p-6">
           <Icon icon={iconError} height={24} class="text-secondary" />
@@ -52,14 +52,14 @@
           </div>
         </div>
       {:else if loading.status == "loaded"}
-        {#if browserActive == 0}
+        {#if activeTab == 0}
           <FileAnalysis
             {currentFile}
             {loading}
             on:open={(e) => {
               openFile = e.detail.file;
               $initialFind = e.detail.initialFind;
-              browserActive = 1;
+              activeTab = 1;
             }}
           />
         {:else}
@@ -82,7 +82,7 @@
 
 <FileAltInputs
   on:chosen={(e) => {
-    currentFile = e.detail;
     openFile = null;
+    currentFile = e.detail;
   }}
 />
