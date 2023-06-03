@@ -7,7 +7,10 @@
   $: fileList = "zip" in $file && Object.keys($file.zip.files);
 </script>
 
-<div class="flex grow overflow-hidden p-6 max-lg:flex-col" class:file-open={$view.editorFile}>
+<div
+  class="flex flex-1 basis-0 overflow-hidden p-6 max-lg:flex-col"
+  class:file-open={$view.editorFile}
+>
   {#if fileList}
     <div class="tree group shrink-0 overflow-auto rounded-xl p-2">
       <FileTree nodes={getFileTree(fileList)} on:chosen={(e) => ($view.editorFile = e.detail)} />

@@ -25,8 +25,6 @@
     return {
       easing: easeEmphasized,
       css: (t: number, u: number) => `
-      display: flex;
-      flex-direction: column;
       transform: translateX(${u * -100}vw)`,
     };
   };
@@ -34,8 +32,6 @@
     return {
       easing: easeEmphasized,
       css: (t: number, u: number) => `
-      display: flex;
-      flex-direction: column;
       transform: translateX(${u * 100}vw)`,
     };
   };
@@ -88,7 +84,7 @@
         />
       </div>
     {:else}
-      <div class="col-start-1 row-start-2 contents" transition:slideRight|local>
+      <div class="col-start-1 row-start-2 flex flex-col" transition:slideRight|local>
         <BrowserPane />
       </div>
     {/if}

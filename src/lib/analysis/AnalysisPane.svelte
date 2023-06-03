@@ -6,11 +6,9 @@
   $: zip = "zip" in $file && $file.zip;
 </script>
 
-<div class="flex grow flex-col gap-6 p-6">
+<div class="flex flex-1 flex-col gap-6 p-6">
   <FileCard />
   {#if zip}
-    {#key zip}
-      <Results on:open />
-    {/key}
+    <Results on:open />
   {/if}
 </div>
