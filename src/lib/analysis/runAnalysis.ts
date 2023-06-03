@@ -113,6 +113,18 @@ const processors = [
     ) => (obfuscation["Possible obfuscation (many 15-char functions)"] = { file }),
   },
   {
+    check: (contents: string) => {
+      const matchCount = contents.match(/\x00/g);
+      return matchCount && matchCount.length > 10000 && matchCount.length > contents.length / 3;
+    },
+    add: (
+      file: string,
+      obfuscation: Analysis["obfuscation"],
+      flags: Analysis["flags"],
+      flag: (flag: { name: string; file: string }) => void
+    ) => (obfuscation["Possible obfuscation (many noops)"] = { file }),
+  },
+  {
     check: (contents: string) =>
       /\p{Script=Han}{5}/u.test(contents) && contents.includes("reflect"),
     add: (

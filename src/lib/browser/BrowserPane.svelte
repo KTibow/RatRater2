@@ -5,7 +5,7 @@
   import FileViewer from "./FileViewer.svelte";
   import { getFileTree } from "./tree";
 
-  $: fileList = Object.keys(($file as Loaded).zip.files);
+  $: fileList = "zip" in $file && Object.keys($file.zip.files);
   const slideTransition = (node: Element) => {
     return {
       easing: easeEmphasized,
@@ -19,11 +19,13 @@
   class:file-open={$view.editorFile}
   transition:slideTransition
 >
-  <div class="tree group shrink-0 overflow-auto rounded-xl p-2">
-    <FileTree nodes={getFileTree(fileList)} on:chosen={(e) => ($view.editorFile = e.detail)} />
-  </div>
-  {#if $view.editorFile}
-    <FileViewer />
+  {#if fileList}
+    <div class="tree group shrink-0 overflow-auto rounded-xl p-2">
+      <FileTree nodes={getFileTree(fileList)} on:chosen={(e) => ($view.editorFile = e.detail)} />
+    </div>
+    {#if $view.editorFile}
+      <FileViewer />
+    {/if}
   {/if}
 </div>
 
