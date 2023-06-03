@@ -1,7 +1,7 @@
 <script lang="ts">
   import { onMount, setContext } from "svelte";
   import { writable } from "svelte/store";
-  import { Button, Tabs, sharedAxisTransition } from "m3-svelte";
+  import { Button, Tabs, easeEmphasized, sharedAxisTransition } from "m3-svelte";
   import iconLoading from "@iconify-icons/ic/outline-pending-actions";
   import iconError from "@iconify-icons/ic/outline-error";
   import { file, loadFile, view } from "$lib/state";
@@ -20,6 +20,19 @@
     hashes.set(await hashResp.json());
   });
   $: $view.tab, ($view.editorFind = undefined);
+
+  const slideLeft = (node: Element) => {
+    return {
+      easing: easeEmphasized,
+      css: (t: number, u: number) => `transform: translateX(${u * -100}vw)`,
+    };
+  };
+  const slideRight = (node: Element) => {
+    return {
+      easing: easeEmphasized,
+      css: (t: number, u: number) => `transform: translateX(${u * 100}vw)`,
+    };
+  };
 </script>
 
 <svelte:head><title>RatRater 2</title></svelte:head>
@@ -61,13 +74,17 @@
       />
     </div>
     {#if $view.tab == 0}
-      <AnalysisPane
-        on:open={(e) => {
-          $view = { tab: 1, editorFile: e.detail, editorFind: $view.editorFind };
-        }}
-      />
+      <div class="col-start-1 row-start-2 flex flex-col" transition:slideLeft|local>
+        <AnalysisPane
+          on:open={(e) => {
+            $view = { tab: 1, editorFile: e.detail, editorFind: $view.editorFind };
+          }}
+        />
+      </div>
     {:else}
-      <BrowserPane />
+      <div class="col-start-1 row-start-2 flex flex-col" transition:slideRight|local>
+        <BrowserPane />
+      </div>
     {/if}
   </main>
 {:else}
