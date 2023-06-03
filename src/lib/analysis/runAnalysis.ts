@@ -45,6 +45,17 @@ const prescan = (
 };
 const processors = [
   {
+    check: (contents: string) => contents.includes("EncryptionMethod1337"),
+    add: (
+      file: string,
+      obfuscation: Analysis["obfuscation"],
+      flags: Analysis["flags"],
+      flag: (flag: { name: string; file: string }) => void
+    ) => {
+      flag({ name: "Quanity", file: file });
+    },
+  },
+  {
     check: (contents: string) => /(?=[Il]{9,})(?:(?:I+l+)+I+)/.test(contents),
     add: (
       file: string,
@@ -73,7 +84,8 @@ const processors = [
   {
     check: (contents: string) =>
       contents.includes("nothing_to_see_here") ||
-      contents.includes("thisIsAInsaneEncryptionMethod"),
+      contents.includes("thisIsAInsaneEncryptionMethod") ||
+      contents.includes("EncryptionMethod1337"),
     add: (
       file: string,
       obfuscation: Analysis["obfuscation"],
@@ -87,6 +99,18 @@ const processors = [
           isRegex: true,
         },
       }),
+  },
+  {
+    check: (contents: string) => {
+      const matchCount = contents.match(/[^a-z][a-z]{15}[^a-z]/g);
+      return matchCount && matchCount.length > 10;
+    },
+    add: (
+      file: string,
+      obfuscation: Analysis["obfuscation"],
+      flags: Analysis["flags"],
+      flag: (flag: { name: string; file: string }) => void
+    ) => (obfuscation["Possible obfuscation (many 15-char functions)"] = { file }),
   },
   {
     check: (contents: string) =>
