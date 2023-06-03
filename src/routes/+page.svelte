@@ -24,13 +24,19 @@
   const slideLeft = (node: Element) => {
     return {
       easing: easeEmphasized,
-      css: (t: number, u: number) => `transform: translateX(${u * -100}vw)`,
+      css: (t: number, u: number) => `
+      display: flex;
+      flex-direction: column;
+      transform: translateX(${u * -100}vw)`,
     };
   };
   const slideRight = (node: Element) => {
     return {
       easing: easeEmphasized,
-      css: (t: number, u: number) => `transform: translateX(${u * 100}vw)`,
+      css: (t: number, u: number) => `
+      display: flex;
+      flex-direction: column;
+      transform: translateX(${u * 100}vw)`,
     };
   };
 </script>
@@ -66,7 +72,7 @@
     class:h-screen={$view.tab == 1}
     transition:sharedAxisTransition={{ direction: "X", rightSeam: false }}
   >
-    <div class="flex flex-col">
+    <div class="contents">
       <Tabs
         items={[{ name: "Analysis" }, { name: "Browser" }]}
         style="primary"
@@ -82,7 +88,7 @@
         />
       </div>
     {:else}
-      <div class="col-start-1 row-start-2 flex flex-col" transition:slideRight|local>
+      <div class="col-start-1 row-start-2 contents" transition:slideRight|local>
         <BrowserPane />
       </div>
     {/if}
