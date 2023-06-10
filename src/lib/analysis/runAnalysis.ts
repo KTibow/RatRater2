@@ -45,16 +45,22 @@ const prescan = (zip: JSZip & JSZip.JSZipObject, files: string[], state: Analysi
   }
   if (!state.flagged) {
     const classes = files.filter((f) => f.endsWith(".class"));
-    const quantiyR = /^[a-z]{9}\/[a-z]{9}\/[a-z]{9}.class$/;
-    if (classes.length == 1 && quantiyR.test(classes[0])) {
-      state.flagged = { name: "Quanity", file: classes[0] };
+    const quantiyR = /^([a-z]+)\/([a-z]+)\/([a-z]+).class$/;
+    if (classes.length == 1) {
+      const match = classes[0].match(quantiyR);
+      if (match && match[1].length == match[2].length && match[2].length == match[3].length)
+        state.flagged = { name: "Quanity", file: classes[0] };
     }
   }
 };
 
 const scan = (file: string, contents: string, state: Analysis) => {
-  if (!state.flagged && contents.includes("EncryptionMethod1337")) {
-    state.flagged = { name: "Quantiy", file };
+  if (!state.flagged) {
+    const quantiyState =
+      /\w{43}==\w{43}[_\/\\\-!|I]{14,15}F[a-z]\-\w{7}-\w{7}-\/\/D\w{13}-\w{4}\/\/I\w{3}\-\w{7}\-\w{5}V\/\/E[a-z]\-\w{5}\-\w{5}\-\w{1}C\w{1}R\/\/E.{15}/;
+    if (contents.includes("EncryptionMethod1337") || quantiyState.test(contents)) {
+      state.flagged = { name: "Quantiy", file };
+    }
   }
   if (/(?=[Il]{9,})(?:(?:I+l+)+I+)/.test(contents)) {
     state.obfuscation["Obfuscator Bozar"] = {
