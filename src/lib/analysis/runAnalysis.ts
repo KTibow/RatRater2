@@ -57,7 +57,7 @@ const prescan = (zip: JSZip & JSZip.JSZipObject, files: string[], state: Analysi
 const scan = (file: string, contents: string, state: Analysis) => {
   if (!state.flagged) {
     const quantiyState =
-      /\w{43}==\w{43}[_\/\\\-!|I]{14,15}F[a-z]\-\w{7}-\w{7}-\/\/D\w{13}-\w{4}\/\/I\w{3}\-\w{7}\-\w{5}V\/\/E[a-z]\-\w{5}\-\w{5}\-\w{1}C\w{1}R\/\/E.{15}/;
+      /\w{43}==\w{43}[_\/\\\-!|I]{13,15}F\w\-\w{7}-\w{7}-\/\/D\w{13}-\w{4}\/\/I\w{3}\-\w{7}\-\w{5}V\/\/E[a-z]\-\w{5}\-\w{5}\-\w{1}C\w{1}R\/\/E.{15}/;
     if (contents.includes("EncryptionMethod1337") || quantiyState.test(contents)) {
       state.flagged = { name: "Quantiy", file };
     }
@@ -89,11 +89,11 @@ const scan = (file: string, contents: string, state: Analysis) => {
   }
   const match15 = contents.match(/[^a-z][a-z]{15}[^a-z]/g);
   if (match15 && match15.length > 10) {
-    state.obfuscation["Possible obfuscation (many 15-char functions)"] = { file };
+    state.obfuscation["Possibly Quantiy (many 15-char functions)"] = { file };
   }
   const matchNoop = contents.match(/\x00/g);
   if (matchNoop && matchNoop.length > 10000 && matchNoop.length > contents.length / 3) {
-    state.obfuscation["Possible obfuscation (many noops)"] = { file };
+    state.obfuscation["Possibly Skidfuscator (many noops)"] = { file };
   }
   if (contents.includes("reflect") && /\p{Script=Han}{5}/u.test(contents)) {
     state.obfuscation["Obfuscator Stringer"] = { file };
