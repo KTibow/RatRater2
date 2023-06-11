@@ -35,6 +35,7 @@ const prescan = (zip: JSZip & JSZip.JSZipObject, files: string[], state: Analysi
     { name: "SBFT", pattern: "com/sbft" },
     { name: "MacroMod", pattern: "com/macromod" },
     { name: "Quanity", pattern: "com/quantiy" },
+    { name: "DogeRat", pattern: "vytal/should/kill/himself" },
   ];
   for (const f of flags) {
     const match = files.find((file) => file.startsWith(f.pattern));
@@ -80,7 +81,7 @@ const scan = (file: string, contents: string, state: Analysis) => {
   }
   const match15 = contents.match(/[^a-z][a-z]{15}[^a-z]/g);
   if (match15 && match15.length > 10) {
-    state.obfuscation["Possibly Quantiy (many 15-char functions)"] = { file };
+    state.obfuscation["Possibly Skidfuscator (many 15-char functions)"] = { file };
   }
   const matchNoop = contents.match(/\x00/g);
   if (matchNoop && matchNoop.length > 10000 && matchNoop.length > contents.length / 3) {
