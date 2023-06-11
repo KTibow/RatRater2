@@ -84,7 +84,10 @@
         />
       </div>
     {:else}
-      <div class="col-start-1 row-start-2 flex flex-col" transition:slideRight|local>
+      <div
+        class="col-start-1 row-start-2 flex flex-col overflow-hidden"
+        transition:slideRight|local
+      >
         <BrowserPane />
       </div>
     {/if}
