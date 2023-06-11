@@ -43,15 +43,6 @@ const prescan = (zip: JSZip & JSZip.JSZipObject, files: string[], state: Analysi
       break;
     }
   }
-  if (!state.flagged) {
-    const classes = files.filter((f) => f.endsWith(".class"));
-    const quantiyR = /^([a-z]+)\/([a-z]+)\/([a-z]+).class$/;
-    if (classes.length == 1) {
-      const match = classes[0].match(quantiyR);
-      if (match && match[1].length == match[2].length && match[2].length == match[3].length)
-        state.flagged = { name: "Quanity", file: classes[0] };
-    }
-  }
 };
 
 const scan = (file: string, contents: string, state: Analysis) => {
@@ -149,7 +140,7 @@ const scan = (file: string, contents: string, state: Analysis) => {
   }
 };
 export default async (
-  { zip, files }: { zip: JSZip & JSZip.JSZipObject; files: string[] },
+  { zip, data, files }: { zip: JSZip & JSZip.JSZipObject; data: ArrayBuffer; files: string[] },
   analysis: Writable<Analysis>,
   progress: Writable<Progress>
 ) => {
@@ -189,6 +180,29 @@ export default async (
     propagate();
   };
   if (manifest) tasks.push(manifestTask(manifest));
+
+  const apiAnalysisTask = async () => {
+    const resp = await fetch("https://rr-quantiy.ktibow.workers.dev/", {
+      body: data,
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+      },
+    });
+    if (!resp.ok) {
+      console.error(await resp.text());
+      throw new Error("API analysis failed");
+    }
+    const json = await resp.json();
+    if (!state.flagged) {
+      if (json.class == "sure") {
+        state.flagged = { name: "Quantiy" };
+      } else if (json.class == "maybe") {
+        state.flagged = { name: "Quantiy (low confidence)" };
+      }
+    }
+  };
+  tasks.push(apiAnalysisTask());
 
   const catchTask = (e: Error) => {
     console.error("While scanning,", e);

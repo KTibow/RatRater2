@@ -13,7 +13,9 @@
 
   let analysis: Writable<Analysis>;
   let progress: Writable<Progress>;
-  $: ({ analysis, progress } = createAnalysis());
+  $: if ("zip" in $file) {
+    ({ analysis, progress } = createAnalysis());
+  }
   let obfuscation: Obfuscation;
   $: obfuscation = Object.entries($analysis.obfuscation);
 </script>
@@ -45,12 +47,16 @@
         {@const flag = $analysis.flagged}
         <p class="m3-font-headline-small text-center">Almost definitely a rat</p>
         <p class="text-center">Classification: {flag.name}</p>
-        <button
-          class="underline-hover truncate text-primary underline"
-          on:click={() => dispatch("open", flag.file)}
-        >
-          File: <span class="font-mono">{flag.file}</span>
-        </button>
+        {#if flag.file}
+          <button
+            class="underline-hover truncate text-primary underline"
+            on:click={() => dispatch("open", flag.file)}
+          >
+            File: <span class="font-mono">{flag.file}</span>
+          </button>
+        {:else}
+          <p class="text-center">To prevent reverse engineering, you cannot see the cause</p>
+        {/if}
       {:else if !$officialHashes}
         <p class="m3-font-headline-small text-center">Failed to load official hashes</p>
       {:else if officialFile}
