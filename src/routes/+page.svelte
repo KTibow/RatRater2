@@ -76,7 +76,7 @@
       />
     </div>
     {#if $view.tab == 0}
-      <div class="col-start-1 row-start-2 flex flex-col" transition:slideLeft|local>
+      <div class="col-start-1 row-start-2 flex flex-col overflow-hidden" transition:slideLeft|local>
         <AnalysisPane
           on:open={(e) => {
             $view = { tab: 1, editorFile: e.detail, editorFind: $view.editorFind };
