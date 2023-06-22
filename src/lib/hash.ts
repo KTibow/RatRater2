@@ -1,4 +1,4 @@
-export const hash = (string) => {
+export const hash = (string: string) => {
   let hash = 0;
   Array.from(
     { length: string.length },

@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { getContext, onMount } from "svelte";
+  import { onMount } from "svelte";
   import type { Subscriber, Writable } from "svelte/store";
   import editorWorker from "monaco-editor/esm/vs/editor/editor.worker?worker";
   import type { editor } from "monaco-editor";
@@ -11,7 +11,6 @@
   let divEl: HTMLElement;
   let editor: editor.IStandaloneCodeEditor;
   let Monaco;
-  const initialFind = getContext("initialFind");
 
   onMount(async () => {
     self.MonacoEnvironment = {

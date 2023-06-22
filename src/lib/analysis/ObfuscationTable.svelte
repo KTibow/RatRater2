@@ -10,11 +10,12 @@
   <div class:not-last={i != obfuscation.length - 1} class="w-full border-primary/50">
     <p>{obfuscator}</p>
     {#if "file" in info}
+      {@const file = info.file}
       <button
-        on:click={() => dispatch("open", info.file)}
+        on:click={() => dispatch("open", file)}
         class="underline-hover truncate text-left font-mono text-primary underline"
       >
-        {info.file}
+        {file}
       </button>
     {:else}
       <p class="truncate font-mono">{info.quote}</p>
