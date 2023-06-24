@@ -10,5 +10,5 @@
 <p class="mb-2">We also accept drop/paste</p>
 <FileChooser on:chosen />
 <p class="mt-auto">
-  Made by KTibow with <a href="https://discord.gg/7sBMTv7AF3" class="underline-hover">Vanta</a>
+  Made by KTibow. <a href="https://discord.gg/ARW8nnh5Kw" class="underline-hover">Discord</a>
 </p>
