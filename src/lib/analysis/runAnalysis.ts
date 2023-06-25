@@ -15,7 +15,7 @@ const prescan = (zip: JSZip & JSZip.JSZipObject, files: string[], state: Analysi
     if (match) shorts.push({ file, name: match[2] });
   }
   if (shorts.length > 3) {
-    const shortest = shorts.sort((a, b) => a.name[1].length - b.name[1].length)[0];
+    const shortest = shorts.sort((a, b) => a.name.length - b.name.length)[0];
     state.obfuscation["Possible obfuscation (short file names)"] = {
       file: shortest.file,
     };

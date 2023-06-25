@@ -9,6 +9,8 @@
 </p>
 <p class="mb-2">We also accept drop/paste</p>
 <FileChooser on:chosen />
-<p class="mt-auto">
-  Made by KTibow. <a href="https://discord.gg/ARW8nnh5Kw" class="underline-hover">Discord</a>
+<p class="mt-auto flex items-center gap-2">
+  <span class="flex rounded-lg bg-primary px-2 py-1 text-on-primary">NEW</span>
+  <a href="https://discord.gg/ARW8nnh5Kw" class="underline-hover">Discord</a>
 </p>
+<p class="mt-2">Made by @KTibow</p>
