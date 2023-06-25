@@ -8,15 +8,23 @@ const prescan = (zip: JSZip & JSZip.JSZipObject, files: string[], state: Analysi
     state.obfuscation["Custom zip comment"] = { quote: zip.comment };
   }
 
-  const shorts = files
-    .map((file: string) => ({ file, match: file.match(/(\/|^)(.{1,2})\.class$/i) }))
-    .filter((m) => m.match) as { file: string; match: RegExpMatchArray }[];
+  const shorts = [];
+  const re = /(\/|^)(.{1,2})\.class$/i;
+  for (const file of files) {
+    const match = re.exec(file);
+    if (match) shorts.push({ file, name: match[2] });
+  }
   if (shorts.length > 3) {
-    const shortest = shorts.sort((a, b) => a.match[1].length - b.match[1].length)[0];
-    state.obfuscation["Possible obfuscation (short file names)"] = { file: shortest.file };
+    const shortest = shorts.sort((a, b) => a.name[1].length - b.name[1].length)[0];
+    state.obfuscation["Possible obfuscation (short file names)"] = {
+      file: shortest.file,
+    };
   }
 
-  const executables = files.filter((file: string) => /\.(jar|exe|dll)$/i.test(file));
+  const executables = files.filter((file: string) => {
+    const n = file.toLowerCase();
+    return n.endsWith(".jar") || n.endsWith(".exe") || n.endsWith(".dll");
+  });
   if (executables.length > 0) {
     state.obfuscation["Non-scanned executable files"] = {
       file: executables[0],
