@@ -44,9 +44,9 @@
 
     let response;
     try {
-      const endpoint = "ratrater" + (Math.floor(Math.random() * 4) + 1) + ".azurewebsites.net";
+      const endpoint = "ratrater" + Math.ceil(Math.random() * 4) + ".azurewebsites.net";
       // load balancer lol
-      // also see: https://github.com/KTibow/RatRater2Backend
+      // also see: https://github.com/KTibow/RatRater2Back
       response = await fetch(`https://${endpoint}/decompile?decompiler=${dialog.decompiler}`, {
         method: "POST",
         body: form,
