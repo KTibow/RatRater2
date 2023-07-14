@@ -44,7 +44,7 @@
 
     let response;
     try {
-      const endpoint = "ratrater" + Math.ceil(Math.random() * 4) + ".azurewebsites.net";
+      const endpoint = "ratrater" + Math.ceil(Math.random() * 3) + ".azurewebsites.net";
       // load balancer lol
       // also see: https://github.com/KTibow/RatRater2Back
       response = await fetch(`https://${endpoint}/decompile?decompiler=${dialog.decompiler}`, {
