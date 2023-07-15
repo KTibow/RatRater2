@@ -9,8 +9,8 @@
   let content: Writable<string> | undefined;
   let rawContent: string, decompiled: string | undefined;
 
-  $: editorFile = $view.editorFile as string;
   $: {
+    const editorFile = $view.editorFile as string;
     const files = ($file as Loaded).zip.files;
     const fileZip = files[editorFile] || files["/" + editorFile];
     if (!editorFile.endsWith(".class")) decompiled = undefined;
@@ -18,6 +18,7 @@
   }
   $: if (content && rawContent) $content = decompiled || rawContent;
   const downloadFile = async () => {
+    const editorFile = $view.editorFile as string;
     const fileZip = ($file as Loaded).zip.files[editorFile];
     if (!fileZip) return console.error("could not find file");
     const fileBlob = await fileZip.async("blob");
@@ -35,9 +36,9 @@
 <div class="relative flex-grow">
   <Monaco bind:content />
   <div class="absolute top-full flex w-full items-center gap-2 p-1">
-    <span class="mr-auto flex-1 overflow-hidden text-ellipsis font-mono">{editorFile}</span>
+    <span class="mr-auto flex-1 overflow-hidden text-ellipsis font-mono">{$view.editorFile}</span>
     <Chip type="assist" on:click={downloadFile} icon={iconExtract}>Grab</Chip>
-    {#if editorFile.endsWith(".class")}
+    {#if $view.editorFile?.endsWith(".class")}
       <Decompile bind:contentOut={decompiled} contentIn={rawContent} />
     {/if}
   </div>

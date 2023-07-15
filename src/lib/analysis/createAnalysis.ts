@@ -28,7 +28,7 @@ export type Analysis = {
 };
 export type Obfuscation = [
   string,
-  { file: string; initialFind: InitialFind } | { quote: string; initialFind: InitialFind }
+  { file: string; initialFind?: InitialFind } | { quote: string; initialFind?: InitialFind }
 ][];
 export type Flag = { matches: string[]; link?: string; initialFind: InitialFind };
 
