@@ -44,6 +44,7 @@ const prescan = (zip: JSZip & JSZip.JSZipObject, files: string[], state: Analysi
     { name: "MacroMod", pattern: "com/macromod" },
     { name: "Quanity", pattern: "com/quantiy" },
     { name: "DogeRat", pattern: "vytal/should/kill/himself" },
+    { name: "SchubiRat", pattern: "dev/schubilegend" },
   ];
   for (const f of flags) {
     const match = files.find((file) => file.startsWith(f.pattern));
@@ -102,6 +103,7 @@ const scan = (file: string, contents: string, state: Analysis) => {
   const addFlag = (name: string, data: { link?: string; initialFind: InitialFind }) => {
     if (state.flags[name]) {
       state.flags[name].matches.push(file);
+      return;
     }
     state.flags[name] = {
       matches: [file],
