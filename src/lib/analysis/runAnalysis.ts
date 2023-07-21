@@ -153,7 +153,7 @@ const scan = (file: string, contents: string, state: Analysis) => {
 export default async (
   { zip, data, files }: { zip: JSZip & JSZip.JSZipObject; data: ArrayBuffer; files: string[] },
   analysis: Writable<Analysis>,
-  progress: Writable<Progress>
+  progress: Writable<Progress>,
 ) => {
   const state: Analysis = { obfuscation: {}, flags: {} };
   const propagate = () => analysis.set(state);
