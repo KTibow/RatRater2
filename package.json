@@ -19,7 +19,7 @@
     "eslint": "^8.45.0",
     "eslint-config-prettier": "^8.8.0",
     "jszip": "^3.10.1",
-    "m3-svelte": "^1.0.9",
+    "m3-svelte": "^2.0.2",
     "monaco-editor": "^0.40.0",
     "postcss": "^8.4.26",
     "postcss-load-config": "^4.0.1",

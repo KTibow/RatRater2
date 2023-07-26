@@ -1,27 +1,26 @@
 <script lang="ts">
-  import { createEventDispatcher, getContext } from "svelte";
+  import { getContext } from "svelte";
   import type { Writable } from "svelte/store";
-  import { file, type Loaded } from "$lib/state";
-  import { createAnalysis, type Analysis, type Progress, type Obfuscation } from "./createAnalysis";
+  import { file, view, type Loaded } from "$lib/state";
+  import { createAnalysis, type Analysis, type Progress } from "./createAnalysis";
   import ObfuscationTable from "./ObfuscationTable.svelte";
   import FlagCard from "./FlagCard.svelte";
 
   const officialHashes: Writable<{ file: string; hash: string; source: string; time: number }[]> =
     getContext("hashes");
   $: officialFile = $officialHashes.find((h) => h.hash == ($file as Loaded).hash);
-  const dispatch = createEventDispatcher();
 
   let analysis: Writable<Analysis>;
   let progress: Writable<Progress>;
   $: if ("zip" in $file) {
     ({ analysis, progress } = createAnalysis());
   }
-  let obfuscation: Obfuscation;
+
   $: obfuscation = Object.entries($analysis.obfuscation);
 </script>
 
-<div class="flex gap-4 max-lg:flex-col">
-  <div class="info-layout flex-1 rounded-2xl bg-primary/10">
+<div class="flex gap-2 max-lg:flex-col">
+  <div class="info-layout rounded-2xl bg-background">
     <p class="m3-font-headline-small">
       {#if !$progress}
         Starting scan...
@@ -33,14 +32,14 @@
     </p>
   </div>
   {#if obfuscation && obfuscation.length}
-    <div class="info-layout flex-1 rounded-2xl bg-primary/10">
+    <div class="info-layout rounded-2xl bg-background">
       <p class="m3-font-headline-small">Possible obfuscation</p>
       <ObfuscationTable {obfuscation} on:open />
     </div>
   {/if}
   {#if $analysis.flagged || !$officialHashes || officialFile}
     <div
-      class="info-layout flex-1 rounded-2xl border-primary bg-primary/10"
+      class="info-layout rounded-2xl border-primary bg-background"
       class:border-4={$analysis.flagged}
     >
       {#if $analysis.flagged}
@@ -50,7 +49,7 @@
         {#if flag.file}
           <button
             class="underline-hover truncate text-primary underline"
-            on:click={() => dispatch("open", flag.file)}
+            on:click={() => ($view = { tab: "browser", editorFile: flag.file })}
           >
             File: <span class="font-mono">{flag.file}</span>
           </button>
@@ -63,15 +62,15 @@
         <p class="m3-font-headline-small text-center">Found in official sources</p>
         <table class="w-full">
           <tr>
-            <th class="border-r border-outline pr-2">File</th>
+            <th class="border-r border-outline-variant pr-2">File</th>
             <td class="pl-2">{officialFile.file}</td>
           </tr>
           <tr>
-            <th class="border-r border-outline pr-2">Source</th>
+            <th class="border-r border-outline-variant pr-2">Source</th>
             <td class="pl-2">{officialFile.source}</td>
           </tr>
           <tr>
-            <th class="border-r border-outline pr-2">Added</th>
+            <th class="border-r border-outline-variant pr-2">Added</th>
             <td class="pl-2">{new Date(officialFile.time).toLocaleString()}</td>
           </tr>
         </table>
@@ -79,14 +78,14 @@
     </div>
   {/if}
 </div>
-<div class="grid gap-4 lg:grid-cols-4 2xl:grid-cols-6">
+<div class="grid gap-4 md:grid-cols-2 xl:grid-cols-4 2xl:grid-cols-6">
   {#each Object.entries($analysis.flags) as [name, flag]}
-    <FlagCard {name} {flag} on:open />
+    <FlagCard {name} {flag} />
   {/each}
 </div>
 
 <style lang="postcss">
   .info-layout {
-    @apply flex flex-col items-center justify-center overflow-hidden p-4;
+    @apply flex flex-col items-center justify-center overflow-hidden p-4 lg:flex-1;
   }
 </style>

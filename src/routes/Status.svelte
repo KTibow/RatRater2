@@ -3,7 +3,7 @@
   export let icon: IconifyIcon;
 </script>
 
-<div class="vertical-container m-auto rounded-2xl bg-primary/10 p-6">
+<div class="vertical-container m-auto rounded-2xl bg-surface-container-high p-6">
   <Icon {icon} height={24} class="text-secondary" />
   <slot />
 </div>

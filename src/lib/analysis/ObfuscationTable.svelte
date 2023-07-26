@@ -1,18 +1,18 @@
 <script lang="ts">
-  import { createEventDispatcher } from "svelte";
   import type { Obfuscation } from "./createAnalysis";
+  import { view } from "$lib/state";
 
   export let obfuscation: Obfuscation;
-  const dispatch = createEventDispatcher();
 </script>
 
 {#each obfuscation as [obfuscator, info], i}
-  <div class:not-last={i != obfuscation.length - 1} class="w-full border-primary/50">
+  <div class:not-last={i != obfuscation.length - 1} class="w-full border-outline-variant">
     <p>{obfuscator}</p>
     {#if "file" in info}
       {@const file = info.file}
       <button
-        on:click={() => dispatch("open", file)}
+        on:click={() =>
+          ($view = { tab: "browser", editorFile: file, editorFind: info.initialFind })}
         class="underline-hover truncate text-left font-mono text-primary underline"
       >
         {file}

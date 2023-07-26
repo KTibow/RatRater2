@@ -1,14 +1,57 @@
 <script lang="ts">
-  import { Chip, Dialog, Radio, Switch, Snackbar, SnackbarPlacer } from "m3-svelte";
-  import iconRefresh from "@iconify-icons/ic/outline-refresh";
+  import iconMenu from "@iconify-icons/ic/outline-more-vert";
+  import iconCode from "@iconify-icons/ic/outline-code";
+  import iconFile from "@iconify-icons/ic/outline-description";
+  import iconPlay from "@iconify-icons/ic/outline-play-arrow";
+  import Icon from "@iconify/svelte";
   import JSZip from "jszip";
-  import { hash } from "$lib/hash";
-  import { file, type Loaded, view } from "$lib/state";
   import { tick } from "svelte";
+  import { fade, slide } from "svelte/transition";
+  import {
+    Button,
+    Dialog,
+    Menu,
+    MenuItem,
+    Snackbar,
+    easeEmphasized,
+    easeEmphasizedDecel,
+  } from "m3-svelte";
+  import type { SnackbarIn } from "m3-svelte/package/containers/Snackbar.svelte";
 
-  export let contentOut: string | undefined;
+  import { hash } from "$lib/hash";
+  import { file, view, type Loaded } from "$lib/state";
+
   export let contentIn: string | undefined;
+  export let contentOut: string | undefined;
 
+  let decompiledContent: string | undefined;
+  let showDecompiled = false;
+  $: decompiledContent = contentIn
+    ? JSON.parse(localStorage["rr2DecompilationCache"] || "{}")[hash(contentIn)] || undefined
+    : undefined;
+  $: contentOut = (showDecompiled && decompiledContent) || undefined;
+
+  const decompileMethods = [
+    { id: "forgeflower-single", text: "FernFlower\n(.class)" },
+    { id: "quiltflower-single", text: "QuiltFlower\n(.class)" },
+    { id: "procyon-single", text: "Procyon\n(.class)" },
+    { id: "cfr-single", text: "CFR\n(.class)" },
+    { id: "forgeflower-all", text: "FernFlower\n(.jar)" },
+    { id: "quiltflower-all", text: "QuiltFlower\n(.jar)" },
+    { id: "procyon-all", text: "Procyon\n(.jar)" },
+    { id: "cfr-all", text: "CFR\n(.jar)" },
+  ];
+  let dialogOpen = false;
+  let decompileMethod = "cfr-single";
+  let hotServer: string | undefined;
+  const openDialog = () => {
+    dialogOpen = true;
+    menuOpen = false;
+    hotServer = "https://ratrater" + Math.ceil(Math.random() * 3) + ".azurewebsites.net";
+    fetch(hotServer);
+  };
+
+  let show: (data: SnackbarIn) => void;
   const addToCache = (raw: string, decompiled: string) => {
     const caches = JSON.parse(localStorage["rr2DecompilationCache"] || "{}");
     caches[hash(raw)] = decompiled;
@@ -19,23 +62,19 @@
       console.error("failed to update cache", e);
     }
   };
-  let decompiledContent: string | undefined,
-    showDecompiled = false;
-  $: decompiledContent =
-    (contentIn && JSON.parse(localStorage["rr2DecompilationCache"] || "{}")[hash(contentIn)]) ||
-    undefined;
-  $: contentOut = (showDecompiled && decompiledContent) || undefined;
-
-  let snackbar: { open: boolean; message?: string } = { open: false };
-  let dialog = { open: false, decompiler: "cfr", decompileAll: true };
-  $: contentIn, (snackbar = { open: false });
-  const decompile = async () => {
-    snackbar = { open: true, message: "Decompiling..." };
+  const runDecompile = async () => {
+    show({ message: "Decompiling..." });
     const form = new FormData(),
+      server = hotServer,
+      decompiler = decompileMethod.split("-")[0],
+      decompileScope = decompileMethod.split("-")[1],
       pinnedRaw = contentIn as string,
       pinnedFile = $view.editorFile as string,
       pinnedZip = ($file as Loaded).zip;
-    if (dialog.decompileAll) {
+    dialogOpen = false;
+    hotServer = undefined;
+
+    if (decompileScope == "all") {
       form.set("file", ($file as Loaded).file, "file.jar");
     } else {
       const blob = await ($file as Loaded).zip.files[pinnedFile].async("blob");
@@ -44,25 +83,23 @@
 
     let response;
     try {
-      const endpoint = "ratrater" + Math.ceil(Math.random() * 3) + ".azurewebsites.net";
-      // load balancer lol
-      // also see: https://github.com/KTibow/RatRater2Back
-      response = await fetch(`https://${endpoint}/decompile?decompiler=${dialog.decompiler}`, {
+      response = await fetch(`${server}/decompile?decompiler=${decompiler}`, {
         method: "POST",
         body: form,
       });
       if (!response.ok) {
-        snackbar = { open: true, message: "Failed to decompile" };
+        show({ message: "Failed to decompile" });
         console.error(response);
         return;
       }
     } catch (e) {
-      snackbar = { open: true, message: "Failed to decompile" };
+      show({ message: "Failed to decompile" });
       console.error(e);
       return;
     }
-    if (dialog.decompileAll) {
-      snackbar = { open: true, message: "Loading decompiled..." };
+
+    if (decompileScope == "all") {
+      show({ message: "Loading decompiled..." });
       await tick();
       const outputZip = await new JSZip().loadAsync(await response.arrayBuffer());
       await Promise.all(
@@ -79,119 +116,98 @@
             decompiledContent = decompiled;
             showDecompiled = true;
           }
-        })
+        }),
       );
     } else {
       decompiledContent = await response.text();
       addToCache(pinnedRaw, decompiledContent);
       showDecompiled = true;
     }
-    snackbar = { open: true, message: "Decompiled!" };
+    show({ message: "Decompiled!" });
   };
 
-  $: classCount = Object.values(($file as Loaded).zip.files).filter(
-    (f) => !f.dir && f.name.endsWith(".class")
-  ).length;
+  let menuOpen = false;
+  let classCount = 0;
+  $: {
+    const hasZip = "zip" in $file;
+    if (!hasZip) break $;
+    const fileObj = ($file as Loaded).zip.files;
+    classCount = Object.values(fileObj).filter((f) => !f.dir && f.name.endsWith(".class")).length;
+  }
 </script>
 
-{#if decompiledContent}
-  <Chip
-    type="assist"
-    selected={showDecompiled}
-    trailingIcon={iconRefresh}
-    on:click={() => (showDecompiled = !showDecompiled)}
-    on:trailingClicked={() => (dialog.open = true)}
-  >
-    Decompiled
-  </Chip>
-{:else}
-  <Chip type="assist" on:click={() => (dialog.open = true)}>Decompile</Chip>
-{/if}
-<Dialog
-  bind:open={dialog.open}
-  title="Decompile file"
-  confirmLabel="Decompile"
-  cancelLabel="Cancel"
-  on:closed={(e) => {
-    if (e.detail.method == "clickConfirm") decompile();
-  }}
->
-  <p class="m3-font-label-large mb-2">
-    <label class="flex items-center gap-2" for={undefined}>
-      <Radio value="forgeflower" bind:group={dialog.decompiler} name="decompiler" /> FernFlower
-    </label>
-  </p>
-  <p class="m3-font-label-large mb-2">
-    <label class="flex items-center gap-2" for={undefined}>
-      <Radio value="quiltflower" bind:group={dialog.decompiler} name="decompiler" /> QuiltFlower
-    </label>
-  </p>
-  <p class="m3-font-label-large mb-2">
-    <label class="flex items-center gap-2" for={undefined}>
-      <Radio value="procyon" bind:group={dialog.decompiler} name="decompiler" /> Procyon
-    </label>
-  </p>
-  <p class="m3-font-label-large mb-4">
-    <label class="flex items-center gap-2" for={undefined}>
-      <Radio value="cfr" bind:group={dialog.decompiler} name="decompiler" /> CFR
-    </label>
-  </p>
-  <p class="m3-font-label-large mb-4">
-    <label class="flex items-center gap-2" for={undefined}>
-      <Switch bind:checked={dialog.decompileAll} /> Decompile whole .jar
-    </label>
-  </p>
-  <details>
-    <summary class="font-italic cursor-pointer">Please be patient</summary>
-    <p class="mb-2">
-      The fact I could run these decompilers without putting any ads on here is crazy.
-    </p>
-    <p class="mb-2">
-      Azure App Services, plus a mix of Docker, Python, Java, and janky load balancing take your
-      request and run a Java decompiler for you.
-    </p>
-    <p class="mb-2">
-      Don't overload the servers. Note that a mix of a slow decompiler like Procyon, decompiling the
-      whole jar, and a large jar may mean your request doesn't get through in time.
-    </p>
-    <p class="mb-2">
-      This jar has <strong>{classCount} classes</strong>. So you can understand some expected
-      response times, here's a table. Note that different servers may have different response times,
-      especially if they have a cold start.
-    </p>
-    <table class="border-collapse">
-      <tr>
-        <td>File</td>
-        <td>FernFlower</td>
-        <td>QuiltFlower</td>
-        <td>Procyon</td>
-        <td>CFR</td>
-      </tr>
-      <tr>
-        <td>45-class non-obfuscated jar</td><td>7s</td><td>10s</td><td>13s</td><td>6s</td>
-      </tr>
-      <tr>
-        <td>348-class non-obfuscated jar</td><td>52s</td><td>56s</td>
-        <td><a class="underline-hover" href="http://http.cat/503">503</a></td><td>30s</td>
-      </tr>
-      <tr>
-        <td>Single obfuscated class</td>
-        <td><a class="underline-hover" href="http://http.cat/500">500</a></td>
-        <td>12s</td><td>20s</td><td>10s</td>
-      </tr>
-    </table>
-  </details>
+<div class="relative flex">
+  <Button type="text" iconType="full" on:click={() => (menuOpen = !menuOpen)}>
+    <Icon icon={iconMenu} />
+  </Button>
+  {#if menuOpen}
+    <div
+      class="absolute top-full right-0 z-10"
+      in:slide={{ duration: 400, easing: easeEmphasizedDecel }}
+      out:fade={{ duration: 300, easing: easeEmphasized }}
+    >
+      <Menu>
+        {#if decompiledContent && showDecompiled}
+          <MenuItem icon={iconCode} on:click={() => ((showDecompiled = false), (menuOpen = false))}>
+            Raw
+          </MenuItem>
+        {:else if decompiledContent}
+          <MenuItem icon={iconFile} on:click={() => ((showDecompiled = true), (menuOpen = false))}>
+            Decompiled
+          </MenuItem>
+        {/if}
+        <MenuItem icon={iconPlay} on:click={openDialog}>Start decompiling</MenuItem>
+      </Menu>
+    </div>
+  {/if}
+</div>
+<Dialog bind:open={dialogOpen} headline="Start decompiling">
+  <div class="grid grid-cols-4 gap-2">
+    {#each decompileMethods as method}
+      <input
+        type="radio"
+        name="decompile-method"
+        value={method.id}
+        id="decompile-method-{method.id}"
+        bind:group={decompileMethod}
+      />
+      <label for="decompile-method-{method.id}">
+        {method.text.split("\n")[0]}<br />{method.text.split("\n")[1]}
+      </label>
+    {/each}
+  </div>
+  <svelte:fragment slot="buttons">
+    <Button
+      type="text"
+      on:click={() => {
+        dialogOpen = false;
+        hotServer = undefined;
+      }}
+    >
+      Cancel
+    </Button>
+    <Button type="text" on:click={runDecompile}>Decompile</Button>
+  </svelte:fragment>
 </Dialog>
-{#key snackbar}
-  <SnackbarPlacer>
-    <Snackbar open={snackbar.open}>
-      {snackbar.message}
-    </Snackbar>
-  </SnackbarPlacer>
-{/key}
+<Snackbar bind:show />
 
-<style lang="postcss">
-  table > tr > td {
-    @apply border border-outline px-2;
+<style>
+  input {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+  }
+  label {
+    padding: 0.5rem 0.6rem;
+    border-radius: 1.2rem;
+    background-color: rgb(var(--m3-scheme-background));
+    color: rgb(var(--m3-scheme-on-background));
+    cursor: pointer;
+    transition: all 200ms;
+  }
+  input:checked + label {
+    background-color: rgb(var(--m3-scheme-primary-container));
+    color: rgb(var(--m3-scheme-on-primary-container));
+    border-radius: 0.5rem;
   }
 </style>

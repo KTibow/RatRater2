@@ -12,8 +12,12 @@ export type Loaded = { state: "loaded"; file: File; data: ArrayBuffer; zip: JSZi
 export const file = writable<
   { state?: never } | { state: "loading"; file: File } | Loaded | { state: "error"; file: File }
 >({});
-export const view = writable<{ tab: number; editorFile?: string; editorFind?: InitialFind }>({
-  tab: 0,
+export const view = writable<{
+  tab: "analysis" | "browser";
+  editorFile?: string;
+  editorFind?: InitialFind;
+}>({
+  tab: "analysis",
 });
 export const loadFile = async (newFile: File) => {
   file.set({ state: "loading", file: newFile });

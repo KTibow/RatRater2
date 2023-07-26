@@ -1,22 +1,17 @@
 <script lang="ts">
+  import Icon from "@iconify/svelte";
+  import iconClose from "@iconify-icons/ic/outline-close";
   import iconExtract from "@iconify-icons/ic/outline-unarchive";
   import type { Writable } from "svelte/store";
-  import { Chip } from "m3-svelte";
-  import { file, type Loaded, view } from "$lib/state";
-  import Monaco from "./Monaco.svelte";
+  import { Button } from "m3-svelte";
+
+  import { file, view, type Loaded } from "$lib/state";
   import Decompile from "./Decompile.svelte";
+  import Monaco from "./Monaco.svelte";
 
-  let content: Writable<string> | undefined;
-  let rawContent: string, decompiled: string | undefined;
-
-  $: {
-    const editorFile = $view.editorFile as string;
-    const files = ($file as Loaded).zip.files;
-    const fileZip = files[editorFile] || files["/" + editorFile];
-    if (!editorFile.endsWith(".class")) decompiled = undefined;
-    if (fileZip) fileZip.async("string").then((c) => (rawContent = c));
-  }
-  $: if (content && rawContent) $content = decompiled || rawContent;
+  const goBack = () => {
+    $view = { tab: "browser" };
+  };
   const downloadFile = async () => {
     const editorFile = $view.editorFile as string;
     const fileZip = ($file as Loaded).zip.files[editorFile];
@@ -25,21 +20,51 @@
     const fileUrl = URL.createObjectURL(fileBlob);
 
     const link = document.createElement("a");
-    link.setAttribute("download", editorFile.split("/").at(-1) as string);
+    link.setAttribute("download", splitPath.end);
     link.setAttribute("href", fileUrl);
     document.head.appendChild(link);
     link.click();
     link.remove();
   };
+
+  let splitPath = { start: "", end: "" };
+  $: {
+    const path = $view.editorFile;
+    if (path) {
+      let lastIndex = path.lastIndexOf("/");
+      splitPath = {
+        start: path.substring(0, lastIndex) || "/",
+        end: path.substring(lastIndex + 1),
+      };
+    }
+  }
+
+  let content: Writable<string> | undefined;
+  let rawContent: string | undefined, decompiled: string | undefined;
+  $: {
+    const path = $view.editorFile;
+    const hasZip = "zip" in $file;
+    if (!path || !hasZip) break $;
+
+    const files = ($file as Loaded).zip.files;
+    const fileZip = files[path] || files["/" + path];
+    if (!path.endsWith(".class")) decompiled = undefined;
+    if (fileZip) fileZip.async("string").then((c) => (rawContent = c));
+  }
+  $: if (content && rawContent != undefined) $content = decompiled || rawContent;
 </script>
 
-<div class="relative flex-grow">
-  <Monaco bind:content />
-  <div class="absolute top-full flex w-full items-center gap-2 p-1">
-    <span class="mr-auto flex-1 overflow-hidden text-ellipsis font-mono">{$view.editorFile}</span>
-    <Chip type="assist" on:click={downloadFile} icon={iconExtract}>Grab</Chip>
-    {#if $view.editorFile?.endsWith(".class")}
-      <Decompile bind:contentOut={decompiled} contentIn={rawContent} />
-    {/if}
+<div class="flex items-center gap-4 p-4">
+  <div class="mr-auto">
+    <p class="m3-font-title-medium">{splitPath.end}</p>
+    <p class="m3-font-body-medium text-on-surface-variant">{splitPath.start}</p>
   </div>
+  <div class="lg:hidden flex">
+    <Button type="text" iconType="full" on:click={goBack}><Icon icon={iconClose} /></Button>
+  </div>
+  <Button type="text" iconType="full" on:click={downloadFile}><Icon icon={iconExtract} /></Button>
+  {#if $view.editorFile && $view.editorFile.endsWith(".class")}
+    <Decompile contentIn={rawContent} bind:contentOut={decompiled} />
+  {/if}
 </div>
+<Monaco bind:content />

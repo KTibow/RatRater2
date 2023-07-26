@@ -12,7 +12,7 @@
   let editor: editor.IStandaloneCodeEditor;
   let Monaco;
 
-  onMount(async () => {
+  const loadMonaco = async () => {
     self.MonacoEnvironment = {
       getWorker: () => new editorWorker(),
     };
@@ -112,7 +112,7 @@
           wholeWord: $view.editorFind.wholeWord || false,
           matchCase: $view.editorFind.matchCase || false,
         },
-        false
+        false,
       );
       editor.focus();
       setTimeout(() => {
@@ -121,20 +121,21 @@
         } catch (e) {}
       }, 200);
     }
-
+  };
+  onMount(() => {
+    loadMonaco();
     return () => {
-      editor.dispose();
+      if (editor) editor.dispose();
     };
   });
 </script>
 
-<div bind:this={divEl} class="h-full w-full" />
+<div bind:this={divEl} class="grow" />
 <svelte:window
   on:resize={() => {
     editor.layout({ width: 0, height: 0 });
     window.requestAnimationFrame(() => {
-      if (!divEl.parentElement) return;
-      const rect = divEl.parentElement.getBoundingClientRect();
+      const rect = divEl.getBoundingClientRect();
       editor.layout({ width: rect.width, height: rect.height });
     });
   }}

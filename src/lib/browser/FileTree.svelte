@@ -22,7 +22,7 @@
 {#each sortTree(nodes) as [name, contents]}
   {#if contents == 0}
     <button
-      class="shared-name shared-ring flex items-center gap-2 text-primary"
+      class="shared-name flex items-center gap-2 text-primary"
       on:click={() => dispatch("chosen", name)}
     >
       <Icon
@@ -36,10 +36,7 @@
       <span class="shared-chop inline-block">{name}</span>
     </button>
   {:else}
-    <button
-      class="shared-name shared-ring flex items-center gap-2"
-      on:click={() => toggleFolder(name)}
-    >
+    <button class="shared-name flex items-center gap-2" on:click={() => toggleFolder(name)}>
       <Icon icon={openFolders.has(name) ? iconOpenFolder : iconFolder} class="flex-shrink-0" />
       <span class="shared-chop inline-block">{name}</span>
     </button>
@@ -57,13 +54,17 @@
 {/each}
 
 <style lang="postcss">
+  button {
+    @apply transition-colors rounded-md -ml-1 pl-1;
+  }
+  button:hover {
+    @apply bg-primary-container/50 text-on-primary-container;
+  }
+  button:active {
+    @apply bg-primary-container text-on-primary-container;
+  }
   .shared-name {
     @apply w-full whitespace-nowrap font-mono;
-  }
-  .shared-ring {
-    @apply -ml-1 rounded-xl pl-1 outline-2 outline-offset-2 outline-primary;
-    @apply hover:outline active:outline-offset-4;
-    transition: outline-offset 150ms;
   }
   .shared-chop {
     @apply overflow-hidden text-ellipsis;
