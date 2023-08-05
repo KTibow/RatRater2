@@ -206,9 +206,11 @@ export default async (
     }
     const json = await resp.json();
     if (!state.flagged) {
-      if (json.class == "sure") {
+      if (json.class == "yes") {
         state.flagged = { name: "Quantiy" };
-      } else if (json.class == "maybe") {
+      } else if (json.class == "medium") {
+        state.flagged = { name: "Quantiy (medium confidence)" };
+      } else if (json.class == "low") {
         state.flagged = { name: "Quantiy (low confidence)" };
       }
     }
