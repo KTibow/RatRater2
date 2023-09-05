@@ -6,9 +6,19 @@
   import ObfuscationTable from "./ObfuscationTable.svelte";
   import FlagCard from "./FlagCard.svelte";
 
-  const officialHashes: Writable<{ file: string; hash: string; source: string; time: number }[]> =
-    getContext("hashes");
-  $: officialFile = $officialHashes.find((h) => h.hash == ($file as Loaded).hash);
+  type OfficialHash = { file: string; hash: string; source: string; time: number };
+  const officialHashes: Writable<OfficialHash[]> = getContext("hashes");
+  let officialFile: OfficialHash | undefined,
+    officialName: OfficialHash | undefined,
+    impersonating: string | undefined;
+  $: {
+    officialFile = $officialHashes.find((h) => h.hash == ($file as Loaded).hash);
+    officialName = $officialHashes.find((h) => h.file == ($file as Loaded).file.name);
+    impersonating =
+      officialName && !(officialFile && officialFile.hash == officialName.hash)
+        ? officialName.file
+        : undefined;
+  }
 
   let analysis: Writable<Analysis>;
   let progress: Writable<Progress>;
@@ -31,15 +41,20 @@
       {/if}
     </p>
   </div>
-  {#if obfuscation && obfuscation.length}
+  {#if (obfuscation && obfuscation.length) || impersonating}
     <div class="info-layout rounded-2xl bg-background">
       <p class="m3-font-headline-small">Possible obfuscation</p>
       <ObfuscationTable {obfuscation} on:open />
+      {#if impersonating}
+        <div class="mt-2 w-full rounded-lg bg-tertiary-container p-2 text-on-tertiary-container">
+          This file may be impersonating the official version of {impersonating}
+        </div>
+      {/if}
     </div>
   {/if}
   {#if $analysis.flagged || !$officialHashes || officialFile}
     <div
-      class="info-layout rounded-2xl border-primary bg-background"
+      class="info-layout rounded-2xl border-tertiary bg-background"
       class:border-4={$analysis.flagged}
     >
       {#if $analysis.flagged}
