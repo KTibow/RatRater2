@@ -94,7 +94,7 @@ const scan = (file: string, contents: string, state: Analysis) => {
       file,
     };
   }
-  const match15 = contents.match(/[^a-z][a-z]{15}[^a-z]/g);
+  const match15 = contents.match(/[^a-z](?!linenumbertable)[a-z]{15}[^a-z]/g);
   if (match15 && match15.length > 10) {
     state.obfuscation["Possibly Skidfuscator (many 15-char functions)"] = { file };
   }
