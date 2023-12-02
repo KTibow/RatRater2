@@ -173,6 +173,7 @@ export default async (
     .filter((path) => path.endsWith(".class"))
     .map(async (f) => {
       const contents = await zip.files[f].async("string");
+      if (window.process) window.process(contents);
       scan(f, contents, state);
       propagate();
     });
