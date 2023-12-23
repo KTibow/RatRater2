@@ -113,7 +113,11 @@ const scan = (file: string, contents: string, state: Analysis) => {
       ...data,
     };
   };
-  if (contents.includes("func_111286_b") || contents.includes("func_148254_d") || contents.includes("field_148258_c")) {
+  if (
+    contents.includes("func_111286_b") ||
+    contents.includes("func_148254_d") ||
+    contents.includes("field_148258_c")
+  ) {
     addFlag("Uses session token", {
       link: "https://github.com/KTibow/RatRater2/wiki/Flags#func_111286_b--func_148254_d--field_148258_c",
       initialFind: { searchString: "func_111286_b|func_148254_d|field_148258_c", isRegex: true },

@@ -1,6 +1,6 @@
 <script lang="ts">
-  import iconLoading from "@iconify-icons/ic/outline-pending-actions";
-  import iconError from "@iconify-icons/ic/outline-error";
+  import iconLoading from "@ktibow/iconset-ic/outline-pending-actions";
+  import iconError from "@ktibow/iconset-ic/outline-error";
   import { onMount, setContext } from "svelte";
   import { writable } from "svelte/store";
   import { fade } from "svelte/transition";

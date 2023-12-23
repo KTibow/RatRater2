@@ -1,11 +1,11 @@
 <script lang="ts">
   import { createEventDispatcher } from "svelte";
   import Icon from "@iconify/svelte";
-  import iconFile from "@iconify-icons/ic/outline-description";
-  import iconCode from "@iconify-icons/ic/outline-code";
-  import iconExtension from "@iconify-icons/ic/outline-extension";
-  import iconFolder from "@iconify-icons/ic/folder";
-  import iconOpenFolder from "@iconify-icons/ic/outline-folder";
+  import iconFile from "@ktibow/iconset-ic/outline-description";
+  import iconCode from "@ktibow/iconset-ic/outline-code";
+  import iconExtension from "@ktibow/iconset-ic/outline-extension";
+  import iconFolder from "@ktibow/iconset-ic/folder";
+  import iconOpenFolder from "@ktibow/iconset-ic/outline-folder";
   import { sortTree, type Tree } from "./tree";
 
   export let nodes: Tree;
@@ -55,7 +55,7 @@
 
 <style lang="postcss">
   button {
-    @apply transition-colors rounded-md -ml-1 pl-1;
+    @apply -ml-1 rounded-md pl-1 transition-colors;
   }
   button:hover {
     @apply bg-primary-container/50 text-on-primary-container;

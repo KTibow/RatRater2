@@ -1,6 +1,6 @@
 <script lang="ts">
   import Icon from "@iconify/svelte";
-  import iconFile from "@iconify-icons/ic/outline-file-present";
+  import iconFile from "@ktibow/iconset-ic/outline-file-present";
   import { onMount } from "svelte";
   import { sharedAxisTransition } from "m3-svelte";
   import { page } from "$app/stores";

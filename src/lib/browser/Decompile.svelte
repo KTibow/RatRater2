@@ -1,8 +1,8 @@
 <script lang="ts">
-  import iconMenu from "@iconify-icons/ic/outline-more-vert";
-  import iconCode from "@iconify-icons/ic/outline-code";
-  import iconFile from "@iconify-icons/ic/outline-description";
-  import iconPlay from "@iconify-icons/ic/outline-play-arrow";
+  import iconMenu from "@ktibow/iconset-ic/outline-more-vert";
+  import iconCode from "@ktibow/iconset-ic/outline-code";
+  import iconFile from "@ktibow/iconset-ic/outline-description";
+  import iconPlay from "@ktibow/iconset-ic/outline-play-arrow";
   import Icon from "@iconify/svelte";
   import JSZip from "jszip";
   import { tick } from "svelte";
@@ -142,7 +142,7 @@
   </Button>
   {#if menuOpen}
     <div
-      class="absolute top-full right-0 z-10"
+      class="absolute right-0 top-full z-10"
       in:slide={{ duration: 400, easing: easeEmphasizedDecel }}
       out:fade={{ duration: 300, easing: easeEmphasized }}
     >

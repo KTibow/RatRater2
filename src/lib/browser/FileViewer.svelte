@@ -1,7 +1,7 @@
 <script lang="ts">
   import Icon from "@iconify/svelte";
-  import iconClose from "@iconify-icons/ic/outline-close";
-  import iconExtract from "@iconify-icons/ic/outline-unarchive";
+  import iconClose from "@ktibow/iconset-ic/outline-close";
+  import iconExtract from "@ktibow/iconset-ic/outline-unarchive";
   import type { Writable } from "svelte/store";
   import { Button } from "m3-svelte";
 
@@ -59,7 +59,7 @@
     <p class="m3-font-title-medium">{splitPath.end}</p>
     <p class="m3-font-body-medium text-on-surface-variant">{splitPath.start}</p>
   </div>
-  <div class="lg:hidden flex">
+  <div class="flex lg:hidden">
     <Button type="text" iconType="full" on:click={goBack}><Icon icon={iconClose} /></Button>
   </div>
   <Button type="text" iconType="full" on:click={downloadFile}><Icon icon={iconExtract} /></Button>
