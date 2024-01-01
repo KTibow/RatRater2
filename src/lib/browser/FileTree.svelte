@@ -58,7 +58,7 @@
     @apply -ml-1 rounded-md pl-1 transition-colors;
   }
   button:hover {
-    @apply bg-primary-container/50 text-on-primary-container;
+    @apply bg-primary-container/80 text-on-primary-container;
   }
   button:active {
     @apply bg-primary-container text-on-primary-container;
