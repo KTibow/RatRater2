@@ -3,6 +3,7 @@
   import type { Writable } from "svelte/store";
   import { file, view, type Loaded } from "$lib/state";
   import { createAnalysis, type Analysis, type Progress } from "./createAnalysis";
+  import { scanWebhooks } from "./webhook";
   import ObfuscationTable from "./ObfuscationTable.svelte";
   import FlagCard from "./FlagCard.svelte";
 
@@ -22,11 +23,16 @@
 
   let analysis: Writable<Analysis>;
   let progress: Writable<Progress>;
+  let webhooks: Set<string> | undefined;
   $: if ("zip" in $file) {
     ({ analysis, progress } = createAnalysis());
+    webhooks = undefined;
   }
 
   $: obfuscation = Object.entries($analysis.obfuscation);
+  const getWebhooks = async () => {
+    webhooks = await scanWebhooks();
+  };
 </script>
 
 <div class="flex gap-2 max-lg:flex-col">
@@ -93,6 +99,23 @@
   {#each Object.entries($analysis.flags) as [name, flag]}
     <FlagCard {name} {flag} />
   {/each}
+  {#if webhooks}
+    <div
+      class="flex flex-col items-center gap-4 overflow-hidden rounded-lg bg-primary-container p-4 text-on-primary-container transition-all"
+    >
+      <h2 class="m3-font-title-large">Webhooks</h2>
+      {#each webhooks as webhook}
+        <a href={webhook} target="_blank">{webhook}</a>
+      {/each}
+    </div>
+  {:else}
+    <button
+      class="m3-font-title-large rounded-lg bg-primary-container/80 px-4 py-8 text-on-primary-container transition-all hover:bg-primary-container"
+      on:click={getWebhooks}
+    >
+      Scan for webhooks
+    </button>
+  {/if}
 </div>
 
 <style lang="postcss">
