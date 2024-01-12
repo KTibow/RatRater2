@@ -30,7 +30,7 @@
 </script>
 
 <div class="flex gap-2 max-lg:flex-col">
-  <div class="info-layout rounded-2xl bg-background">
+  <div class="info-layout bg-background">
     <p class="m3-font-headline-small">
       {#if !$progress}
         Starting scan...
@@ -41,22 +41,8 @@
       {/if}
     </p>
   </div>
-  {#if (obfuscation && obfuscation.length) || impersonating}
-    <div class="info-layout rounded-2xl bg-background">
-      <p class="m3-font-headline-small">Possible obfuscation</p>
-      <ObfuscationTable {obfuscation} on:open />
-      {#if impersonating}
-        <div class="mt-2 w-full rounded-lg bg-tertiary-container p-2 text-on-tertiary-container">
-          This file may be impersonating the official version of {impersonating}
-        </div>
-      {/if}
-    </div>
-  {/if}
   {#if $analysis.flagged || !$officialHashes || officialFile}
-    <div
-      class="info-layout rounded-2xl border-tertiary bg-background"
-      class:border-4={$analysis.flagged}
-    >
+    <div class="info-layout border-tertiary bg-background" class:border-4={$analysis.flagged}>
       {#if $analysis.flagged}
         {@const flag = $analysis.flagged}
         <p class="m3-font-headline-small text-center">Almost definitely a rat</p>
@@ -91,6 +77,16 @@
         </table>
       {/if}
     </div>
+  {:else if (obfuscation && obfuscation.length) || impersonating}
+    <div class="info-layout bg-background">
+      <p class="m3-font-headline-small">Possible obfuscation</p>
+      <ObfuscationTable {obfuscation} on:open />
+      {#if impersonating}
+        <div class="mt-2 w-full rounded-lg bg-tertiary-container p-2 text-on-tertiary-container">
+          This file may be impersonating the official version of {impersonating}
+        </div>
+      {/if}
+    </div>
   {/if}
 </div>
 <div class="grid gap-4 md:grid-cols-2 xl:grid-cols-4 2xl:grid-cols-6">
@@ -102,5 +98,6 @@
 <style lang="postcss">
   .info-layout {
     @apply flex flex-col items-center justify-center overflow-hidden p-4 lg:flex-1;
+    border-radius: 1.5rem;
   }
 </style>

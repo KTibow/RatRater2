@@ -1,6 +1,5 @@
 <script lang="ts">
   import { Divider, Button, easeEmphasized, sharedAxisTransition, ButtonLink } from "m3-svelte";
-  import { createEventDispatcher } from "svelte";
   import { slide } from "svelte/transition";
   import type { Flag } from "./createAnalysis";
   import { view } from "$lib/state";
@@ -8,7 +7,6 @@
   export let name: string;
   export let flag: Flag;
   let expandedFiles = false;
-  const dispatch = createEventDispatcher();
 </script>
 
 <div
@@ -46,14 +44,14 @@
       </Button>
       {#if flag.link}
         <ButtonLink type="text" href={flag.link} extraOptions={{ target: "_blank" }}>
-          Flag info
+          Read about it
         </ButtonLink>
       {/if}
     </div>
   {:else if flag.link}
     <div class="mt-auto flex justify-center pt-4">
       <ButtonLink type="text" href={flag.link} extraOptions={{ target: "_blank" }}>
-        Flag info
+        Read about it
       </ButtonLink>
     </div>
   {/if}
