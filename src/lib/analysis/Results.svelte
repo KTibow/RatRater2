@@ -146,13 +146,15 @@
       class="flex flex-col items-center gap-4 overflow-hidden rounded-lg bg-primary-container p-4 text-on-primary-container"
     >
       <h2 class="m3-font-title-large">Webhooks</h2>
-      {#if webhooksNuked}
-        <p>Webhooks have been nuked</p>
-      {:else}
-        {#each webhooks as webhook}
-          <a href={webhook} target="_blank">{webhook}</a>
-        {/each}
-        <Button type="text" on:click={nukeWebhooks}>Nuke webhooks</Button>
+      {#if webhooks.size > 0}
+        {#if webhooksNuked}
+          <p>Webhooks have been nuked</p>
+        {:else}
+          {#each webhooks as webhook}
+            <a href={webhook} target="_blank">{webhook}</a>
+          {/each}
+          <Button type="text" on:click={nukeWebhooks}>Nuke webhooks</Button>
+        {/if}
       {/if}
     </div>
   {:else}
