@@ -1,9 +1,20 @@
 <script lang="ts">
+  import Icon from "@iconify/svelte";
+  import iconWarning from "@ktibow/iconset-ic/outline-warning";
+  import iconCheck from "@ktibow/iconset-ic/outline-check";
+  import iconNo from "@ktibow/iconset-ic/outline-block";
+  import iconUnknown from "@ktibow/iconset-ic/outline-help-outline";
+  import iconSearch from "@ktibow/iconset-ic/outline-search";
+  import iconObf from "@ktibow/iconset-ic/outline-lens-blur";
+  import iconRat from "@ktibow/iconset-ic/outline-pest-control-rodent";
+
   import { getContext } from "svelte";
   import type { Writable } from "svelte/store";
   import { file, view, type Loaded } from "$lib/state";
   import { createAnalysis, type Analysis, type Progress } from "./createAnalysis";
   import { scanWebhooks } from "./webhook";
+
+  import { Button } from "m3-svelte";
   import ObfuscationTable from "./ObfuscationTable.svelte";
   import FlagCard from "./FlagCard.svelte";
 
@@ -12,7 +23,7 @@
   let officialFile: OfficialHash | undefined,
     officialName: OfficialHash | undefined,
     impersonating: string | undefined;
-  $: {
+  $: if ($officialHashes) {
     officialFile = $officialHashes.find((h) => h.hash == ($file as Loaded).hash);
     officialName = $officialHashes.find((h) => h.file == ($file as Loaded).file.name);
     impersonating =
@@ -24,74 +35,97 @@
   let analysis: Writable<Analysis>;
   let progress: Writable<Progress>;
   let webhooks: Set<string> | undefined;
+  let webhooksNuked = false;
   $: if ("zip" in $file) {
     ({ analysis, progress } = createAnalysis());
     webhooks = undefined;
+    webhooksNuked = false;
   }
-
   $: obfuscation = Object.entries($analysis.obfuscation);
+
   const getWebhooks = async () => {
     webhooks = await scanWebhooks();
   };
+  const nukeWebhooks = async () => {
+    const message = `⛔ Access Revoked: Your webhook has been shut down for not adhering to the [Terms of Service](https://discord.com/terms). We have recorded your account information, and immediate discontinuation of these violations is required to avoid further action.`;
+
+    // @ts-expect-error
+    for (const webhook of webhooks) {
+      // wtf discord made webhooks work over CORS
+      const resp = await fetch(webhook, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          content: message,
+        }),
+      });
+      if (resp.status != 404)
+        await fetch(webhook, {
+          method: "DELETE",
+        });
+
+      // @ts-expect-error
+      webhooks.delete(webhook);
+    }
+    webhooksNuked = true;
+  };
 </script>
 
-<div class="flex gap-2 max-lg:flex-col">
-  <div class="info-layout bg-background">
-    <p class="m3-font-headline-small">
-      {#if !$progress}
-        Starting scan...
-      {:else if $progress.total == 0}
-        No checkable files
-      {:else}
-        {Math.floor(($progress.done / $progress.total) * 100)}% done
-      {/if}
-    </p>
+<div class="flex flex-wrap gap-2">
+  {#if !$officialHashes}
+    <div class="info-layout">
+      <Icon icon={iconWarning} />
+      We couldn't load official mods
+    </div>
+  {:else if officialFile}
+    <div class="info-layout">
+      <Icon icon={iconCheck} />
+      Found in official sources like {officialFile.source}
+    </div>
+  {:else if impersonating}
+    <div class="info-layout">
+      <Icon icon={iconNo} />
+      Might be impersonating the real {impersonating}
+    </div>
+  {:else}
+    <div class="info-layout">
+      <Icon icon={iconUnknown} />
+      We haven't seen this file
+    </div>
+  {/if}
+  <div class="info-layout">
+    <Icon icon={iconSearch} />
+    {#if !$progress}
+      Starting scan...
+    {:else if $progress.total == 0}
+      No checkable files
+    {:else}
+      {Math.floor(($progress.done / $progress.total) * 100)}% done
+    {/if}
   </div>
-  {#if $analysis.flagged || !$officialHashes || officialFile}
-    <div class="info-layout border-tertiary bg-background" class:border-4={$analysis.flagged}>
-      {#if $analysis.flagged}
-        {@const flag = $analysis.flagged}
-        <p class="m3-font-headline-small text-center">Almost definitely a rat</p>
-        <p class="text-center">Classification: {flag.name}</p>
-        {#if flag.file}
-          <button
-            class="underline-hover truncate text-primary underline"
-            on:click={() => ($view = { tab: "browser", editorFile: flag.file })}
-          >
-            File: <span class="font-mono">{flag.file}</span>
-          </button>
-        {:else}
-          <p class="text-center">To prevent reverse engineering, you cannot see the cause</p>
-        {/if}
-      {:else if !$officialHashes}
-        <p class="m3-font-headline-small text-center">Failed to load official hashes</p>
-      {:else if officialFile}
-        <p class="m3-font-headline-small text-center">Found in official sources</p>
-        <table class="w-full">
-          <tr>
-            <th class="border-r border-outline-variant pr-2">File</th>
-            <td class="pl-2">{officialFile.file}</td>
-          </tr>
-          <tr>
-            <th class="border-r border-outline-variant pr-2">Source</th>
-            <td class="pl-2">{officialFile.source}</td>
-          </tr>
-          <tr>
-            <th class="border-r border-outline-variant pr-2">Added</th>
-            <td class="pl-2">{new Date(officialFile.time).toLocaleString()}</td>
-          </tr>
-        </table>
+  {#if $analysis.flagged}
+    {@const flag = $analysis.flagged}
+    <div class="info-layout overflow-hidden border-2 border-tertiary">
+      <Icon icon={iconRat} />
+      It's a {flag.name} rat
+      {#if flag.file}
+        <button
+          class="underline-hover text-primary underline"
+          on:click={() => ($view = { tab: "browser", editorFile: flag.file })}
+        >
+          <span class="font-mono">{flag.file.replace(/.+\//, "../")}</span>
+        </button>
+      {:else}
+        <p>checked in the cloud</p>
       {/if}
     </div>
-  {:else if (obfuscation && obfuscation.length) || impersonating}
-    <div class="info-layout bg-background">
-      <p class="m3-font-headline-small">Possible obfuscation</p>
-      <ObfuscationTable {obfuscation} on:open />
-      {#if impersonating}
-        <div class="mt-2 w-full rounded-lg bg-tertiary-container p-2 text-on-tertiary-container">
-          This file may be impersonating the official version of {impersonating}
-        </div>
-      {/if}
+  {/if}
+  {#if !officialFile && !$analysis.flagged && obfuscation?.length > 0}
+    <div class="info-layout">
+      <Icon icon={iconObf} />
+      Possible obfuscation
     </div>
   {/if}
 </div>
@@ -99,14 +133,27 @@
   {#each Object.entries($analysis.flags) as [name, flag]}
     <FlagCard {name} {flag} />
   {/each}
+  {#if obfuscation?.length > 0}
+    <div
+      class="flex flex-col items-center gap-4 overflow-hidden rounded-lg bg-primary-container p-4 text-on-primary-container"
+    >
+      <h2 class="m3-font-title-large">Obfuscation</h2>
+      <ObfuscationTable {obfuscation} />
+    </div>
+  {/if}
   {#if webhooks}
     <div
-      class="flex flex-col items-center gap-4 overflow-hidden rounded-lg bg-primary-container p-4 text-on-primary-container transition-all"
+      class="flex flex-col items-center gap-4 overflow-hidden rounded-lg bg-primary-container p-4 text-on-primary-container"
     >
       <h2 class="m3-font-title-large">Webhooks</h2>
-      {#each webhooks as webhook}
-        <a href={webhook} target="_blank">{webhook}</a>
-      {/each}
+      {#if webhooksNuked}
+        <p>Webhooks have been nuked</p>
+      {:else}
+        {#each webhooks as webhook}
+          <a href={webhook} target="_blank">{webhook}</a>
+        {/each}
+        <Button type="text" on:click={nukeWebhooks}>Nuke webhooks</Button>
+      {/if}
     </div>
   {:else}
     <button
@@ -120,7 +167,19 @@
 
 <style lang="postcss">
   .info-layout {
-    @apply flex flex-col items-center justify-center overflow-hidden p-4 lg:flex-1;
+    display: flex;
+    flex-direction: column;
+    background-color: rgb(var(--m3-scheme-background));
+
+    width: 10rem;
+    height: 10rem;
+    padding: 1rem;
     border-radius: 1.5rem;
+    transition: all 150ms;
+  }
+  .info-layout :global(svg) {
+    width: 1.25rem;
+    height: 1.25rem;
+    margin-bottom: auto;
   }
 </style>
