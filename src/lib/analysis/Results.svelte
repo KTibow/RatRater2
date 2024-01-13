@@ -65,9 +65,6 @@
         await fetch(webhook, {
           method: "DELETE",
         });
-
-      // @ts-expect-error
-      webhooks.delete(webhook);
     }
     webhooksNuked = true;
   };
