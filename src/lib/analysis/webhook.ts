@@ -5,7 +5,7 @@ import { file, type Loaded } from "$lib/state";
 
 const whRegex =
   /(https?:\/\/(ptb\.|canary\.)?discord(app)?\.com\/api\/webhooks\/(\d{10,20})\/([\w\-]{68}))/g;
-const b64Regex = /(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=|[A-Za-z0-9+/]{4})/g;
+const b64Regex = /(?:[A-Za-z0-9+/]{4})*[A-Za-z0-9+/][A-Za-z0-9+/][A-Za-z0-9+/=][A-Za-z0-9+/=]/g;
 export const scanWebhooks = async () => {
   const fileData = get(file) as Loaded;
   const zip = fileData.zip as JSZip & JSZipObject;
@@ -26,6 +26,7 @@ export const scanWebhooks = async () => {
       if (base.length < 40 || base.length > 200) continue;
       try {
         const decoded = atob(base);
+        console.log(decoded);
         const webhook = decoded.match(whRegex);
         if (webhook) {
           list.push(webhook[0]);
