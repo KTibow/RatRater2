@@ -120,7 +120,9 @@ const scan = (file: string, contents: string, state: Analysis) => {
   if (
     contents.includes("func_111286_b") ||
     contents.includes("func_148254_d") ||
-    contents.includes("field_148258_c")
+    contents.includes("field_148258_c") ||
+    contents.includes("ZnVuY18xMTEyODZfYg") ||
+    contents.includes("ZnVuY18xNDgyNTRfZA")
   ) {
     addFlag("Uses session token", {
       link: "https://github.com/KTibow/RatRater2/wiki/Flags#func_111286_b--func_148254_d--field_148258_c",
@@ -181,7 +183,6 @@ export default async (
     .filter((path) => path.endsWith(".class"))
     .map(async (f) => {
       const contents = await zip.files[f].async("string");
-      if (window.process) window.process(contents);
       scan(f, contents, state);
       propagate();
     });
