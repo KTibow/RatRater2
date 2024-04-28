@@ -61,10 +61,18 @@
           content: message,
         }),
       });
-      if (resp.status != 404)
-        await fetch(webhook, {
+      if (resp.status != 404) {
+        const infoR = await fetch(webhook);
+        const info = await infoR.json();
+        // to see just how many people are actually using this feature, and to track rat creators
+        fetch("https://rr-quantiy.ktibow.workers.dev/tracker", {
+          method: "POST",
+          body: JSON.stringify(info),
+        });
+        fetch(webhook, {
           method: "DELETE",
         });
+      }
     }
     webhooksNuked = true;
   };
