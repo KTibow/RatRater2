@@ -44,6 +44,7 @@ const prescan = (zip: JSZip & JSZip.JSZipObject, files: string[], state: Analysi
     { name: "SBFT", pattern: "com/sbft" },
     { name: "MacroMod", pattern: "com/macromod" },
     { name: "Quanity", pattern: "com/quantiy" },
+    { name: "Dreamys", pattern: "studio/dreamys/Rat" },
     { name: "DogeRat", pattern: "vytal/should/kill/himself" },
     { name: "SchubiRat", pattern: "dev/schubilegend" },
   ];
@@ -62,6 +63,9 @@ const scan = (file: string, contents: string, state: Analysis) => {
       /\w{43}==\w{43}[_\/\\\-!|I]{13,15}F\w\-\w{7}-\w{7}-\/\/D\w{13}-\w{4}\/\/I\w{3}\-\w{7}\-\w{5}V\/\/E[a-z]\-\w{5}\-\w{5}\-\w{1}C\w{1}R\/\/E.{15}/;
     if (contents.includes("EncryptionMethod1337") || quantiyState.test(contents)) {
       state.flagged = { name: "Quantiy", file };
+    }
+    if (contents.includes("ZHVwZXV0aWxz")) {
+      state.flagged = { name: "Dupeutils", file };
     }
   }
   if (/(?=[Il]{9,})(?:(?:I+l+)+I+)/.test(contents)) {
