@@ -40,6 +40,7 @@ const prescan = (zip: JSZip & JSZip.JSZipObject, files: string[], state: Analysi
     { name: "Kodeine", pattern: "a/b/c/d" },
     { name: "Yoink", pattern: "net/jodah/typetools" },
     { name: "CustomPayload Normal", pattern: "me/custompayload/normal" },
+    { name: "Asterisk", pattern: "me/ghosty/notarat" },
     { name: "SBFT", pattern: "com/sbft" },
     { name: "MacroMod", pattern: "com/macromod" },
     { name: "Quanity", pattern: "com/quantiy" },
@@ -74,6 +75,9 @@ const scan = (file: string, contents: string, state: Analysis) => {
       file,
       initialFind: { searchString: "branchlock", isRegex: true },
     };
+  }
+  if (contents.includes("Sta* ckT*ra")) {
+    state.obfuscation["Obfuscator Asterisk"] = { file };
   }
   if (
     contents.includes("nothing_to_see_here") ||
