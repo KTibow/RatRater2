@@ -25,6 +25,6 @@
 />
 <Button type="filled" on:click={() => chooser.click()}>Choose a file</Button>
 <p class="mt-auto">
-  Made by @KTibow - <a href="https://discord.gg/ARW8nnh5Kw" class="underline-hover">RR2 Discord</a>
-  - <a href="https://discord.gg/7sBMTv7AF3" class="underline-hover">Vanta</a>
+  Made by @KTibow - <a href="https://discord.gg/sRzVYM9b47" class="underline-hover">RR2 Discord</a>
+  - <a href="https://discord.gg/7sBMTv7AF3" class="underline-hover">Vanta Discord</a>
 </p>
