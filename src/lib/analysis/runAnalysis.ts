@@ -16,7 +16,7 @@ const prescan = (zip: JSZip & JSZip.JSZipObject, files: string[], state: Analysi
   }
   if (shorts.length > 3) {
     const shortest = shorts.sort((a, b) => a.name.length - b.name.length)[0];
-    state.obfuscation["Possible obfuscation (short file names)"] = {
+    state.obfuscation["Possible obfuscation (short names)"] = {
       file: shortest.file,
     };
   }
@@ -35,6 +35,9 @@ const prescan = (zip: JSZip & JSZip.JSZipObject, files: string[], state: Analysi
   if (bozar) state.obfuscation["Obfuscator Bozar"] = { file: bozar };
   const branchlock = files.find((file: string) => file.toLowerCase().includes("branchlock"));
   if (branchlock) state.obfuscation["Obfuscator Branchlock"] = { file: branchlock };
+
+  const unicode = files.find((file: string) => /(?:^|\/)[^\x00-\xff]+\.class$/.test(file));
+  if (unicode) state.obfuscation["Weird name"] = { file: unicode };
 
   const flags = [
     { name: "Kodeine", pattern: "a/b/c/d" },
