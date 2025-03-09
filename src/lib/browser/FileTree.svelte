@@ -1,5 +1,6 @@
 <script lang="ts">
   import { createEventDispatcher } from "svelte";
+  import { Layer } from "m3-svelte";
   import Icon from "@iconify/svelte";
   import iconFile from "@ktibow/iconset-ic/outline-description";
   import iconCode from "@ktibow/iconset-ic/outline-code";
@@ -22,9 +23,10 @@
 {#each sortTree(nodes) as [name, contents]}
   {#if contents == 0}
     <button
-      class="shared-name flex items-center gap-2 text-primary"
+      class="shared-name text-primary flex items-center gap-2"
       on:click={() => dispatch("chosen", name)}
     >
+      <Layer />
       <Icon
         icon={name.endsWith(".class")
           ? /\$[a-z0-9]+.class$/gi.test(name)
@@ -37,11 +39,12 @@
     </button>
   {:else}
     <button class="shared-name flex items-center gap-2" on:click={() => toggleFolder(name)}>
+      <Layer />
       <Icon icon={openFolders.has(name) ? iconOpenFolder : iconFolder} class="flex-shrink-0" />
       <span class="shared-chop inline-block">{name}</span>
     </button>
     {#if openFolders.has(name)}
-      <div class="border-l border-transparent pl-6 transition-colors group-hover:border-primary/50">
+      <div class="group-hover:border-primary/50 border-l border-transparent pl-6 transition-colors">
         <svelte:self
           nodes={contents}
           on:chosen={(e) => {
@@ -54,14 +57,12 @@
 {/each}
 
 <style lang="postcss">
+  @reference "../../app.css";
   button {
-    @apply -ml-1 rounded-md pl-1 transition-colors;
-  }
-  button:hover {
-    @apply bg-primary-container/80 text-on-primary-container;
-  }
-  button:active {
-    @apply bg-primary-container text-on-primary-container;
+    @apply relative transition-colors;
+    margin-left: -0.25rem;
+    padding-left: 0.25rem;
+    border-radius: 0.5rem;
   }
   .shared-name {
     @apply w-full whitespace-nowrap font-mono;

@@ -14,7 +14,7 @@
   import { createAnalysis, type Analysis, type Progress } from "./createAnalysis";
   import { scanWebhooks } from "./webhook";
 
-  import { Button } from "m3-svelte";
+  import { Button, Layer } from "m3-svelte";
   import ObfuscationTable from "./ObfuscationTable.svelte";
   import FlagCard from "./FlagCard.svelte";
 
@@ -105,7 +105,7 @@
   </div>
   {#if $analysis.flagged}
     {@const flag = $analysis.flagged}
-    <div class="info-layout overflow-hidden border-2 border-tertiary">
+    <div class="info-layout border-tertiary overflow-hidden border-2">
       <Icon icon={iconRat} />
       It's a {flag.name} rat
       {#if flag.file}
@@ -133,7 +133,7 @@
   {/each}
   {#if obfuscation?.length > 0}
     <div
-      class="flex flex-col items-center gap-4 overflow-hidden rounded-lg bg-primary-container p-4 text-on-primary-container"
+      class="bg-primary-container text-on-primary-container flex flex-col items-center gap-4 overflow-hidden rounded-lg p-4"
     >
       <h2 class="m3-font-title-large">Obfuscation</h2>
       <ObfuscationTable {obfuscation} />
@@ -141,7 +141,7 @@
   {/if}
   {#if webhooks}
     <div
-      class="flex flex-col items-center gap-4 overflow-hidden rounded-lg bg-primary-container p-4 text-on-primary-container"
+      class="bg-primary-container text-on-primary-container flex flex-col items-center gap-4 overflow-hidden rounded-lg p-4"
     >
       <h2 class="m3-font-title-large">Webhooks</h2>
       {#if webhooks.size > 0}
@@ -157,9 +157,10 @@
     </div>
   {:else}
     <button
-      class="m3-font-title-large rounded-lg bg-primary-container/80 px-4 py-8 text-on-primary-container transition-all hover:bg-primary-container"
+      class="m3-font-title-large bg-primary-container text-on-primary-container relative rounded-lg px-4 py-8"
       on:click={getWebhooks}
     >
+      <Layer />
       Scan for webhooks
     </button>
   {/if}

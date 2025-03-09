@@ -6,14 +6,14 @@
 </script>
 
 {#each obfuscation as [obfuscator, info], i}
-  <div class:not-last={i != obfuscation.length - 1} class="w-full border-outline-variant">
+  <div class="w-full">
     <p>{obfuscator}</p>
     {#if "file" in info}
       {@const file = info.file}
       <button
         on:click={() =>
           ($view = { tab: "browser", editorFile: file, editorFind: info.initialFind })}
-        class="underline-hover truncate text-left font-mono text-primary underline"
+        class="underline-hover text-primary truncate text-left font-mono underline"
       >
         {file}
       </button>
@@ -21,10 +21,7 @@
       <p class="truncate font-mono">{info.quote}</p>
     {/if}
   </div>
+  {#if i != obfuscation.length - 1}
+    <hr class="border-current/50 w-full border-t" />
+  {/if}
 {/each}
-
-<style lang="postcss">
-  .not-last {
-    @apply mb-2 border-b pb-2;
-  }
-</style>

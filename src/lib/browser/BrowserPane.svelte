@@ -46,7 +46,6 @@
       --m3-util-bottom-offset: 1rem;
     }
     .tree-pane {
-      font-family: monospace;
       min-width: 30ch;
       width: 25vw;
       max-width: 50ch;

@@ -92,7 +92,7 @@
   }}
 />
 <div
-  class="dragover-positioning fixed rounded-2xl bg-primary-container text-on-primary-container"
+  class="dragover-positioning bg-primary-container text-on-primary-container fixed rounded-2xl"
   class:custom-hide={hide}
   style="left: {currentX}px; top: {currentY}px;"
 >
@@ -100,7 +100,7 @@
 </div>
 {#if hashStatus.shown}
   <div
-    class="hash-status rounded-xl bg-primary-container p-4 text-on-primary-container"
+    class="hash-status bg-primary-container text-on-primary-container rounded-xl p-4"
     transition:sharedAxisTransition={{ direction: "Y", rightSeam: false }}
   >
     <p class="font-bold">rat-to-peer</p>
@@ -110,7 +110,9 @@
 
 <style lang="postcss">
   .dragover-positioning {
-    @apply flex h-16 w-16 items-center justify-center overflow-hidden;
+    @apply flex items-center justify-center overflow-hidden;
+    width: 4rem;
+    height: 4rem;
     transition:
       clip-path 0.5s,
       opacity 0.5s;
@@ -122,6 +124,8 @@
     opacity: 0;
   }
   .hash-status {
-    @apply fixed bottom-4 right-4;
+    position: fixed;
+    bottom: 1rem;
+    right: 1rem;
   }
 </style>
