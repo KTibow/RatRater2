@@ -41,7 +41,6 @@ const prescan = (zip: JSZip & JSZip.JSZipObject, files: string[], state: Analysi
 
   const flags = [
     { name: "Kodeine", pattern: "a/b/c/d" },
-    { name: "Yoink", pattern: "net/jodah/typetools" },
     { name: "CustomPayload Normal", pattern: "me/custompayload/normal" },
     { name: "Asterisk", pattern: "me/ghosty/notarat" },
     { name: "SBFT", pattern: "com/sbft" },
@@ -56,6 +55,18 @@ const prescan = (zip: JSZip & JSZip.JSZipObject, files: string[], state: Analysi
     if (match) {
       state.flagged = { name: f.name, file: match };
       break;
+    }
+  }
+
+  if (!state.flagged) {
+    const yoinkMatch = files.find(
+      (file) =>
+        file.startsWith("net/jodah/typetools") &&
+        !file.includes("ReifiedParameterizedType") &&
+        !file.includes("TypeResolver"),
+    );
+    if (yoinkMatch) {
+      state.flagged = { name: "Yoink", file: yoinkMatch };
     }
   }
 };
