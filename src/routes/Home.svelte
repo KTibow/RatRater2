@@ -1,18 +1,12 @@
 <script lang="ts">
-  import { Button } from "m3-svelte";
+  import { Layer } from "m3-svelte";
   import { loadFile } from "$lib/state";
+  import Branding from "./Branding.svelte";
 
   let chooser: HTMLInputElement;
 </script>
 
-<h1 class="my-6 text-5xl md:text-9xl">RatRater 2</h1>
-<p class="my-2 flex-col lg:flex">
-  <span>
-    RatRater is a tool that analyzes .jar files for known signs of infostealers (rats), common among
-    the Hypixel Skyblock community.
-  </span>
-  <span>Drop, paste, or...</span>
-</p>
+<Branding />
 <input
   type="file"
   bind:this={chooser}
@@ -23,8 +17,14 @@
     loadFile(file);
   }}
 />
-<Button type="filled" on:click={() => chooser.click()}>Choose a file</Button>
-<p class="mt-auto">
-  Made by @KTibow - <a href="https://discord.gg/sRzVYM9b47" class="underline-hover">RR2 Discord</a>
-  - <a href="https://discord.gg/7sBMTv7AF3" class="underline-hover">Vanta Discord</a>
-</p>
+<div class="mt-6 grid grow grid-cols-3 gap-6 self-stretch">
+  <button
+    class="bg-primary text-on-primary relative flex items-center justify-center rounded-2xl"
+    on:click={() => chooser.click()}
+  >
+    <Layer />
+    Choose a file
+  </button>
+  <div class="bg-surface-container flex items-center justify-center rounded-2xl">Drop</div>
+  <div class="bg-surface-container flex items-center justify-center rounded-2xl">Paste</div>
+</div>
