@@ -74,7 +74,7 @@
       h1 {
         font-weight: bold;
         font-size: 1rem;
-        margin-left: 0.5rem;
+        margin: 0 0 0 0.5rem;
         transition: var(--transition);
       }
       .outlink {
