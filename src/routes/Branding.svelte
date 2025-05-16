@@ -22,7 +22,6 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
-    min-height: 2.5rem;
     padding-inline: 1.5rem;
     border-radius: 1.75rem;
     background-color: rgb(var(--m3-scheme-primary-container));
