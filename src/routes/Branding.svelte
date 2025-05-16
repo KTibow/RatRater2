@@ -1,6 +1,4 @@
 <script lang="ts">
-  import { containerTransform } from "m3-svelte";
-
   const name = "RatRater 2";
   const description =
     "Analyzes .jar files for known signs of infostealers (rats), common among the Hypixel Skyblock community.";
