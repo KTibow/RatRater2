@@ -55,20 +55,14 @@
       p {
         width: 0;
         height: 0;
-      }
-    }
-    &:hover {
-      .row {
-        margin-top: 1.5rem;
-      }
-      p {
-        margin-bottom: 1.5rem;
+        margin-bottom: 0;
       }
     }
     .row {
       display: flex;
       align-items: center;
       transition: var(--transition);
+      margin-top: 1.5rem;
 
       img {
         width: 1rem;
@@ -99,6 +93,7 @@
     p {
       width: calc-size(auto, size);
       height: 1.5rem;
+      margin: 0 0 1.5rem 0;
       overflow: hidden;
       white-space: nowrap;
       transition: var(--transition);
