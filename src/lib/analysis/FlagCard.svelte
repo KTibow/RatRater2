@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { Divider, Button, easeEmphasized, sharedAxisTransition, ButtonLink } from "m3-svelte";
+  import { Divider, Button, easeEmphasized, sharedAxisTransition } from "m3-svelte";
   import { slide } from "svelte/transition";
   import type { Flag } from "./createAnalysis";
   import { view } from "$lib/state";
@@ -10,7 +10,7 @@
 </script>
 
 <div
-  class="flex flex-col items-center rounded-xl bg-background p-4"
+  class="bg-background flex flex-col items-center rounded-xl p-4"
   in:sharedAxisTransition={{ direction: "Z", leaving: false }}
 >
   <h2 class="m3-font-headline-small">{name}</h2>
@@ -18,7 +18,7 @@
     <div class="w-full" transition:slide={{ easing: easeEmphasized }}>
       {#each flag.matches as file}
         <button
-          class="underline-hover mt-2 block truncate font-mono text-primary underline"
+          class="underline-hover text-primary mt-2 block truncate font-mono underline"
           on:click={() => {
             $view = { tab: "browser", editorFile: file, editorFind: flag.initialFind };
           }}
@@ -43,16 +43,12 @@
         {expandedFiles ? "Collapse" : "Expand"} files
       </Button>
       {#if flag.link}
-        <ButtonLink type="text" href={flag.link} extraOptions={{ target: "_blank" }}>
-          Read about it
-        </ButtonLink>
+        <Button type="text" href={flag.link} target="_blank">Read about it</Button>
       {/if}
     </div>
   {:else if flag.link}
     <div class="mt-auto flex justify-center pt-4">
-      <ButtonLink type="text" href={flag.link} extraOptions={{ target: "_blank" }}>
-        Read about it
-      </ButtonLink>
+      <Button type="text" href={flag.link} target="_blank">Read about it</Button>
     </div>
   {/if}
 </div>
