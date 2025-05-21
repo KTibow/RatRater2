@@ -21,12 +21,12 @@
   <p class="mr-auto whitespace-nowrap pl-4">{getSize(fileL.file.size)}</p>
   <p class="hash max-lg:hidden">{fileL.hash}</p>
   {#if $view.tab == "analysis"}
-    <Button type="tonal" iconType="left" on:click={() => ($view.tab = "browser")}>
+    <Button variant="tonal" iconType="left" click={() => ($view.tab = "browser")}>
       <Icon icon={iconFolder} />
       Browser
     </Button>
   {:else}
-    <Button type="tonal" iconType="left" on:click={() => ($view.tab = "analysis")}>
+    <Button variant="tonal" iconType="left" click={() => ($view.tab = "analysis")}>
       <Icon icon={iconChart} />
       Analysis
     </Button>

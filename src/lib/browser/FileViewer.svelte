@@ -60,9 +60,9 @@
     <p class="m3-font-body-medium text-on-surface-variant">{splitPath.start}</p>
   </div>
   <div class="flex lg:hidden">
-    <Button type="text" iconType="full" on:click={goBack}><Icon icon={iconClose} /></Button>
+    <Button variant="text" iconType="full" click={goBack}><Icon icon={iconClose} /></Button>
   </div>
-  <Button type="text" iconType="full" on:click={downloadFile}><Icon icon={iconExtract} /></Button>
+  <Button variant="text" iconType="full" click={downloadFile}><Icon icon={iconExtract} /></Button>
   {#if $view.editorFile && $view.editorFile.endsWith(".class")}
     <Decompile contentIn={rawContent} bind:contentOut={decompiled} />
   {/if}

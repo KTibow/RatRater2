@@ -13,10 +13,10 @@
     Menu,
     MenuItem,
     Snackbar,
+    type SnackbarIn,
     easeEmphasized,
     easeEmphasizedDecel,
   } from "m3-svelte";
-  import type { SnackbarIn } from "m3-svelte/package/containers/Snackbar.svelte";
 
   import { hash } from "$lib/hash";
   import { file, view, type Loaded } from "$lib/state";
@@ -137,7 +137,7 @@
 </script>
 
 <div class="relative flex">
-  <Button type="text" iconType="full" on:click={() => (menuOpen = !menuOpen)}>
+  <Button variant="text" iconType="full" click={() => (menuOpen = !menuOpen)}>
     <Icon icon={iconMenu} />
   </Button>
   {#if menuOpen}
@@ -148,15 +148,15 @@
     >
       <Menu>
         {#if decompiledContent && showDecompiled}
-          <MenuItem icon={iconCode} on:click={() => ((showDecompiled = false), (menuOpen = false))}>
+          <MenuItem icon={iconCode} click={() => ((showDecompiled = false), (menuOpen = false))}>
             Raw
           </MenuItem>
         {:else if decompiledContent}
-          <MenuItem icon={iconFile} on:click={() => ((showDecompiled = true), (menuOpen = false))}>
+          <MenuItem icon={iconFile} click={() => ((showDecompiled = true), (menuOpen = false))}>
             Decompiled
           </MenuItem>
         {/if}
-        <MenuItem icon={iconPlay} on:click={openDialog}>Start decompiling</MenuItem>
+        <MenuItem icon={iconPlay} click={openDialog}>Start decompiling</MenuItem>
       </Menu>
     </div>
   {/if}
@@ -178,15 +178,15 @@
   </div>
   <svelte:fragment slot="buttons">
     <Button
-      type="text"
-      on:click={() => {
+      variant="text"
+      click={() => {
         dialogOpen = false;
         hotServer = undefined;
       }}
     >
       Cancel
     </Button>
-    <Button type="text" on:click={runDecompile}>Decompile</Button>
+    <Button variant="text" click={runDecompile}>Decompile</Button>
   </svelte:fragment>
 </Dialog>
 <Snackbar bind:show />

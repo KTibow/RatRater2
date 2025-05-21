@@ -39,7 +39,7 @@
       <Divider />
     </div>
     <div class="flex justify-center gap-2">
-      <Button type="tonal" on:click={() => (expandedFiles = !expandedFiles)}>
+      <Button variant="tonal" click={() => (expandedFiles = !expandedFiles)}>
         {expandedFiles ? "Collapse" : "Expand"} files
       </Button>
       {#if flag.link}
