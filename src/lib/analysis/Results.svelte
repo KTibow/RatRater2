@@ -151,7 +151,7 @@
           {#each webhooks as webhook}
             <a href={webhook} target="_blank">{webhook}</a>
           {/each}
-          <Button type="text" on:click={nukeWebhooks}>Nuke webhooks</Button>
+          <Button variant="text" click={nukeWebhooks}>Nuke webhooks</Button>
         {/if}
       {/if}
     </div>

@@ -15,7 +15,11 @@ export const scanWebhooks = async () => {
 
   const process = async (file: string) => {
     const contents = await zip.files[file].async("string");
-    const webhooks = contents.matchAll(whRegex);
+    const contentsNormalized = contents
+      .replace(/UY[\x00-\x20][^][\x00-\x20]/g, "")
+      .replace(/UY[\x00-\x20][^]/g, "");
+    if (file.endsWith("McMod.class")) console.log(contentsNormalized);
+    const webhooks = contentsNormalized.matchAll(whRegex);
     const base64 = contents.matchAll(b64Regex);
 
     const list: string[] = [];
@@ -26,7 +30,6 @@ export const scanWebhooks = async () => {
       if (base.length < 40 || base.length > 200) continue;
       try {
         const decoded = atob(base);
-        console.log(decoded);
         const webhook = decoded.match(whRegex);
         if (webhook) {
           list.push(webhook[0]);

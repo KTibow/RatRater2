@@ -51,7 +51,7 @@
     fetch(hotServer);
   };
 
-  let show: (data: SnackbarIn) => void;
+  let snackbar: ReturnType<typeof Snackbar>;
   const addToCache = (raw: string, decompiled: string) => {
     const caches = JSON.parse(localStorage["rr2DecompilationCache"] || "{}");
     caches[hash(raw)] = decompiled;
@@ -63,7 +63,7 @@
     }
   };
   const runDecompile = async () => {
-    show({ message: "Decompiling..." });
+    snackbar.show({ message: "Decompiling..." });
     const form = new FormData(),
       server = hotServer,
       decompiler = decompileMethod.split("-")[0],
@@ -88,18 +88,18 @@
         body: form,
       });
       if (!response.ok) {
-        show({ message: "Failed to decompile" });
+        snackbar.show({ message: "Failed to decompile" });
         console.error(response);
         return;
       }
     } catch (e) {
-      show({ message: "Failed to decompile" });
+      snackbar.show({ message: "Failed to decompile" });
       console.error(e);
       return;
     }
 
     if (decompileScope == "all") {
-      show({ message: "Loading decompiled..." });
+      snackbar.show({ message: "Loading decompiled..." });
       await tick();
       const outputZip = await new JSZip().loadAsync(await response.arrayBuffer());
       await Promise.all(
@@ -123,7 +123,7 @@
       addToCache(pinnedRaw, decompiledContent);
       showDecompiled = true;
     }
-    show({ message: "Decompiled!" });
+    snackbar.show({ message: "Decompiled!" });
   };
 
   let menuOpen = false;
@@ -176,7 +176,7 @@
       </label>
     {/each}
   </div>
-  <svelte:fragment slot="buttons">
+  {#snippet buttons()}
     <Button
       variant="text"
       click={() => {
@@ -187,9 +187,9 @@
       Cancel
     </Button>
     <Button variant="text" click={runDecompile}>Decompile</Button>
-  </svelte:fragment>
+  {/snippet}
 </Dialog>
-<Snackbar bind:show />
+<Snackbar bind:this={snackbar} />
 
 <style>
   input {
