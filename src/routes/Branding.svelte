@@ -22,7 +22,7 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
-    padding-inline: 1.5rem;
+    padding-inline: 1rem;
     border-radius: 1.75rem;
     background-color: rgb(var(--m3-scheme-primary-container));
     color: rgb(var(--m3-scheme-on-primary-container));
