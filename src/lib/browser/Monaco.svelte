@@ -102,7 +102,7 @@
         editor.setValue(updater(editor.getValue()));
       },
     };
-    if ($view.editorFind) {
+    if ($view.editorFind && $view.editorFind.searchString) {
       const findController = editor.getContribution("editor.contrib.findController") as any;
       findController.start({});
       findController._state.change(

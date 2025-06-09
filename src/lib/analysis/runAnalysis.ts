@@ -184,6 +184,41 @@ const scan = (file: string, contents: string, state: Analysis) => {
       initialFind: { searchString: "Skidfuscator Anti-Abuse" },
     });
   }
+
+  try {
+    const bytes = Uint8Array.from(contents, (c) => c.charCodeAt(0));
+    const ascii: number[] = [];
+    for (let i = 0; i < bytes.length - 1; i++) {
+      let value: number;
+      if (bytes[i] === 0x10) {
+        // bipush
+        value = bytes[i + 1];
+        if (value >= 128) value -= 256;
+        i++;
+      } else if (bytes[i] === 0x11 && i < bytes.length - 2) {
+        // sipush
+        value = (bytes[i + 1] << 8) | bytes[i + 2];
+        if (value >= 32768) value -= 65536;
+        i += 2;
+      } else if (bytes[i] >= 0x02 && bytes[i] <= 0x08) {
+        // iconst
+        value = bytes[i] - 0x03;
+      } else {
+        continue;
+      }
+
+      if (value >= 32 && value <= 126) ascii.push(value);
+    }
+    const text = String.fromCharCode(...ascii);
+
+    const ipRegex = /(?:\d{1,3}\.){3}\d{1,3}:\d{1,5}/;
+    if (ipRegex.test(text)) {
+      addFlag("Direct IP connection", { initialFind: { searchString: "" } });
+    }
+    if (text.includes("`JADS`")) {
+      state.flagged ||= { name: "Jooon (JADS)", file: file };
+    }
+  } catch {}
 };
 export default async (
   { zip, data, files }: { zip: JSZip & JSZip.JSZipObject; data: ArrayBuffer; files: string[] },
