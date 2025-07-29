@@ -1,10 +1,11 @@
 <script lang="ts">
-  import Icon, { type IconifyIcon } from "@iconify/svelte";
+  import { Icon } from "m3-svelte";
+  import type { IconifyIcon } from "@iconify/types";
   export let icon: IconifyIcon;
 </script>
 
-<div class="vertical-container bg-surface-container-high m-auto rounded-2xl p-6">
-  <Icon {icon} height={24} class="text-secondary" />
+<div class="vertical-container m-auto rounded-2xl bg-surface-container-high p-6">
+  <Icon {icon} width="2rem" height="2rem" class="text-secondary" />
   <slot />
 </div>
 

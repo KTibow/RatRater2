@@ -1,5 +1,5 @@
 <script lang="ts">
-  import Icon from "@iconify/svelte";
+  import { Icon } from "m3-svelte";
   import iconWarning from "@ktibow/iconset-ic/outline-warning";
   import iconCheck from "@ktibow/iconset-ic/outline-check";
   import iconNo from "@ktibow/iconset-ic/outline-block";
@@ -105,7 +105,7 @@
   </div>
   {#if $analysis.flagged}
     {@const flag = $analysis.flagged}
-    <div class="info-layout border-tertiary overflow-hidden border-2">
+    <div class="info-layout overflow-hidden border-2 border-tertiary">
       <Icon icon={iconRat} />
       It's a {flag.name} rat
       {#if flag.file}
@@ -133,7 +133,7 @@
   {/each}
   {#if obfuscation?.length > 0}
     <div
-      class="bg-primary-container text-on-primary-container flex flex-col items-center gap-4 overflow-hidden rounded-lg p-4"
+      class="flex flex-col items-center gap-4 overflow-hidden rounded-lg bg-primary-container p-4 text-on-primary-container"
     >
       <h2 class="m3-font-title-large">Obfuscation</h2>
       <ObfuscationTable {obfuscation} />
@@ -141,7 +141,7 @@
   {/if}
   {#if webhooks}
     <div
-      class="bg-primary-container text-on-primary-container flex flex-col items-center gap-4 overflow-hidden rounded-lg p-4"
+      class="flex flex-col items-center gap-4 overflow-hidden rounded-lg bg-primary-container p-4 text-on-primary-container"
     >
       <h2 class="m3-font-title-large">Webhooks</h2>
       {#if webhooks.size > 0}
@@ -151,13 +151,13 @@
           {#each webhooks as webhook}
             <a href={webhook} target="_blank">{webhook}</a>
           {/each}
-          <Button variant="text" click={nukeWebhooks}>Nuke webhooks</Button>
+          <Button variant="text" onclick={nukeWebhooks}>Nuke webhooks</Button>
         {/if}
       {/if}
     </div>
   {:else}
     <button
-      class="m3-font-title-large bg-primary-container text-on-primary-container relative rounded-lg px-4 py-8"
+      class="m3-font-title-large relative rounded-lg bg-primary-container px-4 py-8 text-on-primary-container"
       on:click={getWebhooks}
     >
       <Layer />

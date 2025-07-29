@@ -3,7 +3,7 @@
   import iconCode from "@ktibow/iconset-ic/outline-code";
   import iconFile from "@ktibow/iconset-ic/outline-description";
   import iconPlay from "@ktibow/iconset-ic/outline-play-arrow";
-  import Icon from "@iconify/svelte";
+  import { Icon } from "m3-svelte";
   import JSZip from "jszip";
   import { tick } from "svelte";
   import { fade, slide } from "svelte/transition";
@@ -13,7 +13,6 @@
     Menu,
     MenuItem,
     Snackbar,
-    type SnackbarIn,
     easeEmphasized,
     easeEmphasizedDecel,
   } from "m3-svelte";
@@ -127,36 +126,36 @@
   };
 
   let menuOpen = false;
-  let classCount = 0;
-  $: {
-    const hasZip = "zip" in $file;
-    if (!hasZip) break $;
-    const fileObj = ($file as Loaded).zip.files;
-    classCount = Object.values(fileObj).filter((f) => !f.dir && f.name.endsWith(".class")).length;
-  }
+  // let classCount = 0;
+  // $: {
+  // const hasZip = "zip" in $file;
+  // if (!hasZip) break $;
+  // const fileObj = ($file as Loaded).zip.files;
+  // classCount = Object.values(fileObj).filter((f) => !f.dir && f.name.endsWith(".class")).length;
+  // }
 </script>
 
 <div class="relative flex">
-  <Button variant="text" iconType="full" click={() => (menuOpen = !menuOpen)}>
+  <Button variant="text" iconType="full" onclick={() => (menuOpen = !menuOpen)}>
     <Icon icon={iconMenu} />
   </Button>
   {#if menuOpen}
     <div
-      class="absolute right-0 top-full z-10"
+      class="absolute top-full right-0 z-10"
       in:slide={{ duration: 400, easing: easeEmphasizedDecel }}
       out:fade={{ duration: 300, easing: easeEmphasized }}
     >
       <Menu>
         {#if decompiledContent && showDecompiled}
-          <MenuItem icon={iconCode} click={() => ((showDecompiled = false), (menuOpen = false))}>
+          <MenuItem icon={iconCode} onclick={() => ((showDecompiled = false), (menuOpen = false))}>
             Raw
           </MenuItem>
         {:else if decompiledContent}
-          <MenuItem icon={iconFile} click={() => ((showDecompiled = true), (menuOpen = false))}>
+          <MenuItem icon={iconFile} onclick={() => ((showDecompiled = true), (menuOpen = false))}>
             Decompiled
           </MenuItem>
         {/if}
-        <MenuItem icon={iconPlay} click={openDialog}>Start decompiling</MenuItem>
+        <MenuItem icon={iconPlay} onclick={openDialog}>Start decompiling</MenuItem>
       </Menu>
     </div>
   {/if}
@@ -179,14 +178,14 @@
   {#snippet buttons()}
     <Button
       variant="text"
-      click={() => {
+      onclick={() => {
         dialogOpen = false;
         hotServer = undefined;
       }}
     >
       Cancel
     </Button>
-    <Button variant="text" click={runDecompile}>Decompile</Button>
+    <Button variant="text" onclick={runDecompile}>Decompile</Button>
   {/snippet}
 </Dialog>
 <Snackbar bind:this={snackbar} />

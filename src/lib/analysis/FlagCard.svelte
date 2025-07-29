@@ -10,7 +10,7 @@
 </script>
 
 <div
-  class="bg-background flex flex-col items-center rounded-xl p-4"
+  class="flex flex-col items-center rounded-xl bg-background p-4"
   in:sharedAxisTransition={{ direction: "Z", leaving: false }}
 >
   <h2 class="m3-font-headline-small">{name}</h2>
@@ -18,7 +18,7 @@
     <div class="w-full" transition:slide={{ easing: easeEmphasized }}>
       {#each flag.matches as file}
         <button
-          class="underline-hover text-primary mt-2 block truncate font-mono underline"
+          class="underline-hover mt-2 block truncate font-mono text-primary underline"
           on:click={() => {
             $view = { tab: "browser", editorFile: file, editorFind: flag.initialFind };
           }}
@@ -39,7 +39,7 @@
       <Divider />
     </div>
     <div class="flex justify-center gap-2">
-      <Button variant="tonal" click={() => (expandedFiles = !expandedFiles)}>
+      <Button variant="tonal" onclick={() => (expandedFiles = !expandedFiles)}>
         {expandedFiles ? "Collapse" : "Expand"} files
       </Button>
       {#if flag.link}

@@ -1,7 +1,7 @@
 <script lang="ts">
   import { createEventDispatcher } from "svelte";
   import { Layer } from "m3-svelte";
-  import Icon from "@iconify/svelte";
+  import { Icon } from "m3-svelte";
   import iconFile from "@ktibow/iconset-ic/outline-description";
   import iconCode from "@ktibow/iconset-ic/outline-code";
   import iconExtension from "@ktibow/iconset-ic/outline-extension";
@@ -23,7 +23,7 @@
 {#each sortTree(nodes) as [name, contents]}
   {#if contents == 0}
     <button
-      class="shared-name text-primary flex items-center gap-2"
+      class="shared-name flex items-center gap-2 text-primary"
       on:click={() => dispatch("chosen", name)}
     >
       <Layer />
@@ -44,7 +44,7 @@
       <span class="shared-chop inline-block">{name}</span>
     </button>
     {#if openFolders.has(name)}
-      <div class="group-hover:border-primary/50 border-l border-transparent pl-6 transition-colors">
+      <div class="border-l border-transparent pl-6 transition-colors group-hover:border-primary/50">
         <svelte:self
           nodes={contents}
           on:chosen={(e) => {
@@ -65,7 +65,7 @@
     border-radius: 0.5rem;
   }
   .shared-name {
-    @apply w-full whitespace-nowrap font-mono;
+    @apply w-full font-mono whitespace-nowrap;
   }
   .shared-chop {
     @apply overflow-hidden text-ellipsis;

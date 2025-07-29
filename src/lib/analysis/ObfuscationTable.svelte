@@ -13,7 +13,7 @@
       <button
         on:click={() =>
           ($view = { tab: "browser", editorFile: file, editorFind: info.initialFind })}
-        class="underline-hover text-primary truncate text-left font-mono underline"
+        class="underline-hover truncate text-left font-mono text-primary underline"
       >
         {file}
       </button>
@@ -22,6 +22,6 @@
     {/if}
   </div>
   {#if i != obfuscation.length - 1}
-    <hr class="border-current/50 w-full border-t" />
+    <hr class="w-full border-t border-current/50" />
   {/if}
 {/each}

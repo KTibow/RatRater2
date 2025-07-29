@@ -1,5 +1,5 @@
 <script lang="ts">
-  import Icon from "@iconify/svelte";
+  import { Icon } from "m3-svelte";
   import iconClose from "@ktibow/iconset-ic/outline-close";
   import iconExtract from "@ktibow/iconset-ic/outline-unarchive";
   import type { Writable } from "svelte/store";
@@ -60,9 +60,9 @@
     <p class="m3-font-body-medium text-on-surface-variant">{splitPath.start}</p>
   </div>
   <div class="flex lg:hidden">
-    <Button variant="text" iconType="full" click={goBack}><Icon icon={iconClose} /></Button>
+    <Button variant="text" iconType="full" onclick={goBack}><Icon icon={iconClose} /></Button>
   </div>
-  <Button variant="text" iconType="full" click={downloadFile}><Icon icon={iconExtract} /></Button>
+  <Button variant="text" iconType="full" onclick={downloadFile}><Icon icon={iconExtract} /></Button>
   {#if $view.editorFile && $view.editorFile.endsWith(".class")}
     <Decompile contentIn={rawContent} bind:contentOut={decompiled} />
   {/if}

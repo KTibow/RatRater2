@@ -1,5 +1,5 @@
 <script lang="ts">
-  import Icon from "@iconify/svelte";
+  import { Icon } from "m3-svelte";
   import iconFile from "@ktibow/iconset-ic/outline-insert-drive-file";
   import iconChart from "@ktibow/iconset-ic/outline-bar-chart";
   import iconFolder from "@ktibow/iconset-ic/outline-folder";
@@ -16,17 +16,17 @@
 </script>
 
 <div class="row flex items-center">
-  <Icon icon={iconFile} height={24} />
-  <p class="whitespace-nowrap pl-4">{fileL.file.name}</p>
-  <p class="mr-auto whitespace-nowrap pl-4">{getSize(fileL.file.size)}</p>
+  <Icon icon={iconFile} width="1.5rem" height="1.5rem" />
+  <p class="pl-4 whitespace-nowrap">{fileL.file.name}</p>
+  <p class="mr-auto pl-4 whitespace-nowrap">{getSize(fileL.file.size)}</p>
   <p class="hash max-lg:hidden">{fileL.hash}</p>
   {#if $view.tab == "analysis"}
-    <Button variant="tonal" iconType="left" click={() => ($view.tab = "browser")}>
+    <Button variant="tonal" iconType="left" onclick={() => ($view.tab = "browser")}>
       <Icon icon={iconFolder} />
       Browser
     </Button>
   {:else}
-    <Button variant="tonal" iconType="left" click={() => ($view.tab = "analysis")}>
+    <Button variant="tonal" iconType="left" onclick={() => ($view.tab = "analysis")}>
       <Icon icon={iconChart} />
       Analysis
     </Button>

@@ -19,12 +19,12 @@
 />
 <div class="mt-6 grid grow grid-cols-3 gap-6 self-stretch">
   <button
-    class="bg-primary text-on-primary relative flex items-center justify-center rounded-2xl"
+    class="relative flex items-center justify-center rounded-2xl bg-primary text-on-primary"
     on:click={() => chooser.click()}
   >
     <Layer />
     Choose a file
   </button>
-  <div class="bg-surface-container flex items-center justify-center rounded-2xl">Drop</div>
-  <div class="bg-surface-container flex items-center justify-center rounded-2xl">Paste</div>
+  <div class="flex items-center justify-center rounded-2xl bg-surface-container">Drop</div>
+  <div class="flex items-center justify-center rounded-2xl bg-surface-container">Paste</div>
 </div>

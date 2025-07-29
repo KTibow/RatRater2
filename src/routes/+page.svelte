@@ -70,7 +70,7 @@
         Make sure you dragged in a .jar file or something else that's a zip file.
       </p>
       <div class="mt-2 flex">
-        <Button variant="filled" click={() => ($file = {})}>OK</Button>
+        <Button variant="filled" onclick={() => ($file = {})}>OK</Button>
       </div>
     </Status>
   </main>

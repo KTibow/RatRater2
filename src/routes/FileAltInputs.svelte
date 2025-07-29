@@ -1,5 +1,5 @@
 <script lang="ts">
-  import Icon from "@iconify/svelte";
+  import { Icon } from "m3-svelte";
   import iconFile from "@ktibow/iconset-ic/outline-file-present";
   import { onMount } from "svelte";
   import { sharedAxisTransition } from "m3-svelte";
@@ -73,7 +73,8 @@
     hide = !e.dataTransfer || !e.dataTransfer.types.includes("Files");
     if (hide) return;
     e.preventDefault();
-    (currentX = e.clientX), (currentY = e.clientY);
+    currentX = e.clientX;
+    currentY = e.clientY;
   }}
   on:drop={(e) => {
     hide = true;
@@ -92,15 +93,15 @@
   }}
 />
 <div
-  class="dragover-positioning bg-primary-container text-on-primary-container fixed rounded-2xl"
+  class="dragover-positioning fixed rounded-2xl bg-primary-container text-on-primary-container"
   class:custom-hide={hide}
   style="left: {currentX}px; top: {currentY}px;"
 >
-  <Icon icon={iconFile} height={32} />
+  <Icon icon={iconFile} width="2rem" height="2rem" />
 </div>
 {#if hashStatus.shown}
   <div
-    class="hash-status bg-primary-container text-on-primary-container rounded-xl p-4"
+    class="hash-status rounded-xl bg-primary-container p-4 text-on-primary-container"
     transition:sharedAxisTransition={{ direction: "Y", rightSeam: false }}
   >
     <p class="font-bold">rat-to-peer</p>

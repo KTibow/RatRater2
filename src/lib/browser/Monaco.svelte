@@ -2,14 +2,14 @@
   import { onMount } from "svelte";
   import type { Subscriber, Writable } from "svelte/store";
   import editorWorker from "monaco-editor/esm/vs/editor/editor.worker?worker";
-  import type { editor } from "monaco-editor";
+  import type { editor as MonacoType } from "monaco-editor";
   import { view } from "$lib/state";
 
   let subscriptions: Subscriber<string>[] = [];
   export let content: Writable<string> | undefined;
 
   let divEl: HTMLElement;
-  let editor: editor.IStandaloneCodeEditor;
+  let editor: MonacoType.IStandaloneCodeEditor;
   let Monaco;
 
   const loadMonaco = async () => {
