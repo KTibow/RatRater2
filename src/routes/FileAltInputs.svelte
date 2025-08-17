@@ -93,7 +93,7 @@
   }}
 />
 <div
-  class="dragover-positioning fixed rounded-2xl bg-primary-container text-on-primary-container"
+  class="dragover-positioning fixed rounded-lg bg-primary-container text-on-primary-container"
   class:custom-hide={hide}
   style="left: {currentX}px; top: {currentY}px;"
 >
@@ -101,7 +101,7 @@
 </div>
 {#if hashStatus.shown}
   <div
-    class="hash-status rounded-xl bg-primary-container p-4 text-on-primary-container"
+    class="hash-status rounded-md bg-primary-container p-4 text-on-primary-container"
     transition:sharedAxisTransition={{ direction: "Y", rightSeam: false }}
   >
     <p class="font-bold">rat-to-peer</p>

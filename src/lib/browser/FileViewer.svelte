@@ -59,7 +59,7 @@
     <p class="m3-font-title-medium">{splitPath.end}</p>
     <p class="m3-font-body-medium text-on-surface-variant">{splitPath.start}</p>
   </div>
-  <div class="flex lg:hidden">
+  <div class="flex l:hidden">
     <Button variant="text" iconType="full" onclick={goBack}><Icon icon={iconClose} /></Button>
   </div>
   <Button variant="text" iconType="full" onclick={downloadFile}><Icon icon={iconExtract} /></Button>

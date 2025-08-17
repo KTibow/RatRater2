@@ -9,7 +9,7 @@
 
 {#if fileList}
   <div class="panes flex grow overflow-hidden" class:file-open={$view.editorFile}>
-    <div class="tree-pane group overflow-auto p-4 sm:px-6">
+    <div class="tree-pane group overflow-auto p-4 m:px-6">
       <FileTree nodes={getFileTree(fileList)} on:chosen={(e) => ($view.editorFile = e.detail)} />
     </div>
     {#if $view.editorFile}

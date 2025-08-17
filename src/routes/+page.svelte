@@ -36,7 +36,7 @@
     <FileHeader />
     {#if $view.tab == "analysis"}
       <div
-        class="col-start-1 row-start-2 gap-6 p-4 sm:px-6"
+        class="col-start-1 row-start-2 gap-6 p-4 m:px-6"
         transition:fade={{ duration: 300, easing: easeEmphasized }}
       >
         <Results />
@@ -66,7 +66,7 @@
   >
     <Status icon={iconError}>
       <p class="m3-font-headline-small">Couldn't open file</p>
-      <p class="m3-font-body-medium text-on-surface-variant">
+      <p class="text-on-surface-variant m3-font-body-medium">
         Make sure you dragged in a .jar file or something else that's a zip file.
       </p>
       <div class="mt-2 flex">
@@ -76,7 +76,7 @@
   </main>
 {:else}
   <main
-    class="vertical-container absolute min-h-screen p-4 sm:p-6"
+    class="vertical-container absolute min-h-screen p-4 m:p-6"
     transition:sharedAxisTransition={{ direction: "X", rightSeam: true }}
   >
     <Home />

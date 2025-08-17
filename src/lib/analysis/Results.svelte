@@ -127,13 +127,13 @@
     </div>
   {/if}
 </div>
-<div class="grid gap-4 md:grid-cols-2 xl:grid-cols-4 2xl:grid-cols-6">
+<div class="grid gap-4 x:grid-cols-2 l:grid-cols-4 xl:grid-cols-6">
   {#each Object.entries($analysis.flags) as [name, flag]}
     <FlagCard {name} {flag} />
   {/each}
   {#if obfuscation?.length > 0}
     <div
-      class="flex flex-col items-center gap-4 overflow-hidden rounded-lg bg-primary-container p-4 text-on-primary-container"
+      class="flex flex-col items-center gap-4 overflow-hidden rounded-sm bg-primary-container p-4 text-on-primary-container"
     >
       <h2 class="m3-font-title-large">Obfuscation</h2>
       <ObfuscationTable {obfuscation} />
@@ -141,7 +141,7 @@
   {/if}
   {#if webhooks}
     <div
-      class="flex flex-col items-center gap-4 overflow-hidden rounded-lg bg-primary-container p-4 text-on-primary-container"
+      class="flex flex-col items-center gap-4 overflow-hidden rounded-sm bg-primary-container p-4 text-on-primary-container"
     >
       <h2 class="m3-font-title-large">Webhooks</h2>
       {#if webhooks.size > 0}
@@ -157,7 +157,7 @@
     </div>
   {:else}
     <button
-      class="m3-font-title-large relative rounded-lg bg-primary-container px-4 py-8 text-on-primary-container"
+      class="relative rounded-sm bg-primary-container px-4 py-8 text-on-primary-container m3-font-title-large"
       on:click={getWebhooks}
     >
       <Layer />

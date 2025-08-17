@@ -10,7 +10,7 @@
 </script>
 
 <div
-  class="flex flex-col items-center rounded-xl bg-background p-4"
+  class="flex flex-col items-center rounded-md bg-background p-4"
   in:sharedAxisTransition={{ direction: "Z", leaving: false }}
 >
   <h2 class="m3-font-headline-small">{name}</h2>

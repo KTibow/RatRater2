@@ -48,8 +48,8 @@ importers:
         specifier: ^3.10.1
         version: 3.10.1
       m3-svelte:
-        specifier: ^5.0.0
-        version: 5.0.0
+        specifier: ^5.3.4
+        version: 5.3.4
       monaco-editor:
         specifier: ^0.52.2
         version: 0.52.2
@@ -60,7 +60,7 @@ importers:
         specifier: ^3.3.3
         version: 3.4.0(prettier@3.6.2)(svelte@5.37.1)
       prettier-plugin-tailwindcss:
-        specifier: ^0.6.11
+        specifier: ^0.6.14
         version: 0.6.14(prettier-plugin-svelte@3.4.0(prettier@3.6.2)(svelte@5.37.1))(prettier@3.6.2)
       svelte:
         specifier: ^5.0.0
@@ -69,8 +69,8 @@ importers:
         specifier: ^4.0.0
         version: 4.3.0(picomatch@4.0.3)(svelte@5.37.1)(typescript@5.8.3)
       tailwindcss:
-        specifier: ^4.0.0
-        version: 4.1.11
+        specifier: ^4.1.12
+        version: 4.1.12
       typescript:
         specifier: ^5.0.0
         version: 5.8.3
@@ -320,6 +320,12 @@ packages:
   '@jridgewell/gen-mapping@0.3.12':
     resolution: {integrity: sha512-OuLGC46TjB5BbN1dH8JULVVZY4WTdkF7tV9Ys6wLL1rubZnCMstOhNHueU5bLCrnRuDhKPDM4g6sw4Bel5Gzqg==}
 
+  '@jridgewell/gen-mapping@0.3.13':
+    resolution: {integrity: sha512-2kkt/7niJ6MgEPxF0bYdQ6etZaA+fQvDcLKckhy1yIQOzaoKjBBjSj63/aLVjYE3qhRt5dvM+uUyfCg6UKCBbA==}
+
+  '@jridgewell/remapping@2.3.5':
+    resolution: {integrity: sha512-LI9u/+laYG4Ds1TDKSJW2YPrIlcVYOwi2fUC6xB43lueCjgxV4lffOCZCtYFiH6TNOX+tQKXx97T4IKHbhyHEQ==}
+
   '@jridgewell/resolve-uri@3.1.2':
     resolution: {integrity: sha512-bRISgCIjP20/tbWSPWMEi54QVPRZExkuD9lJL+UIxUKtwVJA8wW1Trb1jMs1RFXo1CBTNZ/5hpC9QvmKWdopKw==}
     engines: {node: '>=6.0.0'}
@@ -327,17 +333,23 @@ packages:
   '@jridgewell/sourcemap-codec@1.5.4':
     resolution: {integrity: sha512-VT2+G1VQs/9oz078bLrYbecdZKs912zQlkelYpuf+SXF+QvZDYJlbx/LSx+meSAwdDFnF8FVXW92AVjjkVmgFw==}
 
+  '@jridgewell/sourcemap-codec@1.5.5':
+    resolution: {integrity: sha512-cYQ9310grqxueWbl+WuIUIaiUaDcj7WOq5fVhEljNVgRfOUhY9fy2zTvfoqWsnebh8Sl70VScFbICvJnLKB0Og==}
+
   '@jridgewell/trace-mapping@0.3.29':
     resolution: {integrity: sha512-uw6guiW/gcAGPDhLmd77/6lW8QLeiV5RUTsAX46Db6oLhGaVj4lhnPwb184s1bkc8kdVg/+h988dro8GRDpmYQ==}
+
+  '@jridgewell/trace-mapping@0.3.30':
+    resolution: {integrity: sha512-GQ7Nw5G2lTu/BtHTKfXhKHok2WGetd4XYcVKGx00SjAk8GMwgJM3zr6zORiPGuOE+/vkc90KtTosSSvaCjKb2Q==}
 
   '@ktibow/iconset-ic@1.0.32':
     resolution: {integrity: sha512-BowCahg47VxEP9RpCR4cPyM+BoNaGjihlFtCalVq0Z1oJuzjCBTogCSeBrVamuWd/YdCLrkxFY/LZcAdPEkGqA==}
 
-  '@ktibow/iconset-material-symbols@0.0.1752989765':
-    resolution: {integrity: sha512-J+gfYidiP0Lr1Gs8J0OsA+128Ay1UrcBjECZBCye4CBLl6KZmVc7su0vqKrkpNEnUxCJFdcC8nZAH8O2XPWurw==}
+  '@ktibow/iconset-material-symbols@0.0.1754804347':
+    resolution: {integrity: sha512-Fa5TKzCWzJPOb7raYVm+ULdR/UD8yhCV+knX/BVqEKz4h2BN9skzr09LpSXCB+18ksEQfVgnyuP4yZBsvywt7Q==}
 
-  '@ktibow/material-color-utilities-nightly@0.3.11753753853685':
-    resolution: {integrity: sha512-maizGqgFRRubz37aCUPTcA23Ib3f6w+XOVNZ4jLxS3jzv5h2FX1yBPjIqUFzussWjrH4moiF9xtzO+r7YJRqHw==}
+  '@ktibow/material-color-utilities-nightly@0.3.11755394799061':
+    resolution: {integrity: sha512-Bek8MSnjc+0pVrQ+QDGClV7FdlvdBWXkpfQYcCyZL0cmwiOU9URYDxVVmTRF7k/DqBetVGexCrqsNJfbBTVP8g==}
 
   '@nodelib/fs.scandir@2.1.5':
     resolution: {integrity: sha512-vq24Bq3ym5HEQm2NKCr3yXDwjc7vTsEThRDnkp2DK9p1uqLR+DHurm/NOTo0KG7HYHU7eppKZj3MyqYuMBf62g==}
@@ -1065,8 +1077,8 @@ packages:
   lodash.merge@4.6.2:
     resolution: {integrity: sha512-0KpjqXRVvrYyCsX1swR/XTK0va6VQkQM6MNo7PqW77ByjAhoARA8EfrP1N4+KlKj8YS0ZUCtRT/YUuhyYDujIQ==}
 
-  m3-svelte@5.0.0:
-    resolution: {integrity: sha512-KPrlPe7sGPbW50uB4bb7R16edcJ4d23p7PH5YWZ4GLvcvHVf2GwWG8sbQFlg8qCk6ko8OQXCslzLQjdP2j2I8w==}
+  m3-svelte@5.3.4:
+    resolution: {integrity: sha512-4vMYHh1+9sIboTfGchstUUtpJllepmV9su8v2U6s715gTBfoZzfUrA0qaSfAzRIcas5zaAbjXPRlyWULUKt69g==}
 
   magic-string@0.30.17:
     resolution: {integrity: sha512-sNPKHvyjVf7gyjwS4xGTaW/mCnF8wnjtifKBEhxfZ7E/S8tQ0rssrwGNn6q8JH/ohItJfSQp9mBtQYuTlH5QnA==}
@@ -1366,8 +1378,15 @@ packages:
     resolution: {integrity: sha512-h8arWpQZ+3z8eahyBT5KkiBOUsG6xvI5Ykg0ozRr9xEdImgSMUPUlOFWRNkUsT7Ti0DSUCTEbPoped0aoxFyWA==}
     engines: {node: '>=18'}
 
+  svelte@5.38.1:
+    resolution: {integrity: sha512-fO6CLDfJYWHgfo6lQwkQU2vhCiHc2MBl6s3vEhK+sSZru17YL4R5s1v14ndRpqKAIkq8nCz6MTk1yZbESZWeyQ==}
+    engines: {node: '>=18'}
+
   tailwindcss@4.1.11:
     resolution: {integrity: sha512-2E9TBm6MDD/xKYe+dvJZAmg3yxIEDNRc0jwlNyDg/4Fil2QcSLjFKGVff0lAf1jjeaArlG/M75Ey/EYr/OJtBA==}
+
+  tailwindcss@4.1.12:
+    resolution: {integrity: sha512-DzFtxOi+7NsFf7DBtI3BJsynR+0Yp6etH+nRPTbpWnS2pZBaSksv/JGctNwSWzbFjp0vxSqknaUylseZqMDGrA==}
 
   tapable@2.2.2:
     resolution: {integrity: sha512-Re10+NauLTMCudc7T5WLFLAwDhQ0JWdrMK+9B2M8zR5hRExKmsRDCBA7/aV/pNJFltmBFO5BAMlQFi/vq3nKOg==}
@@ -1646,24 +1665,41 @@ snapshots:
       '@jridgewell/sourcemap-codec': 1.5.4
       '@jridgewell/trace-mapping': 0.3.29
 
+  '@jridgewell/gen-mapping@0.3.13':
+    dependencies:
+      '@jridgewell/sourcemap-codec': 1.5.5
+      '@jridgewell/trace-mapping': 0.3.30
+
+  '@jridgewell/remapping@2.3.5':
+    dependencies:
+      '@jridgewell/gen-mapping': 0.3.13
+      '@jridgewell/trace-mapping': 0.3.30
+
   '@jridgewell/resolve-uri@3.1.2': {}
 
   '@jridgewell/sourcemap-codec@1.5.4': {}
+
+  '@jridgewell/sourcemap-codec@1.5.5': {}
 
   '@jridgewell/trace-mapping@0.3.29':
     dependencies:
       '@jridgewell/resolve-uri': 3.1.2
       '@jridgewell/sourcemap-codec': 1.5.4
 
+  '@jridgewell/trace-mapping@0.3.30':
+    dependencies:
+      '@jridgewell/resolve-uri': 3.1.2
+      '@jridgewell/sourcemap-codec': 1.5.5
+
   '@ktibow/iconset-ic@1.0.32':
     dependencies:
       '@iconify/types': 2.0.0
 
-  '@ktibow/iconset-material-symbols@0.0.1752989765':
+  '@ktibow/iconset-material-symbols@0.0.1754804347':
     dependencies:
       '@iconify/types': 2.0.0
 
-  '@ktibow/material-color-utilities-nightly@0.3.11753753853685': {}
+  '@ktibow/material-color-utilities-nightly@0.3.11755394799061': {}
 
   '@nodelib/fs.scandir@2.1.5':
     dependencies:
@@ -2360,12 +2396,12 @@ snapshots:
 
   lodash.merge@4.6.2: {}
 
-  m3-svelte@5.0.0:
+  m3-svelte@5.3.4:
     dependencies:
       '@iconify/types': 2.0.0
-      '@ktibow/iconset-material-symbols': 0.0.1752989765
-      '@ktibow/material-color-utilities-nightly': 0.3.11753753853685
-      svelte: 5.37.1
+      '@ktibow/iconset-material-symbols': 0.0.1754804347
+      '@ktibow/material-color-utilities-nightly': 0.3.11755394799061
+      svelte: 5.38.1
 
   magic-string@0.30.17:
     dependencies:
@@ -2608,7 +2644,26 @@ snapshots:
       magic-string: 0.30.17
       zimmerframe: 1.1.2
 
+  svelte@5.38.1:
+    dependencies:
+      '@jridgewell/remapping': 2.3.5
+      '@jridgewell/sourcemap-codec': 1.5.5
+      '@sveltejs/acorn-typescript': 1.0.5(acorn@8.15.0)
+      '@types/estree': 1.0.8
+      acorn: 8.15.0
+      aria-query: 5.3.2
+      axobject-query: 4.1.0
+      clsx: 2.1.1
+      esm-env: 1.2.2
+      esrap: 2.1.0
+      is-reference: 3.0.3
+      locate-character: 3.0.0
+      magic-string: 0.30.17
+      zimmerframe: 1.1.2
+
   tailwindcss@4.1.11: {}
+
+  tailwindcss@4.1.12: {}
 
   tapable@2.2.2: {}
 

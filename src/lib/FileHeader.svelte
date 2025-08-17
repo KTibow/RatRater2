@@ -19,7 +19,7 @@
   <Icon icon={iconFile} width="1.5rem" height="1.5rem" />
   <p class="pl-4 whitespace-nowrap">{fileL.file.name}</p>
   <p class="mr-auto pl-4 whitespace-nowrap">{getSize(fileL.file.size)}</p>
-  <p class="hash max-lg:hidden">{fileL.hash}</p>
+  <p class="hash max-l:hidden">{fileL.hash}</p>
   {#if $view.tab == "analysis"}
     <Button variant="tonal" iconType="left" onclick={() => ($view.tab = "browser")}>
       <Icon icon={iconFolder} />

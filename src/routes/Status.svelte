@@ -4,7 +4,7 @@
   export let icon: IconifyIcon;
 </script>
 
-<div class="vertical-container m-auto rounded-2xl bg-surface-container-high p-6">
+<div class="vertical-container m-auto rounded-lg bg-surface-container-high p-6">
   <Icon {icon} width="2rem" height="2rem" class="text-secondary" />
   <slot />
 </div>
