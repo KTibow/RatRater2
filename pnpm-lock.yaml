@@ -48,8 +48,8 @@ importers:
         specifier: ^3.10.1
         version: 3.10.1
       m3-svelte:
-        specifier: ^5.3.4
-        version: 5.3.4
+        specifier: ^5.3.6
+        version: 5.3.6
       monaco-editor:
         specifier: ^0.52.2
         version: 0.52.2
@@ -1077,8 +1077,8 @@ packages:
   lodash.merge@4.6.2:
     resolution: {integrity: sha512-0KpjqXRVvrYyCsX1swR/XTK0va6VQkQM6MNo7PqW77ByjAhoARA8EfrP1N4+KlKj8YS0ZUCtRT/YUuhyYDujIQ==}
 
-  m3-svelte@5.3.4:
-    resolution: {integrity: sha512-4vMYHh1+9sIboTfGchstUUtpJllepmV9su8v2U6s715gTBfoZzfUrA0qaSfAzRIcas5zaAbjXPRlyWULUKt69g==}
+  m3-svelte@5.3.6:
+    resolution: {integrity: sha512-wJB630NJCyl4byHOa9GRUwoYgtgsBzTGGng8QctcIyL9Jn9IW5ZiJZDcvw0V49EwJ7eVqD0ujoMF6gO8bbkn/g==}
 
   magic-string@0.30.17:
     resolution: {integrity: sha512-sNPKHvyjVf7gyjwS4xGTaW/mCnF8wnjtifKBEhxfZ7E/S8tQ0rssrwGNn6q8JH/ohItJfSQp9mBtQYuTlH5QnA==}
@@ -2396,7 +2396,7 @@ snapshots:
 
   lodash.merge@4.6.2: {}
 
-  m3-svelte@5.3.4:
+  m3-svelte@5.3.6:
     dependencies:
       '@iconify/types': 2.0.0
       '@ktibow/iconset-material-symbols': 0.0.1754804347
