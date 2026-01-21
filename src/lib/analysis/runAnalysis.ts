@@ -5,15 +5,24 @@ import type { InitialFind } from "$lib/state";
 
 const SESSION_TOKEN_INDICATORS = [
   "func_111286_b", // getSessionID (token:[session token]:[player uuid])
+  "method_1675", // getSessionId
+  "getSessionId",
+
   "func_148254_d", // getToken
   "method_1674", // getAccessToken
-  "getAccessToken", // getAccessToken
+  "getAccessToken",
+
   "field_148258_c", // token
+
   // base 64 versions of the above:
   "ZnVuY18xMTEyODZfYg",
+  "bWV0aG9kXzE2NzU",
+  "Z2V0U2Vzc2lvbklk",
+
   "ZnVuY18xNDgyNTRfZA",
   "bWV0aG9kXzE2NzQ",
   "Z2V0QWNjZXNzVG9rZW4",
+
   "ZmllbGRfMTQ4MjU4X2M",
 ];
 const prescan = (zip: JSZip & JSZip.JSZipObject, files: string[], state: Analysis) => {
