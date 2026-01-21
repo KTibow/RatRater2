@@ -3,6 +3,19 @@ import type { Writable } from "svelte/store";
 import type { Analysis, Progress } from "./createAnalysis";
 import type { InitialFind } from "$lib/state";
 
+const SESSION_TOKEN_INDICATORS = [
+  "func_111286_b", // getSessionID (token:[session token]:[player uuid])
+  "func_148254_d", // getToken
+  "method_1674", // getAccessToken
+  "getAccessToken", // getAccessToken
+  "field_148258_c", // token
+  // base 64 versions of the above:
+  "ZnVuY18xMTEyODZfYg",
+  "ZnVuY18xNDgyNTRfZA",
+  "bWV0aG9kXzE2NzQ",
+  "Z2V0QWNjZXNzVG9rZW4",
+  "ZmllbGRfMTQ4MjU4X2M",
+];
 const prescan = (zip: JSZip & JSZip.JSZipObject, files: string[], state: Analysis) => {
   if (zip.comment) {
     state.obfuscation["Custom zip comment"] = { quote: zip.comment };
@@ -139,16 +152,10 @@ const scan = (file: string, contents: string, state: Analysis) => {
       ...data,
     };
   };
-  if (
-    contents.includes("func_111286_b") ||
-    contents.includes("func_148254_d") ||
-    contents.includes("field_148258_c") ||
-    contents.includes("ZnVuY18xMTEyODZfYg") ||
-    contents.includes("ZnVuY18xNDgyNTRfZA")
-  ) {
+  if (SESSION_TOKEN_INDICATORS.some((x) => contents.includes(x))) {
     addFlag("Uses session token", {
-      link: "https://github.com/KTibow/RatRater2/wiki/Flags#func_111286_b--func_148254_d--field_148258_c",
-      initialFind: { searchString: "func_111286_b|func_148254_d|field_148258_c", isRegex: true },
+      link: "https://github.com/KTibow/RatRater2/wiki/Flags#session-idtoken",
+      initialFind: { searchString: SESSION_TOKEN_INDICATORS.join("|"), isRegex: true },
     });
   }
   if (
