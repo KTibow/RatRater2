@@ -14,6 +14,12 @@ importers:
       '@eslint/js':
         specifier: ^9.18.0
         version: 9.32.0
+      '@fontsource/google-sans-code':
+        specifier: ^5.2.3
+        version: 5.2.3
+      '@fontsource/roboto':
+        specifier: ^5.2.10
+        version: 5.2.10
       '@iconify/types':
         specifier: ^2.0.0
         version: 2.0.0
@@ -289,6 +295,12 @@ packages:
   '@eslint/plugin-kit@0.3.4':
     resolution: {integrity: sha512-Ul5l+lHEcw3L5+k8POx6r74mxEYKG5kOb6Xpy2gCRW6zweT6TEhAf8vhxGgjhqrd/VO/Dirhsb+1hNpD1ue9hw==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
+
+  '@fontsource/google-sans-code@5.2.3':
+    resolution: {integrity: sha512-bCbCXFWtGIVNEe8O/mE7YpIuVjc3E4CV6pToJ0IZc9XcXKfa74yntZa3UgyzBRgabnx5bm6ciQVQvWGnwi4Rqw==}
+
+  '@fontsource/roboto@5.2.10':
+    resolution: {integrity: sha512-8HlA5FtSfz//oFSr2eL7GFXAiE7eIkcGOtx7tjsLKq+as702x9+GU7K95iDeWFapHC4M2hv9RrpXKRTGGBI8Zg==}
 
   '@humanfs/core@0.19.1':
     resolution: {integrity: sha512-5DyQ4+1JEUzejeK1JGICcideyfUbGixgS9jNgex5nqkW+cY7WZhxBigmieN5Qnw9ZosSNVC9KQKyb+GUaGyKUA==}
@@ -1640,6 +1652,10 @@ snapshots:
     dependencies:
       '@eslint/core': 0.15.1
       levn: 0.4.1
+
+  '@fontsource/google-sans-code@5.2.3': {}
+
+  '@fontsource/roboto@5.2.10': {}
 
   '@humanfs/core@0.19.1': {}
 

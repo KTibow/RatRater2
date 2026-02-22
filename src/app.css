@@ -2,12 +2,15 @@
 @import "m3-svelte/misc/styles.css";
 @import "m3-svelte/misc/recommended-styles.css";
 @import "m3-svelte/misc/tailwind-styles.css";
+@import "@fontsource/roboto/400.css";
+@import "@fontsource/roboto/500.css";
+@import "@fontsource/roboto/700.css";
+@import "@fontsource/google-sans-code/latin-400.css";
+:root {
+  color-scheme: light dark;
+}
 @media (prefers-color-scheme: light) {
   :root {
-    color-scheme: light;
-  }
-  :root,
-  ::backdrop {
     --m3-scheme-primary: 65 95 145;
     --m3-scheme-on-primary: 255 255 255;
     --m3-scheme-primary-container: 214 227 255;
@@ -49,10 +52,6 @@
 }
 @media (prefers-color-scheme: dark) {
   :root {
-    color-scheme: dark;
-  }
-  :root,
-  ::backdrop {
     --m3-scheme-primary: 170 199 255;
     --m3-scheme-on-primary: 11 48 95;
     --m3-scheme-primary-container: 40 71 119;

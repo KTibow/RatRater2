@@ -16,6 +16,8 @@
   "devDependencies": {
     "@eslint/compat": "^1.2.5",
     "@eslint/js": "^9.18.0",
+    "@fontsource/google-sans-code": "^5.2.3",
+    "@fontsource/roboto": "^5.2.10",
     "@iconify/types": "^2.0.0",
     "@ktibow/iconset-ic": "^1.0.32",
     "@sveltejs/adapter-static": "^3.0.8",
