@@ -10,9 +10,13 @@ export const getFileTree = (files: string[]) => {
   return files.reduce((tree, file) => {
     let current = tree;
     const parts = file.split("/");
-    parts.forEach((part, i) => {
-      if (!part) return;
-      if (i == parts.length - 1) current[part] = 0;
+    if (file.endsWith("/") && parts.length > 1) {
+      parts[parts.length - 2] += "/";
+      parts.pop();
+    }
+    const filteredParts = parts.filter(Boolean);
+    filteredParts.forEach((part, i) => {
+      if (i == filteredParts.length - 1) current[part] = 0;
       // @ts-expect-error doesnt realize that current will never be 0
       current = current[part] == undefined ? (current[part] = {}) : current[part];
     });

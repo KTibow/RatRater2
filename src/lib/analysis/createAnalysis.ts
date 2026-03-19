@@ -1,20 +1,16 @@
-import type JSZip from "jszip";
-import type { JSZipObject } from "jszip";
 import { get, writable } from "svelte/store";
 import { file, type InitialFind, type Loaded } from "$lib/state";
 import runAnalysis from "./runAnalysis";
 
 export const createAnalysis = () => {
   const fileData = get(file) as Loaded;
-  const zip = fileData.zip as JSZip & JSZipObject;
+  const entries = fileData.entries;
   const data = fileData.data;
-  const files = Object.values(zip.files)
-    .filter((f) => !f.dir)
-    .map((f) => f.name);
+  const files = entries.map((entry) => entry.filename);
   const analysis = writable<Analysis>({ obfuscation: {}, flags: {} });
   const progress = writable<Progress>({ done: 0, total: 1 });
 
-  runAnalysis({ zip, data, files }, analysis, progress);
+  runAnalysis({ comment: fileData.comment, entries, data, files }, analysis, progress);
 
   return { analysis, progress };
 };

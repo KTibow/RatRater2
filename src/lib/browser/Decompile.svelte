@@ -1,10 +1,10 @@
 <script lang="ts">
+  import { BlobReader, BlobWriter, TextWriter, ZipReader } from "@zip.js/zip.js";
   import iconMenu from "@ktibow/iconset-ic/outline-more-vert";
   import iconCode from "@ktibow/iconset-ic/outline-code";
   import iconFile from "@ktibow/iconset-ic/outline-description";
   import iconPlay from "@ktibow/iconset-ic/outline-play-arrow";
   import { Icon } from "m3-svelte";
-  import JSZip from "jszip";
   import { tick } from "svelte";
   import { fade, slide } from "svelte/transition";
   import {
@@ -17,8 +17,15 @@
     easeEmphasizedDecel,
   } from "m3-svelte";
 
+  import { arrayBufferToBinaryString } from "$lib/binaryString";
   import { hash } from "$lib/hash";
   import { file, view, type Loaded } from "$lib/state";
+  import {
+    hasEntryData,
+    isClassPath,
+    stripTrailingSlash,
+    type LoadedEntry,
+  } from "$lib/zipEntries";
 
   export let contentIn: string | undefined;
   export let contentOut: string | undefined;
@@ -61,6 +68,12 @@
       console.error("failed to update cache", e);
     }
   };
+  const getEntry = (entries: LoadedEntry[], path: string) =>
+    entries.find((entry) => entry.filename === path || entry.filename === "/" + path);
+  const getJavaCandidates = (path: string) => {
+    const javaPath = stripTrailingSlash(path).replace(/\.class$/i, ".java");
+    return path.endsWith("/") ? [javaPath, javaPath + "/"] : [javaPath];
+  };
   const runDecompile = async () => {
     snackbar.show({ message: "Decompiling..." });
     const form = new FormData(),
@@ -69,14 +82,19 @@
       decompileScope = decompileMethod.split("-")[1],
       pinnedRaw = contentIn as string,
       pinnedFile = $view.editorFile as string,
-      pinnedZip = ($file as Loaded).zip;
+      pinnedEntries = ($file as Loaded).entries;
     dialogOpen = false;
     hotServer = undefined;
 
     if (decompileScope == "all") {
       form.set("file", ($file as Loaded).file, "file.jar");
     } else {
-      const blob = await ($file as Loaded).zip.files[pinnedFile].async("blob");
+      const entry = getEntry(pinnedEntries, pinnedFile);
+      if (!entry) {
+        snackbar.show({ message: "Failed to decompile" });
+        return;
+      }
+      const blob = await entry.getData(new BlobWriter());
       form.set("file", blob, "file.class");
     }
 
@@ -100,23 +118,37 @@
     if (decompileScope == "all") {
       snackbar.show({ message: "Loading decompiled..." });
       await tick();
-      const outputZip = await new JSZip().loadAsync(await response.arrayBuffer());
-      await Promise.all(
-        Object.values(pinnedZip.files).map(async (f) => {
-          if (f.dir || !f.name.endsWith(".class")) return;
-          const decompiledFile = outputZip.files[f.name.replace(/\.class$/, ".java")];
-          if (!decompiledFile) return;
-          const [raw, decompiled] = await Promise.all([
-            f.async("string"),
-            decompiledFile.async("string"),
-          ]);
-          addToCache(raw, decompiled);
-          if (f.name == pinnedFile) {
-            decompiledContent = decompiled;
-            showDecompiled = true;
-          }
-        }),
-      );
+      const outputZip = new ZipReader(new BlobReader(await response.blob()));
+      try {
+        const outputEntries = (await outputZip.getEntries()).filter(
+          hasEntryData,
+        );
+        const outputEntriesByName = new Map(
+          outputEntries.map((entry) => [entry.filename, entry]),
+        );
+
+        await Promise.all(
+          pinnedEntries.map(async (entry) => {
+            if (!isClassPath(entry.filename)) return;
+            const decompiledFile = getJavaCandidates(entry.filename)
+              .map((candidate) => outputEntriesByName.get(candidate))
+              .find(Boolean);
+            if (!decompiledFile) return;
+            const [rawData, decompiled] = await Promise.all([
+              entry.arrayBuffer(),
+              decompiledFile.getData(new TextWriter()),
+            ]);
+            const raw = arrayBufferToBinaryString(rawData);
+            addToCache(raw, decompiled);
+            if (entry.filename == pinnedFile) {
+              decompiledContent = decompiled;
+              showDecompiled = true;
+            }
+          }),
+        );
+      } finally {
+        await outputZip.close().catch(() => {});
+      }
     } else {
       decompiledContent = await response.text();
       addToCache(pinnedRaw, decompiledContent);
@@ -126,13 +158,6 @@
   };
 
   let menuOpen = false;
-  // let classCount = 0;
-  // $: {
-  // const hasZip = "zip" in $file;
-  // if (!hasZip) break $;
-  // const fileObj = ($file as Loaded).zip.files;
-  // classCount = Object.values(fileObj).filter((f) => !f.dir && f.name.endsWith(".class")).length;
-  // }
 </script>
 
 <div class="relative flex">

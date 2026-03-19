@@ -4,7 +4,7 @@
   import FileViewer from "./FileViewer.svelte";
   import { getFileTree } from "./tree";
 
-  $: fileList = "zip" in $file && Object.keys($file.zip.files);
+  $: fileList = "entries" in $file && $file.entries.map((entry) => entry.filename);
 </script>
 
 {#if fileList}

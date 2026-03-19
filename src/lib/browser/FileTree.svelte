@@ -7,6 +7,7 @@
   import iconExtension from "@ktibow/iconset-ic/outline-extension";
   import iconFolder from "@ktibow/iconset-ic/folder";
   import iconOpenFolder from "@ktibow/iconset-ic/outline-folder";
+  import { isClassPath, stripTrailingSlash } from "$lib/zipEntries";
   import { sortTree, type Tree } from "./tree";
 
   export let nodes: Tree;
@@ -28,8 +29,8 @@
     >
       <Layer />
       <Icon
-        icon={name.endsWith(".class")
-          ? /\$[a-z0-9]+.class$/gi.test(name)
+        icon={isClassPath(name)
+          ? /\$[a-z0-9]+\.class$/i.test(stripTrailingSlash(name))
             ? iconExtension
             : iconCode
           : iconFile}

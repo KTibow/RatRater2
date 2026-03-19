@@ -1,7 +1,9 @@
-import type JSZip from "jszip";
+import { TextWriter, type FileEntry } from "@zip.js/zip.js";
 import type { Writable } from "svelte/store";
+import { arrayBufferToBinaryString } from "$lib/binaryString";
 import type { Analysis, Progress } from "./createAnalysis";
 import type { InitialFind } from "$lib/state";
+import { isClassPath } from "$lib/zipEntries";
 
 const SESSION_TOKEN_INDICATORS = [
   "func_111286_b", // getSessionID (token:[session token]:[player uuid])
@@ -25,13 +27,13 @@ const SESSION_TOKEN_INDICATORS = [
 
   "ZmllbGRfMTQ4MjU4X2M",
 ];
-const prescan = (zip: JSZip & JSZip.JSZipObject, files: string[], state: Analysis) => {
-  if (zip.comment) {
-    state.obfuscation["Custom zip comment"] = { quote: zip.comment };
+const prescan = (comment: string | undefined, files: string[], state: Analysis) => {
+  if (comment) {
+    state.obfuscation["Custom zip comment"] = { quote: comment };
   }
 
   const shorts = [];
-  const re = /(\/|^)(.{1,2})\.class$/i;
+  const re = /(\/|^)(.{1,2})\.class\/?$/i;
   for (const file of files) {
     const match = re.exec(file);
     if (match) shorts.push({ file, name: match[2] });
@@ -58,7 +60,7 @@ const prescan = (zip: JSZip & JSZip.JSZipObject, files: string[], state: Analysi
   const branchlock = files.find((file: string) => file.toLowerCase().includes("branchlock"));
   if (branchlock) state.obfuscation["Obfuscator Branchlock"] = { file: branchlock };
 
-  const unicode = files.find((file: string) => /(?:^|\/)[^\x00-\xff]+\.class$/.test(file));
+  const unicode = files.find((file: string) => /(?:^|\/)[^\x00-\xff]+\.class\/?$/.test(file));
   if (unicode) state.obfuscation["Weird name"] = { file: unicode };
 
   const flags = [
@@ -237,7 +239,12 @@ const scan = (file: string, contents: string, state: Analysis) => {
   } catch {}
 };
 export default async (
-  { zip, data, files }: { zip: JSZip & JSZip.JSZipObject; data: ArrayBuffer; files: string[] },
+  {
+    comment,
+    entries,
+    data,
+    files,
+  }: { comment?: string; entries: FileEntry[]; data: ArrayBuffer; files: string[] },
   analysis: Writable<Analysis>,
   progress: Writable<Progress>,
 ) => {
@@ -246,23 +253,26 @@ export default async (
   let done = 0;
 
   try {
-    prescan(zip, files, state);
+    prescan(comment, files, state);
     propagate();
   } catch (e) {
     console.error("While prescanning", e);
   }
 
-  const tasks = files
-    .filter((path) => path.endsWith(".class"))
-    .map(async (f) => {
-      const contents = await zip.files[f].async("string");
-      scan(f, contents, state);
-      propagate();
-    });
+  const entriesByName = new Map(entries.map((entry) => [entry.filename, entry]));
+  const tasks = files.filter(isClassPath).map(async (f) => {
+    const entry = entriesByName.get(f);
+    if (!entry) return;
+    const contents = arrayBufferToBinaryString(await entry.arrayBuffer());
+    scan(f, contents, state);
+    propagate();
+  });
 
   const manifest = files.find((f) => /manifest\.mf$/i.test(f));
   const manifestTask = async (manifest: string) => {
-    const contents = await zip.files[manifest].async("string");
+    const entry = entriesByName.get(manifest);
+    if (!entry) return;
+    const contents = await entry.getData(new TextWriter());
     const protectedLine = contents.match(/^(?=.*protected).*$/im);
     if (!protectedLine) return;
     state.obfuscation["Obfuscator noted in manifest.mf"] = {

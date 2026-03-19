@@ -1,6 +1,6 @@
-import type JSZip from "jszip";
-import type { JSZipObject } from "jszip";
+import { type FileEntry } from "@zip.js/zip.js";
 import { get } from "svelte/store";
+import { arrayBufferToBinaryString } from "$lib/binaryString";
 import { file, type Loaded } from "$lib/state";
 
 const whRegex =
@@ -8,13 +8,11 @@ const whRegex =
 const b64Regex = /(?:[A-Za-z0-9+/]{4})*[A-Za-z0-9+/][A-Za-z0-9+/][A-Za-z0-9+/=][A-Za-z0-9+/=]/g;
 export const scanWebhooks = async () => {
   const fileData = get(file) as Loaded;
-  const zip = fileData.zip as JSZip & JSZipObject;
-  const files = Object.values(zip.files)
-    .filter((f) => !f.dir)
-    .map((f) => f.name);
+  const entries = fileData.entries;
 
-  const process = async (file: string) => {
-    const contents = await zip.files[file].async("string");
+  const process = async (entry: FileEntry) => {
+    const file = entry.filename;
+    const contents = arrayBufferToBinaryString(await entry.arrayBuffer());
     const contentsNormalized = contents
       .replace(/UY[\x00-\x20][^][\x00-\x20]/g, "")
       .replace(/UY[\x00-\x20][^]/g, "");
@@ -49,8 +47,8 @@ export const scanWebhooks = async () => {
 
   const list: Set<string> = new Set();
   await Promise.all(
-    files.map(async (f) => {
-      const result = await process(f);
+    entries.map(async (entry) => {
+      const result = await process(entry);
       result.forEach((w) => list.add(w));
     }),
   );
