@@ -53,7 +53,7 @@
   const openDialog = () => {
     dialogOpen = true;
     menuOpen = false;
-    hotServer = "https://ratrater" + Math.ceil(Math.random() * 3) + ".azurewebsites.net";
+    hotServer = "https://ratrater2-back.fly.dev";
     fetch(hotServer);
   };
 
